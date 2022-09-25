@@ -1,0 +1,19 @@
+[comment encoding = UTF-8 /]
+[module request('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+
+[**
+ * Gets the OrderedSet of parameters without the return parameter.
+ * @param o The operation for which the list of parameters should be returned. 
+ */]
+[query public request_parameter_only(o : Operation) 
+ : OrderedSet(Parameter) 
+ = o.ownedParameter->select(direction <> ParameterDirectionKind::return)/]
+
+[**
+ * @brief Get the OrderedSet of the Operation return values.
+ * @param o The operation for which the return values will be given.
+ */]
+[query public request_return_value(o : Operation) 
+ : OrderedSet(Parameter) 
+ = o.ownedParameter->select(direction = ParameterDirectionKind::return)/]

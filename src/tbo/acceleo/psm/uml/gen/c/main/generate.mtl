@@ -1,0 +1,22 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module generate.
+ */]
+[module generate('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::files::packageHFile /]
+[import tbo::acceleo::psm::uml::gen::c::files::packageCFile /]
+
+[**
+ * The documentation of the template uml2c.
+ * @param aModel
+ */]
+[template public uml2c(aModel : Model)]
+[comment @main/]
+[generatePackageH(aModel)/]
+[generatePackageC(aModel)/]
+[for (aPackage : Package|aModel.eAllContents(Package))]
+    [generatePackageH(aPackage)/]
+    [generatePackageC(aPackage)/]
+[/for]
+[/template]

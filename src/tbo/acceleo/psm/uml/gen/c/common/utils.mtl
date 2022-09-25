@@ -1,0 +1,50 @@
+[comment encoding = UTF-8 /]
+[module utils('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[**
+ * @brief Follows each newline symbol with a prefix string.
+ * @param aString The string in which the newlines should be replaced.
+ * @param line_prefix The string that should be inserted after each line 
+ *     separator. 
+ */]
+[query public indent_newlines(aString : String, line_prefix : String) : String =
+  aString.replaceAll('\\r\\n|[\\r\\n]', lineSeparator()+line_prefix)/]
+
+[**
+ * @brief Returns the guard definition for the header file. 
+ */]
+[query public header_guard(name : String) : String 
+   = name.toUpper().concat('_H')/]
+
+[query public get_package_folder(aPackage : Package) : String = 
+                                       aPackage.name + '/'/]
+
+[query public get_package_h_filename(aPackage : Package) : String = 
+                             aPackage.name+'.h'/]
+
+[query public get_package_h_path(aPackage : Package) : String = 
+               get_package_folder(aPackage) + get_package_h_filename(aPackage)/]
+
+[query public get_package_qualified_folder(aPackage : Package) : String = 
+   if aPackage.eContainer(Package).oclIsUndefined() then ''
+   else get_package_qualified_folder(aPackage.eContainer(Package)) 
+   + get_package_folder(aPackage) endif/]
+
+[query public get_package_h_qualified_path(aPackage : Package) : String = 
+     get_package_qualified_folder(aPackage) + get_package_h_filename(aPackage)/]
+
+[query public get_package_c_filename(aPackage : Package) : String = 
+                                       aPackage.name + '.c'/]
+
+[query public get_package_c_path(aPackage : Package) : String = 
+               get_package_folder(aPackage) + get_package_c_filename(aPackage)/]
+
+[query public get_package_c_qualified_path(aPackage : Package) : String = 
+     get_package_qualified_folder(aPackage) + get_package_c_filename(aPackage)/]
+
+[**
+ * Produces a string of spaces of specified length. 
+ * @length The number of spaces.
+ */]
+[query public indent(length:Integer) : String = 
+ if length > 0 then ' ' + indent(length-1) else '' endif/]

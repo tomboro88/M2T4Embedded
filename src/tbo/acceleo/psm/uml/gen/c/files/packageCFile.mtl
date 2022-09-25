@@ -1,0 +1,58 @@
+[comment encoding = UTF-8 /]
+[module packageCFile('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::utils /]
+[import tbo::acceleo::psm::uml::gen::c::common::documentation /]
+
+[template public generatePackageC(aPackage : Package)
+    {ownedPackageHeaders : Collection(String) 
+         = aPackage.packagedElement->filter(Package
+         )->select(p : Package | not (p.visibility = VisibilityKind::public)
+         )->collect(p:Package|p.get_package_h_path());}]
+
+[file (get_package_c_qualified_path(aPackage), false, 'UTF-8')]
+[documentationCFile('The ' + aPackage.name + ' package source file.')/]
+
+/*******************************************************************************
+ * 
+ * Include statements.
+ * 
+ ******************************************************************************/
+#include "[get_package_h_filename(aPackage)/]"
+[for (s : String | ownedPackageHeaders)]
+#include "[s/]"
+[/for]
+/*******************************************************************************
+ *
+ * Data type, constant, and macro definitions.
+ *
+ ******************************************************************************/
+
+/*******************************************************************************
+ * 
+ * Private function prototypes.
+ * 
+ ******************************************************************************/
+
+/*******************************************************************************
+ * 
+ * Static data declarations.
+ * 
+ ******************************************************************************/
+
+/*******************************************************************************
+ * 
+ * Public function bodies.
+ * 
+ ******************************************************************************/
+
+/*******************************************************************************
+ * 
+ * Private function bodies.
+ * 
+ ******************************************************************************/
+
+/*** end of file ***/
+
+[/file]
+[/template]

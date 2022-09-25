@@ -1,0 +1,116 @@
+[comment encoding = UTF-8 /]
+[module doxygen('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::utils/]
+[import tbo::acceleo::psm::uml::gen::c::request::request/]
+
+[**
+ * Get the operation parameter doxygen documentation header.
+ * @param aParameter Parameter that should be documented.
+ */]
+[query private doxygen_param(aParameter : Parameter) : String = 
+      doxygen_param(aParameter.direction, aParameter.name)/]
+
+[**
+ * Get the operation parameter doxygen documentation header.
+ * @param aParameter Parameter that should be documented.
+ */]
+[query private doxygen_param(aDirection : ParameterDirectionKind,
+                            aName : String) : String = 
+      '@param ' + doxygen_param_dir(aDirection) + ' ' + aName + ' '/]
+
+[query private doxygen_return(aString : String) : String = 
+      '@return ' + aString/]
+
+[**
+ * Get the doxygen specification of the operation parameter direction. 
+ */]
+[query private doxygen_param_dir(aDirection : ParameterDirectionKind) : String
+ = '[' + if (aDirection = ParameterDirectionKind::inout)
+         then 'in,out' else aDirection endif + ']' /]
+
+[query private doxygen_brief (aString : String) : String = 
+'@brief ' + aString + lineSeparator()/]
+
+[query private doxygen_file (aString : String) : String = 
+'@file ' + aString/]
+
+[query private doxygen_line_prefix(aString : String) : String = 
+  ' * ' + aString /]
+
+[**
+ * @brief Follows each newline symbol with a prefix string.
+ * @param aString The string in which the newlines should be replaced.
+ * @param line_prefix The string that should be inserted after each line 
+ *     separator. 
+ */]
+[query private doxygen_newlines(aString : String, line_prefix : String) : 
+  String = indent_newlines(aString, line_prefix.doxygen_line_prefix())/]
+
+[template private doxygen_block(aString : String)]
+/**
+[aString/] */
+[/template]
+
+[**
+ * Concatenates a set of comments with additoinal prefix into a documentation 
+ * block.  
+ * @param setComments The comments that should be concatenated.
+ * @param before_comments The text that should be inserted before the first 
+ * comment.
+ */]
+[template private doxygen_comments(setComments : Set(Comment),
+                     before_comments : String)
+                     {spaces : String = '    '.first(before_comments.size());
+                      b_is_not_empty : Boolean = 
+                                (before_comments.size()>0) 
+                                 or (not setComments->isEmpty());}]
+[if (b_is_not_empty)
+][before_comments.doxygen_line_prefix()
+/][/if][for (aComment: Comment | setComments)
+                       separator(lineSeparator()+ spaces.doxygen_line_prefix())
+][aComment._body.doxygen_newlines(spaces)/][/for][if (b_is_not_empty)
+][lineSeparator()/][/if]
+[/template]
+
+[**
+ * @brief The template that generates doxygen documentation 
+ * for the given object.
+ */]
+[template public doxygen_documentation(anElement: Element) 
+                                                    post(doxygen_block())]
+[doxygen_comments(anElement.ownedComment,'')
+/][if (anElement.oclIsKindOf(Operation))]
+[if (not anElement.oclAsType(Operation).isStatic)]
+[doxygen_param(ParameterDirectionKind::_in, 'p_obj').doxygen_line_prefix()
+/]The pointer to the self object.
+[/if]
+[for (aParameter : Parameter | 
+                      request_parameter_only(anElement.oclAsType(Operation)))
+][doxygen_comments(aParameter.ownedComment, doxygen_param(aParameter))
+/][/for][if (not anElement.oclAsType(Operation).type.oclIsUndefined())]
+[doxygen_comments(
+   request_return_value(anElement.oclAsType(Operation))->first().ownedComment,
+   doxygen_return(''))/][/if]
+[/if]
+[/template]
+
+[**
+ * @brief The template for doxygen documentation of a header file. 
+ */]
+[template public doxygen_header_doc(anElement: Element)
+                             post(doxygen_block())]
+[doxygen_file('').doxygen_line_prefix()/]
+[doxygen_line_prefix('')/]
+[doxygen_comments(anElement.ownedComment,'')/]
+[/template]
+
+[**
+ * @brief The template for doxygen documentation of a source file. 
+ */]
+[template public doxygen_source_doc(aBrief: String)
+                             post(doxygen_block())]
+[doxygen_file('').doxygen_line_prefix()/]
+[doxygen_line_prefix('')/]
+[aBrief.doxygen_brief().doxygen_line_prefix()/]
+[/template]

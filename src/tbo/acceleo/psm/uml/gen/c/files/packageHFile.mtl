@@ -1,0 +1,33 @@
+[comment encoding = UTF-8 /]
+[module packageHFile('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::documentation /]
+[import tbo::acceleo::psm::uml::gen::c::common::utils /]
+
+
+[template public generatePackageH(aPackage : Package)
+ {ownedPackageHeaders : Collection(String) 
+         = aPackage.packagedElement->filter(Package
+         )->select(p : Package | p.visibility = VisibilityKind::public
+         )->collect(p:Package|p.get_package_h_path());}]
+
+[file (get_package_h_qualified_path(aPackage), false, 'UTF-8')]
+[documentationHFile(aPackage)/]
+
+#ifndef [aPackage.name.header_guard()/]
+#define [aPackage.name.header_guard()/]
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+    [for (s : String | ownedPackageHeaders)]
+#    include "[s/]"
+    [/for]
+
+#ifdef  __cplusplus
+}
+#endif
+
+#endif  /* [aPackage.name.header_guard()/] */
+[/file]
+[/template]

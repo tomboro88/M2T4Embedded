@@ -1,0 +1,16 @@
+[comment encoding = UTF-8 /]
+[module documentation('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::doxygen/]
+
+[template public documentationCFile(aBrief : String)]
+[doxygen_source_doc(aBrief)/]
+[/template]
+
+[template public documentationHFile(anElement: Element)]
+[doxygen_header_doc(anElement)/]
+[/template]
+
+[template public documentationElement(anElement: Element)]
+[doxygen_documentation(anElement)/]
+[/template]

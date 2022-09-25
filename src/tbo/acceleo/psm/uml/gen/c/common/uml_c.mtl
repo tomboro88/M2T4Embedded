@@ -1,0 +1,287 @@
+[comment encoding = UTF-8 /]
+[module uml_c('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::documentation/]
+[import tbo::acceleo::psm::uml::gen::c::common::utils/]
+[import tbo::acceleo::psm::uml::gen::c::request::request/]
+
+[**
+ * Provides the type of the operation return value. 
+ */]
+[query private uml_c_operation_return_type(anOperation : Operation) : String = 
+  if anOperation.visibility = VisibilityKind::private
+  then 'static ' else '' endif + if anOperation.type.oclIsUndefined() 
+  then 'void' 
+  else uml_c_parameter_type(request_return_value(anOperation)->first()) endif /]
+
+[**
+ * This query decides if a parameter is passed by copy or by reference. 
+ */]
+[query private uml_c_param_by_ref(p : Parameter) : Boolean = 
+    (not p.type.oclIsKindOf(DataType)) 
+    or (p.direction = ParameterDirectionKind::inout)
+    or (p.direction = ParameterDirectionKind::out)
+    or (p.upper <> 0 and p.upper <> 1)
+    or (p.lower = 0)/]
+
+[**
+ * This query forms a full parameter type specification string. 
+ */]
+[query private uml_c_parameter_type(p : Parameter) : String = 
+    if uml_c_param_by_ref(p)
+       and ((p.direction = ParameterDirectionKind::_in)
+            or (p.direction = ParameterDirectionKind::return
+                and p.effect = ParameterEffectKind::read)) 
+    then 'const ' else '' endif + 
+    p.type.name + if uml_c_param_by_ref(p) then '*' else '' endif/]
+
+[**
+ * This query automatically provides the correct declaration of a parameter.
+ */]
+[query private uml_c_param_decl(p : Parameter) : String = 
+    uml_c_param_decl(uml_c_parameter_type(p), p.name) /]
+
+[**
+ * This query specifies the format of function parameter declaration.
+ */]
+[query private uml_c_param_decl(type : String, name : String) : String = 
+    type.trim() + ' const ' + name.trim() /]
+
+[**
+ * This query provides the declaration of the function self parameter.
+ */]
+[query private uml_c_parameter_self(o : Operation) : String = 
+    uml_c_param_decl(if o.isQuery then 'const ' else '' endif 
+                   + o.class.name + '*', 'p_obj') /]
+
+[**
+ * Returns a sequence of strings representing parameters from the operation 
+ * parameter list. 
+ */]
+[query private uml_c_param_strings(o:Operation) : Sequence(String) =
+  if request_parameter_only(o)->isEmpty()
+  then
+    Sequence{if (not o.isStatic) 
+    then uml_c_parameter_self(o) 
+    else 'void'
+    endif}
+  else
+    if (not o.isStatic)
+    then 
+      (request_parameter_only(o)->collect(p : Parameter|uml_c_param_decl(p))
+         )->prepend(uml_c_parameter_self(o))
+    else
+      request_parameter_only(o)->collect(p : Parameter|uml_c_param_decl(p))
+    endif
+  endif /]
+
+[**
+ * This query checks if the parameter declaration will fit the specified width
+ * after being splitted an the ' const ' token (Assumes the token is present).
+ */]
+[query private uml_c_fits_param_width(s : String, width : Integer) : 
+ Boolean = 
+ let index : Integer = s.lastIndex(' const ') in (
+   (index-1) <= width and (s.size()-index)<=width)/]
+
+[**
+ * Concatenates the strings in the sequence so that each result string 
+ * is no longer than the specified width.
+ * @param aSequence The sequence of strings that should be concatenated.
+ * @param width The sequence of width for each result string. If its number of 
+ * elements is lower that the number of strings, the las width will be used for 
+ * the rest of the strings.
+ */]
+[query private uml_c_concat_short_params(aSequence : Sequence(String), 
+                                      width : Sequence(Integer))
+ : Sequence(String) = 
+ if aSequence->size() > 1 and width->size() > 0 then
+   let joined_string : String = aSequence->at(1)+' '+ aSequence->at(2) in 
+   if joined_string.size()<=(width->first())
+   then uml_c_concat_short_params(aSequence->drop(2)->prepend(joined_string),
+                                width)
+   else aSequence->drop(1)->uml_c_concat_short_params(
+         if width->size() > 1 
+         then width->drop(1) 
+         else width endif)->prepend(aSequence->first()) 
+   endif
+ else aSequence endif/]
+
+[**
+ * Splits the operation parameter declarations that are too long to fit the 
+ * given width. 
+ * @param aSequence The sequence of strings that should be splitted.
+ * @param width The sequence of widths for each of the input eement. If the 
+ * number of elements is lower than the number of strings, the last element
+ * will b used for the remaining strings.
+ */]
+[query private uml_c_split_long_params(aSequence : Sequence(String), 
+                                      width : Sequence(Integer))
+ : Sequence(String) = 
+ if aSequence->size() > 0 and width->size() > 0 then
+   (let s : String = aSequence->at(1)
+                    + if aSequence->size()>1 then ',' else '' endif in 
+   if s.size()<=(width->first())
+   then Sequence{s}
+   else let index : Integer = s.lastIndex(' const ') in
+        if index > 0 
+        then Sequence{s.first(index),'/**/'+s.last(s.size()-index)}
+        else Sequence{s}
+        endif
+   endif)->union(aSequence->drop(1)->uml_c_split_long_params(
+         if width->size() > 1 
+         then width->drop(1) 
+         else width endif))
+ else aSequence endif/]
+
+[**
+ * This query decides if a property is stored by copy or by reference. 
+ */]
+[query private uml_c_property_by_ref(p : Property) : Boolean = 
+    (not (p.aggregation = AggregationKind::composite
+      or p.type.oclIsKindOf(DataType)))
+    or (p.aggregation = AggregationKind::shared)
+    or (p.upper = *)
+    or (p.lower = 0)/]
+
+[**
+ * This query forms a full property type specification string. 
+ */]
+[query private uml_c_property_type(p : Property) : String = 
+    p.type.name + if uml_c_property_by_ref(p) then '*' else '' endif/]
+
+[**
+ * @brief Provides C declaration of an UML LiteralSpecification.
+ */]
+[template public uml_c_literal_definition(ls : LiteralSpecification) 
+  ?(not (ls.name.oclIsUndefined() or ls.name.oclIsInvalid()))]
+[documentationElement(ls)/]
+#define [ls.name.toUpper()/] [ls.eGet('value')/]
+[/template]
+
+[**
+ * Provides C declaration of a class.
+ * @param aClass The class that should be declared.
+ * @param indentation The number of spaces the declaration is indented from 
+ * the left margin.
+ */]
+[template public uml_c_class_decl(aClass : Class, indentation : Integer)
+  ?(not aClass.attribute->select(p : Property | not p.isStatic)->isEmpty())]
+[documentationElement(aClass)/]
+typedef struct
+{
+    [for (p: Property | aClass.ownedAttribute)]
+    [documentationElement(p)/]
+    [uml_c_property_decl(p,indentation + 4)/]
+    [/for]
+} [aClass.name/];
+[/template]
+
+[**
+ * Provides C declaration of an operation.
+ * @param anOperation The operation that should be declared.
+ * @param indentation The number of spaces the declaration is indented from 
+ * left margin. 
+ */]
+[template public uml_c_operation_decl(anOperation : Operation,
+                                        indentation : Integer)]
+[uml_c_format_param_list(uml_c_operation_return_type(anOperation) 
+                                + ' ' + anOperation.name,
+                                uml_c_param_strings(anOperation),
+                                indentation)/];
+[/template]
+
+[**
+ * Provides the C definition of an operation. 
+ */]
+[template public uml_c_operation_definition(anOperation : Operation,
+                                      indentation : Integer)]
+[documentationElement(anOperation)/]
+[uml_c_operation_return_type(anOperation)/]
+[uml_c_format_param_list(anOperation.name,
+                                uml_c_param_strings(anOperation),indentation)/]
+{
+    [for (b: Behavior | anOperation.method)]
+    [if (b.eGet('language')->includes('C'))]
+    [let bd : String = b.eGet('body')->at(b.eGet('language')->indexOf('C'))]
+    [bd.indent_newlines(indent(4))/]
+    [/let]
+    [/if]
+    [/for]
+}
+[/template]
+
+[**
+ * Prints an Operation parameter list, preceded by a prefix string.
+ * @param prefix The string that should be printed in the same line before the
+ *     opening parenthesis.
+ * @param aSequence The sequence of strings representing parameter declarations.
+ * @param indentation The number of spaces the whole block is indented. 
+ */]
+[template private 
+  uml_c_format_param_list(prefix : String, aSequence : Sequence(String),
+                                 indentation : Integer)
+  {line_width : Integer = getProperty('line_width').oclAsType(Integer) 
+                          - indentation;
+   line_sep : String = '\\'+lineSeparator();
+   alt_indent : Integer = 8;
+   default_param_width: Integer = line_width-2-prefix.size();
+   alt_param_width: Integer = line_width-1-alt_indent;
+   b_fits_default_param_width : Boolean = aSequence->forAll(s:String 
+                            | s.uml_c_fits_param_width(default_param_width));
+   sep : String = if b_fits_default_param_width 
+                  then line_sep + indent(prefix.size()+1)
+                  else line_sep + indent(alt_indent)
+                  endif;
+   param_width : Integer = if b_fits_default_param_width 
+                           then default_param_width
+                           else alt_param_width
+                           endif;
+   b_prepend_linebreak : Boolean = if aSequence->notEmpty() 
+              then not (b_fits_default_param_width 
+                        or aSequence->first().size() <= default_param_width) 
+              else false endif;
+   first_param_width : Integer = if b_prepend_linebreak 
+                                 then alt_param_width
+                                 else default_param_width endif;
+   width_sequence : Sequence(Integer) = Sequence{first_param_width,param_width};
+   splitted : Sequence(String) = 
+            aSequence->uml_c_split_long_params(width_sequence);
+   grouped : Sequence(String) = 
+            splitted->uml_c_concat_short_params(width_sequence);}]
+[prefix
+/][if (b_prepend_linebreak)][line_sep + indent(alt_indent-1)
+/][/if]([for (s : String | grouped) separator(sep)][s/][/for])
+[/template]
+
+[**
+ * This template forms a full property type specification string. 
+ */]
+[template private uml_c_property_multiplicity(p : Property)
+    ?((p.upper <> *) and (p.upper <> 1) and (p.upper <> 0) and 
+      (not p.upper.oclIsUndefined()))
+    {name : String = if p.upperValue.name.oclIsUndefined() 
+                     then '' else p.upperValue.name.trim() endif;
+     b_is_literal : Boolean = (not p.upperValue.name.oclIsUndefined())
+                               and (name.size() > 0)
+                               and name.first(1).isAlpha();}]
+['['/][if (b_is_literal)][name.toUpper()/][else][p.upper/][/if][']'/]
+[/template]
+
+[**
+ * @brief Inserts a Property declaration string.
+ * @param p The property that should be declared.
+ * @param indentation How much the declaration is indented.
+ */]
+[template private uml_c_property_decl(p: Property, indentation : Integer) 
+    {s : String = '                               ';
+     t : String = p.uml_c_property_type();
+     m : String = p.uml_c_property_multiplicity();
+     sep : String = '\\' +lineSeparator() + s + ' ';
+     line_width : Integer = getProperty('line_width').oclAsType(Integer) 
+                          - indentation;}]
+[t/][(if t.size() <= s.size() then s.substring(t.size()) 
+      else ' '+sep
+      endif)/][p.name/][if ((p.name.size() + m.size()+1)
+                             >(line_width-s.size()-1))][sep/][/if][m/];
+[/template]
