@@ -9,7 +9,7 @@
  * Provides the type of the operation return value. 
  */]
 [query private uml_c_operation_return_type(anOperation : Operation) : String = 
-  if uml_c_source_visibility()->includes(anOperation.visibility)
+  if anOperation.visibility = VisibilityKind::private
   then 'static ' else '' endif + if anOperation.type.oclIsUndefined() 
   then 'void' 
   else uml_c_parameter_type(request_return_value(anOperation)->first()) endif /]
@@ -33,7 +33,8 @@
             or (p.direction = ParameterDirectionKind::return
                 and p.effect = ParameterEffectKind::read)) 
     then 'const ' else '' endif + 
-    p.type.name + if uml_c_param_by_ref(p) then '*' else '' endif/]
+    uml_c_get_type_name(p.type) + 
+    if uml_c_param_by_ref(p) then '*' else '' endif/]
 
 [**
  * This query automatically provides the correct declaration of a parameter.
@@ -52,7 +53,8 @@
  */]
 [query private uml_c_parameter_self(o : Operation) : String = 
     uml_c_param_decl(if o.isQuery then 'const ' else '' endif 
-                   + o.class.name + '*', 'p_obj') /]
+          + uml_c_get_type_name(o.request_operation_owner_classifier())
+          + '*', 'p_obj') /]
 
 [**
  * Returns a sequence of strings representing parameters from the operation 
@@ -148,17 +150,22 @@
  * Recognizes some of the common fixed size integer and floating point types
  * and replaces their names with names of appropriate c language types.
  */]
-[query private uml_c_type_name(name: String) : String = 
- let n : String = name.toLower() in
+[query private uml_c_get_type_name(aType: Type) : String = 
+ let n : String = aType.name.toLower() in
  let predefined : Set(String) = Set {'int8', 'uint8', 'int16', 'uint16', 
  'int32', 'uint32', 'int64', 'uint64', 'float32', 'float64', 'float128'} in
  if predefined->includes(n) then
-    n + '_t'
+    n + uml_c_get_type_suffix(aType)
  else
-    if predefined->collect(s : String | s + '_t')->includes(n) then
+    if predefined->collect(s : String | s + uml_c_get_type_suffix(aType))
+       ->includes(n) then
         n
     else
-        name
+        if aType.oclIsKindOf(PrimitiveType) then
+            n
+        else
+        uml_c_get_element_full_name(aType) + uml_c_get_type_suffix(aType)
+        endif
     endif
  endif 
  /]
@@ -167,7 +174,7 @@
  * This query forms a full property type specification string. 
  */]
 [query private uml_c_property_type(p : Property) : String = 
-    uml_c_type_name(p.type.name) + 
+    uml_c_get_type_name(p.type) + 
     if uml_c_property_by_ref(p) then '*' else '' endif/]
 
 [**
@@ -207,6 +214,7 @@
       endif
     endif/]
 
+
 [query public uml_c_header_visibility(traceabilityContext : OclAny) : 
       Set(VisibilityKind) = 
       Set{VisibilityKind::public, VisibilityKind::protected, 
@@ -214,7 +222,14 @@
 
 [query public uml_c_source_visibility(traceabilityContext : OclAny) : 
       Set(VisibilityKind) = 
-      VisibilityKind.allInstances()->removeAll(uml_c_header_visibility())/]
+      request_all_visibilities()->removeAll(uml_c_header_visibility())/]
+
+[query public uml_c_header_operation_visibility(traceabilityContext : OclAny) :
+      Set(VisibilityKind) = Set{VisibilityKind::public}/]
+
+[query public uml_c_source_operation_visibility(traceabilityContext : OclAny) :
+      Set(VisibilityKind) = request_all_visibilities()
+      ->removeAll(uml_c_header_operation_visibility())/]
 
 [**
  * @brief Returns a Sequence of namespaces that should b visible in a header
@@ -285,12 +300,8 @@
   request_non_packaged_children(aPackage)->filter(LiteralSpecification)
   ->removeAll(uml_c_header_literal_specifications(aPackage))/]
 
-[query public uml_c_get_classifier_suffix(aNamedElement:NamedElement) : String 
+[query public uml_c_get_type_suffix(aType:Type) : String 
 = '_t'/]
-
-[query public uml_c_get_type_name(aClassifier:Classifier) : String = 
- uml_c_get_element_full_name(aClassifier)
- + uml_c_get_classifier_suffix(aClassifier)/]
 
 [template public uml_c_get_literal_string(ls:LiteralSpecification)] 
 [let lun : LiteralUnlimitedNatural = ls.oclAsType(LiteralUnlimitedNatural)]
@@ -360,11 +371,11 @@
   ?(aClassifier.request_has_attributes())
   {attr_indentation : Integer = getProperty('indent_width').toInteger();
    spaces : String = indent(attr_indentation);}]
-[documentationElement(aClassifier)/]
+[documentationElement(aClassifier,indentation)/]
 typedef struct
 {
 [for (p: Property | aClassifier.attribute)]
-[spaces/][documentationElement(p)/]
+[spaces/][documentationElement(p,indentation + attr_indentation)/]
 [spaces/][uml_c_property_decl(p,indentation + attr_indentation)/]
 [/for]
 } [uml_c_get_type_name(aClassifier)/];
@@ -372,6 +383,11 @@ typedef struct
 
 [template public uml_c_get_element_full_name(aNamedElement : NamedElement)
 ][aNamedElement.eContainer(Package).name + '_' + aNamedElement.name/][/template]
+
+[template public uml_c_get_operation_full_name(anOperation : Operation)
+][anOperation.eContainer(Package).name + '_' 
+  + anOperation.request_operation_owner_classifier().name 
+  + '_' + anOperation.name/][/template]
 
 [template public uml_c_declare_structs(aSeq:Sequence(Classifier),
                                            indentation:Integer)
@@ -391,17 +407,18 @@ typedef struct
 [template public uml_c_operation_decl(anOperation : Operation,
                                         indentation : Integer)]
 [uml_c_format_param_list(uml_c_operation_return_type(anOperation) 
-                                + ' ' + anOperation.name,
-                                uml_c_param_strings(anOperation),
-                                indentation)/];
+                         + ' ' + anOperation.uml_c_get_operation_full_name(),
+                         uml_c_param_strings(anOperation),
+                         indentation)/];
 [/template]
 
 [**
  * Provides the C definition of an operation. 
  */]
 [template public uml_c_operation_definition(anOperation : Operation,
-                                      indentation : Integer)]
-[documentationElement(anOperation)/]
+                                      indentation : Integer)
+    {indent_width : Integer = getProperty('indent_width').toInteger();}]
+[documentationElement(anOperation,indentation)/]
 [uml_c_operation_return_type(anOperation)/]
 [uml_c_format_param_list(anOperation.name,
                                 uml_c_param_strings(anOperation),indentation)/]
@@ -409,7 +426,7 @@ typedef struct
     [for (b: Behavior | anOperation.method)]
     [if (b.eGet('language')->includes('C'))]
     [let bd : String = b.eGet('body')->at(b.eGet('language')->indexOf('C'))]
-    [bd.indent_newlines(indent(4))/]
+[indent(indent_width)/][bd.indent_newlines(indent(indent_width))/]
     [/let]
     [/if]
     [/for]
@@ -426,7 +443,7 @@ typedef struct
 [template private 
   uml_c_format_param_list(prefix : String, aSequence : Sequence(String),
                                  indentation : Integer)
-  {line_width : Integer = getProperty('line_width').oclAsType(Integer) 
+  {line_width : Integer = getProperty('line_width').toInteger()
                           - indentation;
    line_sep : String = '\\'+utils_newline();
    alt_indent : Integer = 8;
@@ -497,7 +514,20 @@ typedef struct
 [template private uml_c_literal_definition(ls : LiteralSpecification,
                                           indentation : Integer) 
   ?(not (ls.name.oclIsUndefined() or ls.name.oclIsInvalid()))]
-[indent(indentation)/][documentationElement(ls)/]
-#[indent(indentation)/]define [ls.eContainer(Package).name.toUpper() + '_' 
-          + ls.name.toUpper()/] [ls.uml_c_get_literal_string()/]
+[indent(indentation)/][documentationElement(ls,indentation)/]
+#[indent(indentation)/]define [ls.uml_c_get_element_full_name().toUpper()
+                               /] [ls.uml_c_get_literal_string()/]
+[/template]
+
+[template public uml_c_declare_operations(aSeq:Sequence(Classifier),
+                                          vis : Set(VisibilityKind), 
+                                          indentation : Integer)]
+[for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
+      ?(not aClassifier.ownedMember->filter(Operation)->isEmpty())]
+[for (o: Operation | aClassifier.ownedMember->filter(Operation)
+                     ->sortedBy(o:Operation|o.name))
+     ?(vis->includes(o.visibility))]
+[indent(indentation)/][uml_c_operation_decl(o,indentation)/]
+[/for]
+[/for]
 [/template]

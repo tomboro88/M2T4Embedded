@@ -70,3 +70,23 @@
    let directChildren : Sequence(PackageableElement) 
                       = aPackage.request_direct_children() in
    directChildren->union(directChildren.eAllContents(PackageableElement))/]
+
+[query public request_operation_owner_classifier(anOperation : Operation) : 
+ Classifier = if anOperation.class.oclIsUndefined() then
+              if anOperation.datatype.oclIsUndefined() then
+              if anOperation.interface.oclIsUndefined() then null
+              else anOperation.interface endif
+              else anOperation.datatype endif
+              else anOperation.class endif/]
+
+[query public request_all_visibilities(traceabilityContext : OclAny) : 
+      Set(VisibilityKind) = 
+      Set{VisibilityKind::public, VisibilityKind::protected, 
+      VisibilityKind::_package, VisibilityKind::private}/]
+[**
+ * Returns the last whitespace index in the string up to th given index.
+ */]
+[query public  request_last_whitespace_index(aString:String, upto:Integer) 
+: Integer = let space_index : Integer = aString.lastIndex(' ', upto) in
+  let tab_index : Integer = aString.lastIndex('\t', upto) in
+  tab_index.max(space_index)/]

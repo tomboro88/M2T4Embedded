@@ -47,6 +47,52 @@
 [query private doxygen_newlines(aString : String, line_prefix : String) : 
   String = indent_newlines(aString, line_prefix.doxygen_line_prefix())/]
 
+[query private doxygen_split_a_long_line(aString : String, line_width: Integer,
+                                        prefix : String)
+     : String = let doxygen_prefix_length : Integer 
+                    = prefix.doxygen_line_prefix().size() in
+     if  aString.size() > doxygen_prefix_length then
+       if aString.size() > line_width then
+         let last_space : Integer = 
+             request_last_whitespace_index(aString,line_width) in
+         if last_space > doxygen_prefix_length 
+            and (not Set{' ','\t'}->includes(
+                  aString.at(doxygen_prefix_length + 1))) 
+         then
+           aString.first(last_space-1) + utils_newline() 
+           + (prefix.doxygen_line_prefix()
+              + aString.substring(last_space + 1))
+               .doxygen_split_a_long_line(line_width, prefix)
+         else
+           aString.first(line_width-3)+'...' + utils_newline() 
+           + (prefix.doxygen_line_prefix() + '...'
+              + aString.substring(line_width-2))
+               .doxygen_split_a_long_line(line_width, prefix)
+         endif
+       else
+         aString
+       endif
+     else aString endif/]
+
+[query private doxygen_split_long_lines(aString : String, line_width: Integer,
+                                        prefix : String)
+     : String = let doxygen_prefix_length : Integer 
+                    = prefix.doxygen_line_prefix().size() in
+     if  aString.size() > doxygen_prefix_length then
+       let line_length : Integer = aString.index(utils_newline()) in
+       if line_length > 0 then
+         aString.first(line_length-1).doxygen_split_a_long_line(line_width, 
+                                                                prefix)
+         + utils_newline() + 
+         if (line_length + utils_newline().size()) < aString.size() then
+           aString.substring(line_length + utils_newline().size())
+           .doxygen_split_long_lines(line_width, prefix)
+         else '' endif
+       else
+         aString.doxygen_split_a_long_line(line_width, prefix)
+       endif
+     else aString endif/]
+
 [template private doxygen_block(aString : String)]
 /**
 [aString/] */
@@ -60,9 +106,13 @@
  * comment.
  */]
 [template private doxygen_comments(anElement : Element,
-                     before_comments : String)
-                     {seqComments : Sequence(Comment) 
-                      = anElement.ancestors()->prepend(anElement)
+                     before_comments : String, line_width : Integer)
+                     post(doxygen_split_long_lines(line_width, 
+                                    '    '.first(before_comments.size())))
+                     {before_comments_prefixed : String 
+                        = before_comments.doxygen_line_prefix();
+                      seqComments : Sequence(Comment) 
+                        = anElement.ancestors()->prepend(anElement)
                         ->last().eAllContents(Comment)
                         ->select(aComment : Comment 
                             | aComment.annotatedElement->includes(anElement));
@@ -71,7 +121,7 @@
                                 (before_comments.size()>0) 
                                  or (not seqComments->isEmpty());}]
 [if (b_is_not_empty)
-][before_comments.doxygen_line_prefix()
+][before_comments_prefixed
 /][/if][for (aComment: Comment | seqComments)
                        separator(utils_newline()+ spaces.doxygen_line_prefix())
 ][aComment._body.doxygen_newlines(spaces)/][/for][if (b_is_not_empty)
@@ -82,9 +132,9 @@
  * @brief The template that generates doxygen documentation 
  * for the given object.
  */]
-[template public doxygen_documentation(anElement: Element) 
+[template public doxygen_documentation(anElement: Element, line_width : Integer) 
                                                     post(doxygen_block())]
-[doxygen_comments(anElement,'')
+[doxygen_comments(anElement,'',line_width)
 /][if (anElement.oclIsKindOf(Operation))]
 [if (not anElement.oclAsType(Operation).isStatic)]
 [doxygen_param(ParameterDirectionKind::_in, 'p_obj').doxygen_line_prefix()
@@ -92,22 +142,22 @@
 [/if]
 [for (aParameter : Parameter | 
                       request_parameter_only(anElement.oclAsType(Operation)))
-][doxygen_comments(aParameter, doxygen_param(aParameter))
+][doxygen_comments(aParameter, doxygen_param(aParameter),line_width)
 /][/for][if (not anElement.oclAsType(Operation).type.oclIsUndefined())]
 [doxygen_comments(
    request_return_value(anElement.oclAsType(Operation))->first(),
-   doxygen_return(''))/][/if]
+   doxygen_return(''),line_width)/][/if]
 [/if]
 [/template]
 
 [**
  * @brief The template for doxygen documentation of a header file. 
  */]
-[template public doxygen_header_doc(anElement: Element)
+[template public doxygen_header_doc(anElement: Element, line_width : Integer)
                              post(doxygen_block())]
 [doxygen_file('').doxygen_line_prefix()/]
 [doxygen_line_prefix('')/]
-[doxygen_comments(anElement,'')/]
+[doxygen_comments(anElement,'',line_width)/]
 [/template]
 
 [**

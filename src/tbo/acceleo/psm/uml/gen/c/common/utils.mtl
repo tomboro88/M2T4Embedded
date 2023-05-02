@@ -57,6 +57,12 @@
 utils_files_newline().characters()
 ->select(s : String | Set{'\r','\n'}->includes(s))->utils_concat()/]
 
+[query public utils_sort_by_name(aSeq:Sequence(NamedElement)) : 
+  Sequence(NamedElement)=
+  aSeq->select(n:NamedElement| ((not n.name.oclIsUndefined()) 
+                           and (not n.name.oclIsInvalid()) 
+                           and (not n.name->isEmpty())) )
+    ->sortedBy(n:NamedElement|n.name)/]
 [**
  * @brief this template is a template of a newline character.
  * 

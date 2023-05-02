@@ -7,10 +7,11 @@
 [doxygen_source_doc(aBrief)/]
 [/template]
 
-[template public documentationHFile(anElement: Element)]
-[doxygen_header_doc(anElement)/]
+[template public documentationHFile(anElement: Element, line_width: Integer)]
+[doxygen_header_doc(anElement, line_width)/]
 [/template]
 
-[template public documentationElement(anElement: Element)]
-[doxygen_documentation(anElement)/]
+[template public documentationElement(anElement: Element, indentation: Integer)]
+[doxygen_documentation(anElement,
+                       getProperty('line_width').toInteger() - indentation)/]
 [/template]

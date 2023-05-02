@@ -12,11 +12,12 @@
   headerLiteralSpecifications : Sequence(LiteralSpecification) = 
     uml_c_header_literal_specifications(aPackage);
   headerClassifiers : Sequence(Classifier) = 
-    aPackage.uml_c_header_classifiers();
+    utils_sort_by_name(aPackage.uml_c_header_classifiers())
+    .oclAsType(Classifier);
   indentation : Integer = getProperty('indent_width').toInteger();}]
 
 [file (get_package_h_qualified_path(aPackage), false, 'UTF-8')]
-[documentationHFile(aPackage)/]
+[documentationHFile(aPackage,getProperty('line_width').toInteger())/]
 
 #ifndef [aPackage.name.header_guard()/]
 #define [aPackage.name.header_guard()/]
@@ -35,6 +36,10 @@ extern "C" {
 [uml_c_literal_list(headerLiteralSpecifications, indentation)/]
 
 [uml_c_declare_structs(headerClassifiers, indentation)/]
+
+[uml_c_declare_operations(headerClassifiers, 
+                          uml_c_header_operation_visibility(), 
+                          indentation)/]
 
 #ifdef  __cplusplus
 }

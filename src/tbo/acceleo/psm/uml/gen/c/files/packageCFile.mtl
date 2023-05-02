@@ -4,6 +4,7 @@
 [import tbo::acceleo::psm::uml::gen::c::common::utils /]
 [import tbo::acceleo::psm::uml::gen::c::common::documentation /]
 [import tbo::acceleo::psm::uml::gen::c::common::uml_c/]
+[import tbo::acceleo::psm::uml::gen::c::request::request/]
 
 [template public generatePackageC(aPackage : Package)
   {header_packages : Set(Package) = uml_c_header_subpackages(aPackage)->union(
@@ -13,8 +14,12 @@
       ->removeAll(header_packages);
    sourceLiteralSpecifications : Sequence(LiteralSpecification) = 
     uml_c_source_literal_specifications(aPackage);
+   allClassifiers : Sequence(Classifier) = 
+      utils_sort_by_name(aPackage.request_non_packaged_children()
+                         ->selectByKind(Classifier)).oclAsType(Classifier);
    sourceClassifiers : Sequence(Classifier) = 
-    aPackage.uml_c_source_classifiers();}]
+      utils_sort_by_name(aPackage.uml_c_source_classifiers())
+              .oclAsType(Classifier);}]
 
 [file (get_package_c_qualified_path(aPackage), false, 'UTF-8')]
 [documentationCFile('The ' + aPackage.name + ' package source file.')/]
@@ -41,10 +46,19 @@
 [uml_c_declare_structs(sourceClassifiers, 0)/]
 /*******************************************************************************
  * 
+ * Protected and package function prototypes.
+ * 
+ ******************************************************************************/
+[uml_c_declare_operations(allClassifiers, 
+                          Set{VisibilityKind::protected, 
+                              VisibilityKind::_package}, 0)/]
+/*******************************************************************************
+ * 
  * Private function prototypes.
  * 
  ******************************************************************************/
-
+[uml_c_declare_operations(allClassifiers, 
+                          Set{VisibilityKind::private}, 0)/]
 /*******************************************************************************
  * 
  * Static data declarations.
