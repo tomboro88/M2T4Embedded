@@ -82,3 +82,11 @@
 : Integer = let space_index : Integer = aString.lastIndex(' ', upto) in
   let tab_index : Integer = aString.lastIndex('\t', upto) in
   tab_index.max(space_index)/]
+
+[query public request_needs_generalization_storage(aClassifier : Classifier) 
+: Boolean = aClassifier.generalization->exists(g : Generalization 
+   | g.general.request_needs_storage())/]
+
+[query public request_needs_storage(aClassifier : Classifier) 
+: Boolean = aClassifier.request_has_attributes() 
+            or aClassifier.request_needs_generalization_storage()/]

@@ -316,11 +316,11 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 = '_t'/]
 
 [template public uml_c_get_literal_string(ls:LiteralSpecification)] 
-[let lun : LiteralUnlimitedNatural = ls.oclAsType(LiteralUnlimitedNatural)]
-[lun.value/]u[elselet lr:LiteralReal = ls.oclAsType(LiteralReal)]
-[lr.value/][elselet lb:LiteralBoolean = ls.oclAsType(LiteralBoolean)]
-[lb.value/][elselet li:LiteralInteger = ls.oclAsType(LiteralInteger)]
-[li.value/][elselet lstr:LiteralString = ls.oclAsType(LiteralString)]
+[let lun : LiteralUnlimitedNatural = ls]
+[lun.value/]u[elselet lr:LiteralReal = ls]
+[lr.value/][elselet lb:LiteralBoolean = ls]
+[lb.value/][elselet li:LiteralInteger = ls]
+[li.value/][elselet lstr:LiteralString = ls]
 [lstr.value/][else][/let]
 [/template]
 
@@ -380,13 +380,16 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
  */]
 [template public uml_c_struct_decl(aClassifier : Classifier, 
                                   indentation : Integer)
-  ?(aClassifier.request_has_attributes())
+  ?(aClassifier.request_needs_storage())
   {attr_indentation : Integer = getProperty('indent_width').toInteger();
    spaces : String = indent(attr_indentation);}]
 [documentationElement(aClassifier,indentation)/]
 typedef struct
 {
-[for (p: Property | aClassifier.attribute)]
+[for (bC : Classifier | aClassifier.generalization.general->select(
+          aC : Classifier | aC.request_needs_storage()))]
+todo
+[/for][for (p: Property | aClassifier.attribute)]
 [spaces/][documentationElement(p,indentation + attr_indentation)/]
 [spaces/][uml_c_property_decl(p,indentation + attr_indentation)/]
 [/for]
@@ -411,7 +414,7 @@ typedef struct
      {aSorted : Sequence(Classifier) = aSeq->uml_c_sort_classifiers();}]
 [for (aClassifier : Classifier | aSorted)
  separator(utils_newline()+utils_newline())
- ?(request_has_attributes())]
+ ?(aClassifier.request_needs_storage())]
 [indent(indentation)/][uml_c_struct_decl(aClassifier, indentation)
 /][/for]
 [/template]
@@ -596,7 +599,9 @@ typedef struct
 {
     [let ob : OpaqueBehavior = aBehavior]
     [if (ob.language->includes('C'))]
-    [let bd : String = ob._body->at(ob.language->indexOf('C'))]
+    [let bd : String = 
+      let s : String = ob._body->at(ob.language->indexOf('C')) in 
+                       if s.oclIsUndefined() then '' else s endif]
 [indent(indent_width)/][bd.indent_newlines(indent(indent_width))/]
     [/let]
     [/if]
