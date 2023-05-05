@@ -15,3 +15,8 @@
 [doxygen_documentation(anElement,
                        getProperty('line_width').toInteger() - indentation)/]
 [/template]
+
+[template public documentation_string(aString: String, indentation: Integer)]
+[doxygen_doc_block_string(aString, 
+                          getProperty('line_width').toInteger() - indentation)/]
+[/template]

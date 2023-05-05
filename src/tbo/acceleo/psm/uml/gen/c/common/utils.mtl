@@ -46,8 +46,12 @@
  * Produces a string of spaces of specified length. 
  * @length The number of spaces.
  */]
-[query public indent(length:Integer) : String = 
- if length > 0 then ' ' + indent(length-1) else '' endif/]
+[query public utils_indent(length:Integer) : String = 
+ if length > 0 then ' ' + utils_indent(length-1) else '' endif/]
+
+[query public utils_get_indent_string(traceabilityContext : OclAny) : String
+ = let indent_width : Integer = getProperty('indent_width').toInteger() in
+   utils_indent(indent_width)/]
 
 [query private utils_concat(aSequence : Sequence(String)):String
 = if aSequence->isEmpty() then '' 

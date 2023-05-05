@@ -47,6 +47,9 @@
 [query private doxygen_newlines(aString : String, line_prefix : String) : 
   String = indent_newlines(aString, line_prefix.doxygen_line_prefix())/]
 
+[**
+ * Splits a long doxygen documentation block line into multiple shorter lines.
+*/]
 [query private doxygen_split_a_long_line(aString : String, line_width: Integer,
                                         prefix : String)
      : String = let doxygen_prefix_length : Integer 
@@ -74,6 +77,9 @@
        endif
      else aString endif/]
 
+[**
+ * Splits long lines in a doxygen documentation block into shorter ones.
+ */]
 [query private doxygen_split_long_lines(aString : String, line_width: Integer,
                                         prefix : String)
      : String = let doxygen_prefix_length : Integer 
@@ -108,7 +114,7 @@
 [template private doxygen_comments(anElement : Element,
                      before_comments : String, line_width : Integer)
                      post(doxygen_split_long_lines(line_width, 
-                                    '    '.first(before_comments.size())))
+                       utils_get_indent_string().first(before_comments.size())))
                      {before_comments_prefixed : String 
                         = before_comments.doxygen_line_prefix();
                       seqComments : Sequence(Comment) 
@@ -116,7 +122,8 @@
                         ->last().eAllContents(Comment)
                         ->select(aComment : Comment 
                             | aComment.annotatedElement->includes(anElement));
-                      spaces : String = '    '.first(before_comments.size());
+                      spaces : String = 
+                        utils_get_indent_string().first(before_comments.size());
                       b_is_not_empty : Boolean = 
                                 (before_comments.size()>0) 
                                  or (not seqComments->isEmpty());}]
@@ -128,6 +135,17 @@
 ][utils_newline()/][/if]
 [/template]
 
+[**
+ * Inserts a string into a separate doxygen documentation block.
+ * @param aString The string to be inserted in the documentation block.
+ * @param line_width The line width of the documentation block.
+*/]
+[template public doxygen_doc_block_string(aString:String, line_width : Integer) 
+                                                     post(doxygen_block())]
+[aString.doxygen_line_prefix().doxygen_newlines('')
+ .doxygen_split_long_lines(line_width, '')/]
+
+[/template]
 [**
  * @brief The template that generates doxygen documentation 
  * for the given object.

@@ -90,3 +90,26 @@
 [query public request_needs_storage(aClassifier : Classifier) 
 : Boolean = aClassifier.request_has_attributes() 
             or aClassifier.request_needs_generalization_storage()/]
+
+[query public request_sort_classifiers(aSeq : Sequence(Classifier)) : 
+  Sequence(Classifier)
+  = if aSeq->size() <=1 then aSeq
+    else 
+      let aRest : Sequence(Classifier) = aSeq->drop(1) in
+      let aFirst : Classifier = aSeq->first() in
+      let aRest_dependencies:Sequence(Classifier) = aRest->select(
+          c:Classifier | aFirst.request_classifier_depends(c)) in
+      let aRest_non_dependencies:Sequence(Classifier) 
+          = aRest->removeAll(aRest_dependencies) in
+      aRest_dependencies->request_sort_classifiers()->append(aFirst)
+      ->union(aRest_non_dependencies->request_sort_classifiers())
+    endif/]
+
+[query public request_classifier_depends(aClassifier:Classifier,
+                                       bClassifier:Classifier):Boolean
+ =aClassifier.attribute.type->includes(bClassifier.oclAsType(Type))
+  or aClassifier.attribute.type->exists(t:Type|
+        t.oclAsType(Classifier).request_classifier_depends(bClassifier))
+        or aClassifier.generalization.general->includes(bClassifier)
+        or aClassifier.generalization.general
+           ->exists(c:Classifier|c.request_classifier_depends(bClassifier))/]

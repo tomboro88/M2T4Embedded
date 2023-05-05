@@ -213,20 +213,6 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [query public uml_c_source_dependencies(aPackage:Package):Set(Package) =
     request_visible_dependencies(aPackage, uml_c_source_visibility())/]
 
-[query private uml_c_sort_classifiers(aSeq : Sequence(Classifier)) : 
-  Sequence(Classifier)
-  = if aSeq->size() <=1 then aSeq
-    else 
-      let aRest : Sequence(Classifier) = aSeq->drop(1) in
-      let aFirst : Classifier = aSeq->first() in
-      if aRest->exists(c:Classifier | 
-        aFirst.attribute.type->includes(c.oclAsType(Type)))
-      then aRest->uml_c_sort_classifiers()->append(aFirst)
-      else aRest->uml_c_sort_classifiers()->prepend(aFirst)
-      endif
-    endif/]
-
-
 [query public uml_c_header_visibility(traceabilityContext : OclAny) : 
       Set(VisibilityKind) = 
       Set{VisibilityKind::public, VisibilityKind::protected, 
@@ -343,7 +329,7 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
  */]
 [template public uml_c_include_local_file(aFile : String, 
                                           indentation : Integer)]
-#[indent(indentation)/]include "[aFile/]"
+#[utils_indent(indentation)/]include "[aFile/]"
 [/template]
 
 [**
@@ -354,7 +340,7 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
  */]
 [template public uml_c_include_global_file(aFile : String, 
                                            indentation : Integer)]
-#[indent(indentation)/]include <[aFile/]>
+#[utils_indent(indentation)/]include <[aFile/]>
 [/template]
 
 [template public uml_c_include_dependencies(external_packages:Set(Package),
@@ -381,17 +367,20 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [template public uml_c_struct_decl(aClassifier : Classifier, 
                                   indentation : Integer)
   ?(aClassifier.request_needs_storage())
-  {attr_indentation : Integer = getProperty('indent_width').toInteger();
-   spaces : String = indent(attr_indentation);}]
+  {spaces : String = utils_get_indent_string();
+   total_indentation : Integer = indentation + spaces.size();}]
 [documentationElement(aClassifier,indentation)/]
 typedef struct
 {
 [for (bC : Classifier | aClassifier.generalization.general->select(
           aC : Classifier | aC.request_needs_storage()))]
-todo
+[spaces/][documentation_string(bC.name + ' base class data.', 
+                                total_indentation)/]
+[spaces/][uml_c_property_decl_string(bC.uml_c_get_type_name(),bC.name,'',
+                                     total_indentation)/]
 [/for][for (p: Property | aClassifier.attribute)]
-[spaces/][documentationElement(p,indentation + attr_indentation)/]
-[spaces/][uml_c_property_decl(p,indentation + attr_indentation)/]
+[spaces/][documentationElement(p,total_indentation)/]
+[spaces/][uml_c_property_decl(p,total_indentation)/]
 [/for]
 } [uml_c_get_type_name(aClassifier)/];
 [/template]
@@ -411,11 +400,11 @@ todo
 
 [template public uml_c_declare_structs(aSeq:Sequence(Classifier),
                                            indentation:Integer)
-     {aSorted : Sequence(Classifier) = aSeq->uml_c_sort_classifiers();}]
+     {aSorted : Sequence(Classifier) = aSeq->request_sort_classifiers();}]
 [for (aClassifier : Classifier | aSorted)
  separator(utils_newline()+utils_newline())
  ?(aClassifier.request_needs_storage())]
-[indent(indentation)/][uml_c_struct_decl(aClassifier, indentation)
+[utils_indent(indentation)/][uml_c_struct_decl(aClassifier, indentation)
 /][/for]
 [/template]
 
@@ -464,7 +453,7 @@ todo
     [for (b: Behavior | anOperation.method)]
     [if (b.eGet('language')->includes('C'))]
     [let bd : String = b.eGet('body')->at(b.eGet('language')->indexOf('C'))]
-[indent(indent_width)/][bd.indent_newlines(indent(indent_width))/]
+[utils_indent(indent_width)/][bd.indent_newlines(utils_indent(indent_width))/]
     [/let]
     [/if]
     [/for]
@@ -490,8 +479,8 @@ todo
    b_fits_default_param_width : Boolean = aSequence->forAll(s:String 
                             | s.uml_c_fits_param_width(default_param_width));
    sep : String = if b_fits_default_param_width 
-                  then line_sep + indent(prefix.size()+1)
-                  else line_sep + indent(alt_indent)
+                  then line_sep + utils_indent(prefix.size()+1)
+                  else line_sep + utils_indent(alt_indent)
                   endif;
    param_width : Integer = if b_fits_default_param_width 
                            then default_param_width
@@ -510,7 +499,7 @@ todo
    grouped : Sequence(String) = 
             splitted->uml_c_concat_short_params(width_sequence);}]
 [prefix
-/][if (b_prepend_linebreak)][line_sep + indent(alt_indent-1)
+/][if (b_prepend_linebreak)][line_sep + utils_indent(alt_indent-1)
 /][/if]([for (s : String | grouped) separator(sep)][s/][/for])
 [/template]
 
@@ -534,15 +523,27 @@ todo
  * @param indentation How much the declaration is indented.
  */]
 [template private uml_c_property_decl(p: Property, indentation : Integer) 
+    {t : String = p.uml_c_property_type();
+     m : String = p.uml_c_property_multiplicity();}]
+[uml_c_property_decl_string(t,p.name,m,indentation)/]
+[/template]
+
+[**
+ * @brief Inserts a Property declaration string.
+ * @param t The type String.
+ * @param n The name Sring.
+ * @param m The multiplicity string.
+ * @param indentation How much the declaration is indented.
+ */]
+[template private uml_c_property_decl_string(t:String, n:String, m:String,
+                                             indentation : Integer) 
     {s : String = '                               ';
-     t : String = p.uml_c_property_type();
-     m : String = p.uml_c_property_multiplicity();
      sep : String = '\\' +utils_newline() + s + ' ';
      line_width : Integer = getProperty('line_width').toInteger() 
                           - indentation;}]
 [t/][(if t.size() <= s.size() then s.substring(t.size()) 
       else ' '+sep
-      endif)/][p.name/][if ((p.name.size() + m.size()+1)
+      endif)/][n/][if ((n.size() + m.size()+1)
                              >(line_width-s.size()-1))][sep/][/if][m/];
 [/template]
 
@@ -552,8 +553,8 @@ todo
 [template private uml_c_literal_definition(ls : LiteralSpecification,
                                           indentation : Integer) 
   ?(not (ls.name.oclIsUndefined() or ls.name.oclIsInvalid()))]
-[indent(indentation)/][documentationElement(ls,indentation)/]
-#[indent(indentation)/]define [ls.uml_c_get_element_full_name().toUpper()
+[utils_indent(indentation)/][documentationElement(ls,indentation)/]
+#[utils_indent(indentation)/]define [ls.uml_c_get_element_full_name().toUpper()
                                /] [ls.uml_c_get_literal_string()/]
 [/template]
 
@@ -565,7 +566,7 @@ todo
 [for (o: Operation | aClassifier.ownedMember->filter(Operation)
                      ->sortedBy(o:Operation|o.name.toLower()))
      ?(vis->includes(o.visibility))]
-[indent(indentation)/][uml_c_operation_decl(o,indentation)/]
+[utils_indent(indentation)/][uml_c_operation_decl(o,indentation)/]
 [/for]
 [/for]
 [/template]
@@ -579,7 +580,7 @@ todo
                      ->sortedBy(b:Behavior|b.name.toLower()))
      ?(vis->includes(b.visibility) and (not b.specification.oclIsUndefined())
        and b.specification.oclIsKindOf(Operation))]
-[indent(indentation)/][uml_c_behavior_decl(b,indentation)/]
+[utils_indent(indentation)/][uml_c_behavior_decl(b,indentation)/]
 [/for]
 [/for]
 [/template]
@@ -602,7 +603,7 @@ todo
     [let bd : String = 
       let s : String = ob._body->at(ob.language->indexOf('C')) in 
                        if s.oclIsUndefined() then '' else s endif]
-[indent(indent_width)/][bd.indent_newlines(indent(indent_width))/]
+[utils_indent(indent_width)/][bd.indent_newlines(utils_indent(indent_width))/]
     [/let]
     [/if]
     [/let]
@@ -619,7 +620,7 @@ todo
      separator(utils_newline())
      ?(vis->includes(b.visibility) and (not b.specification.oclIsUndefined())
        and b.specification.oclIsKindOf(Operation))]
-[indent(indentation)/][uml_c_behavior_definition(b,indentation)/]
+[utils_indent(indentation)/][uml_c_behavior_definition(b,indentation)/]
 [/for]
 [/for]
 [/template]
