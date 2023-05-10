@@ -91,6 +91,20 @@
 : Boolean = aClassifier.request_has_attributes() 
             or aClassifier.request_needs_generalization_storage()/]
 
+[query private request_needs_generalization_vtable(aClassifier : Classifier) 
+  : Boolean = aClassifier.generalization->exists(g : Generalization
+    | g.general.request_needs_vtable())/]
+
+[query public request_needs_vtable(aClassifier : Classifier) : Boolean 
+ = let operations : Set(Operation) = aClassifier.ownedMember->filter(Operation)
+   in operations->exists(o : Operation | o.isAbstract)
+   or operations->exists(
+        o : Operation | o.method._context.request_all_generals()->includes(aClassifier))
+   or aClassifier.request_needs_generalization_vtable()/]
+
+[query public request_all_generals(aClassifier:Classifier) : Set(Classifier) = 
+ aClassifier.general->addAll(aClassifier.general.request_all_generals())/]
+
 [query public request_sort_classifiers(aSeq : Sequence(Classifier)) : 
   Sequence(Classifier)
   = if aSeq->size() <=1 then aSeq

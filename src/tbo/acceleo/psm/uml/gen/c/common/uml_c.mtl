@@ -66,7 +66,10 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [query private uml_c_parameter_self(o : Operation) : String = 
     uml_c_param_decl(if o.isQuery then 'const ' else '' endif 
           + o.featuringClassifier.uml_c_get_type_name()
-          + '*', 'p_obj') /]
+          + '*', uml_c_get_self_name()) /]
+
+[query public uml_c_get_self_name(traceabilityContext: OclAny) : 
+  String = 'p_obj'/]
 
 [**
  * Returns a sequence of strings representing parameters from the operation 
@@ -181,6 +184,32 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
     endif
  endif 
  /]
+
+[**
+ * Returns the name of the struct corresponding to the specific type.
+ */]
+[query private uml_c_get_struct_name(aType: Type) : String = 
+ uml_c_get_element_full_name(aType) + uml_c_get_struct_suffix(aType)/]
+
+[**
+ * Returns the name of the struct corresponding to the virtual table 
+ * of the specific type.
+ */]
+[query private uml_c_get_vtable_struct_name(aType: Type) : String = 
+ uml_c_get_vtable_name(aType) + uml_c_get_struct_suffix(aType)/]
+
+[**
+ * Returns the name of the struct corresponding to the virtual table 
+ * of the specific type.
+ */]
+[query private uml_c_get_vtable_type_name(aType: Type) : String = 
+ uml_c_get_vtable_name(aType) + uml_c_get_type_suffix(aType)/]
+
+[**
+ * Returns the name of the virtual table of the specific type.
+ */]
+[query private uml_c_get_vtable_name(aType: Type) : String = 
+ uml_c_get_element_full_name(aType) + '_vt'/]
 
 [**
  * This query forms a full property type specification string. 
@@ -301,6 +330,9 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [query public uml_c_get_type_suffix(aType:Type) : String 
 = '_t'/]
 
+[query public uml_c_get_struct_suffix(aType:Type) : String 
+= '_s'/]
+
 [template public uml_c_get_literal_string(ls:LiteralSpecification)] 
 [let lun : LiteralUnlimitedNatural = ls]
 [lun.value/]u[elselet lr:LiteralReal = ls]
@@ -358,6 +390,31 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [uml_c_include_local_file(s, indentation)/]
 [/for]
 [/template]
+
+[**
+ * Provides the definition of the type associated with a given struct.
+*/]
+[template public uml_c_struct_typedef(aClassifier : Classifier, 
+                                      indentation : Integer)
+          ?(aClassifier.request_needs_storage())]
+[uml_c_struct_typedef_string('@brief The type representing the ' 
+  + uml_c_get_struct_name(aClassifier) + ' struct.', 
+    uml_c_get_struct_name(aClassifier), uml_c_get_type_name(aClassifier), 
+    indentation)/]
+[/template]
+
+[**
+ * Provides the definition of the type associated with a given struct.
+*/]
+[template public uml_c_struct_typedef_string(doc : String,
+                                      s_name : String,
+                                      t_name : String, 
+                                      indentation : Integer)]
+[documentation_string(doc, indentation)/]
+typedef struct [s_name/] \
+        [t_name/];
+[/template]
+
 [**
  * Provides C declaration of a classifier.
  * @param aClassifier The classifier that should be declared.
@@ -370,9 +427,16 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
   {spaces : String = utils_get_indent_string();
    total_indentation : Integer = indentation + spaces.size();}]
 [documentationElement(aClassifier,indentation)/]
-typedef struct
+struct [uml_c_get_struct_name(aClassifier)/]
 {
-[for (bC : Classifier | aClassifier.generalization.general->select(
+[if (aClassifier.request_needs_vtable())]
+[spaces/][documentation_string('@brief The pointer to the virtual table of the ' 
+                               + aClassifier.name + ' class.', 
+                                total_indentation)/]
+[spaces/][uml_c_property_decl_string('const ' 
+     + aClassifier.uml_c_get_vtable_type_name()+'*','p_vtable','',
+                                     total_indentation)/]
+[/if][for (bC : Classifier | aClassifier.generalization.general->select(
           aC : Classifier | aC.request_needs_storage()))]
 [spaces/][documentation_string(bC.name + ' base class data.', 
                                 total_indentation)/]
@@ -382,7 +446,42 @@ typedef struct
 [spaces/][documentationElement(p,total_indentation)/]
 [spaces/][uml_c_property_decl(p,total_indentation)/]
 [/for]
-} [uml_c_get_type_name(aClassifier)/];
+};
+[/template]
+
+[**
+ * Provides C declaration of a virtual table struct.
+ * @param aClassifier The classifier which the virtual table should be 
+ * declared for.
+ * @param indentation The number of spaces the declaration is indented from 
+ * the left margin.
+ */]
+[template public uml_c_vtable_decl(aClassifier : Classifier, 
+                                  indentation : Integer)
+  ?(aClassifier.request_needs_vtable())
+  {spaces : String = utils_get_indent_string();
+   total_indentation : Integer = indentation + spaces.size();}]
+[documentation_string('@brief The virtual table struct for the ' 
+  + uml_c_get_struct_name(aClassifier) + ' struct.' + 
+  ' Contains pointers to all virtual methods of the class.', indentation)/]
+struct [uml_c_get_vtable_struct_name(aClassifier)/]
+{
+[for (bC : Classifier | aClassifier.generalization.general->select(
+          aC : Classifier | aC.request_needs_storage()))]
+[spaces/][documentation_string(bC.name + ' base class virtual table.', 
+                                total_indentation)/]
+[spaces/][uml_c_property_decl_string(bC.uml_c_get_vtable_type_name(),
+              bC.name,'', total_indentation)/]
+[/for][for (op: Operation | aClassifier.ownedMember->filter(Operation)
+                     ->select(o : Operation | (not o.isStatic) 
+                       and (o.isAbstract or 
+                 not o.method._context.oclAsType(Classifier)
+                 ->excluding(aClassifier)->isEmpty()))
+                 ->sortedBy(o:Operation|o.name.toLower()))]
+[spaces/][documentationElement(op,total_indentation)/]
+[spaces/][uml_c_operation_vpointer_decl(op,total_indentation)/]
+[/for]
+};
 [/template]
 
 [template public uml_c_get_element_full_name(aNamedElement : NamedElement)
@@ -403,9 +502,24 @@ typedef struct
      {aSorted : Sequence(Classifier) = aSeq->request_sort_classifiers();}]
 [for (aClassifier : Classifier | aSorted)
  separator(utils_newline()+utils_newline())
+ after(utils_newline()+utils_newline())
  ?(aClassifier.request_needs_storage())]
-[utils_indent(indentation)/][uml_c_struct_decl(aClassifier, indentation)
-/][/for]
+[if aClassifier.request_needs_vtable()]
+[utils_indent(indentation)/][uml_c_struct_typedef_string(
+       '@brief The virtual table type for the ' 
+       + uml_c_get_struct_name(aClassifier) + ' struct.', 
+       aClassifier.uml_c_get_vtable_struct_name(), 
+       aClassifier.uml_c_get_vtable_type_name(), indentation)/]
+
+[/if][utils_indent(indentation)/][uml_c_struct_typedef(aClassifier, indentation)
+/][/for][for (aClassifier : Classifier | aSorted)
+ separator(utils_newline())
+ ?(aClassifier.request_needs_storage())]
+[utils_indent(indentation)/][uml_c_struct_decl(aClassifier, indentation)/]
+[if aClassifier.request_needs_vtable()]
+
+[utils_indent(indentation)/][uml_c_vtable_decl(aClassifier, indentation)/]
+[/if][/for]
 [/template]
 
 [**
@@ -419,6 +533,20 @@ typedef struct
 [uml_c_format_param_list(anOperation.visibility.uml_c_function_visibility() 
                          + uml_c_operation_return_type(anOperation) 
                          + ' ' + anOperation.uml_c_get_operation_full_name(),
+                         uml_c_param_strings(anOperation),
+                         indentation)/];
+[/template]
+
+[**
+ * Provides C declaration of an operation.
+ * @param anOperation The operation that should be declared.
+ * @param indentation The number of spaces the declaration is indented from 
+ * left margin. 
+ */]
+[template public uml_c_operation_vpointer_decl(anOperation : Operation,
+                                        indentation : Integer)]
+[uml_c_format_param_list(uml_c_operation_return_type(anOperation) 
+                         + ' (*p_' + anOperation.name+')',
                          uml_c_param_strings(anOperation),
                          indentation)/];
 [/template]

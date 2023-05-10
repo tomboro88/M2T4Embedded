@@ -2,6 +2,7 @@
 [module doxygen('http://www.eclipse.org/uml2/5.0.0/UML')]
 
 [import tbo::acceleo::psm::uml::gen::c::common::utils/]
+[import tbo::acceleo::psm::uml::gen::c::common::uml_c/]
 [import tbo::acceleo::psm::uml::gen::c::request::request/]
 
 [**
@@ -156,7 +157,8 @@
 /][let anOp : Operation = if anElement.oclIsKindOf(Behavior) then 
                anElement.oclAsType(Behavior).specification else anElement endif]
 [if (not anOp.isStatic)]
-[doxygen_param(ParameterDirectionKind::_in, 'p_obj').doxygen_line_prefix()
+[doxygen_param(ParameterDirectionKind::_in, 
+               uml_c_get_self_name()).doxygen_line_prefix()
 /]The pointer to the self object.
 [/if]
 [for (aParameter : Parameter | 

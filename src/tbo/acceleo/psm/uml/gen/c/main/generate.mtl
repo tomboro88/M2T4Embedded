@@ -15,7 +15,8 @@
 [comment @main/]
 [generatePackageH(aModel)/]
 [generatePackageC(aModel)/]
-[for (aPackage : Package|aModel.eAllContents(Package))]
+[for (aPackage : Package|aModel.eAllContents(Package)) 
+    ?(not aPackage.oclIsKindOf(Model))]
     [generatePackageH(aPackage)/]
     [generatePackageC(aPackage)/]
 [/for]
