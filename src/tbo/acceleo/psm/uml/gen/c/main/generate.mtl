@@ -11,12 +11,12 @@
  * The documentation of the template uml2c.
  * @param aModel
  */]
-[template public uml2c(aModel : Model)]
+[template public uml2c(aModel : Model) 
+ ?(aModel.nestingPackage.oclIsUndefined())]
 [comment @main/]
 [generatePackageH(aModel)/]
 [generatePackageC(aModel)/]
-[for (aPackage : Package|aModel.eAllContents(Package)) 
-    ?(not aPackage.oclIsKindOf(Model))]
+[for (aPackage : Package|aModel.eAllContents(Package))]
     [generatePackageH(aPackage)/]
     [generatePackageC(aPackage)/]
 [/for]

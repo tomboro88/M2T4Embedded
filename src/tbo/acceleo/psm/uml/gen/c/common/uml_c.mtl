@@ -5,8 +5,11 @@
 [import tbo::acceleo::psm::uml::gen::c::common::utils/]
 [import tbo::acceleo::psm::uml::gen::c::request::request/]
 
-[query private uml_c_function_visibility(vis:VisibilityKind):String = 
-if vis = VisibilityKind::private then 'static ' else '' endif/]
+[query private uml_c_function_visibility(vis:VisibilityKind, 
+                                         b_is_extern : Boolean):String = 
+if b_is_extern then 'extern ' else
+    if vis = VisibilityKind::private then 'static ' else '' endif 
+endif/]
 
 [**
  * Provides the type of the operation return value. 
@@ -66,10 +69,7 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [query private uml_c_parameter_self(o : Operation) : String = 
     uml_c_param_decl(if o.isQuery then 'const ' else '' endif 
           + o.featuringClassifier.uml_c_get_type_name()
-          + '*', uml_c_get_self_name()) /]
-
-[query public uml_c_get_self_name(traceabilityContext: OclAny) : 
-  String = 'p_obj'/]
+          + '*', utils_get_self_name()) /]
 
 [**
  * Returns a sequence of strings representing parameters from the operation 
@@ -197,6 +197,12 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
  */]
 [query private uml_c_get_vtable_struct_name(aType: Type) : String = 
  uml_c_get_vtable_name(aType) + uml_c_get_struct_suffix(aType)/]
+
+[**
+ * Returns the name of the virtual table.
+ */]
+[query private uml_c_get_vtable_instance_name(aType : Type) : String = 
+  uml_c_get_element_full_name(aType) + '_vtable'/]
 
 [**
  * Returns the name of the struct corresponding to the virtual table 
@@ -333,6 +339,9 @@ if vis = VisibilityKind::private then 'static ' else '' endif/]
 [query public uml_c_get_struct_suffix(aType:Type) : String 
 = '_s'/]
 
+[query private uml_c_get_vtable_entry_name(anOperation : Operation) : String = 
+ 'p_' + anOperation.name/]
+
 [template public uml_c_get_literal_string(ls:LiteralSpecification)] 
 [let lun : LiteralUnlimitedNatural = ls]
 [lun.value/]u[elselet lr:LiteralReal = ls]
@@ -429,15 +438,9 @@ typedef struct [s_name/] \
 [documentationElement(aClassifier,indentation)/]
 struct [uml_c_get_struct_name(aClassifier)/]
 {
-[if (aClassifier.request_needs_vtable())]
-[spaces/][documentation_string('@brief The pointer to the virtual table of the ' 
-                               + aClassifier.name + ' class.', 
-                                total_indentation)/]
-[spaces/][uml_c_property_decl_string('const ' 
-     + aClassifier.uml_c_get_vtable_type_name()+'*','p_vtable','',
-                                     total_indentation)/]
-[/if][for (bC : Classifier | aClassifier.generalization.general->select(
-          aC : Classifier | aC.request_needs_storage()))]
+[for (bC : Classifier | aClassifier.generalization.general->select(
+          aC : Classifier | aC.request_needs_storage())
+          ->sortedBy(aC : Classifier | aC.name.toLower()))]
 [spaces/][documentation_string(bC.name + ' base class data.', 
                                 total_indentation)/]
 [spaces/][uml_c_property_decl_string(bC.uml_c_get_type_name(),bC.name,'',
@@ -445,7 +448,14 @@ struct [uml_c_get_struct_name(aClassifier)/]
 [/for][for (p: Property | aClassifier.attribute)]
 [spaces/][documentationElement(p,total_indentation)/]
 [spaces/][uml_c_property_decl(p,total_indentation)/]
-[/for]
+[/for][if (aClassifier.request_has_virtual_operations())]
+[spaces/][documentation_string('@brief The pointer to the virtual table of the ' 
+                               + aClassifier.name + ' class.', 
+                                total_indentation)/]
+[spaces/][uml_c_property_decl_string('const ' 
+     + aClassifier.uml_c_get_vtable_type_name()+'*','p_vtable','',
+                                     total_indentation)/]
+[/if]
 };
 [/template]
 
@@ -467,17 +477,13 @@ struct [uml_c_get_struct_name(aClassifier)/]
 struct [uml_c_get_vtable_struct_name(aClassifier)/]
 {
 [for (bC : Classifier | aClassifier.generalization.general->select(
-          aC : Classifier | aC.request_needs_storage()))]
+          aC : Classifier | aC.request_needs_storage())
+          ->sortedBy(aC : Classifier | aC.name.toLower()))]
 [spaces/][documentation_string(bC.name + ' base class virtual table.', 
                                 total_indentation)/]
 [spaces/][uml_c_property_decl_string(bC.uml_c_get_vtable_type_name(),
               bC.name,'', total_indentation)/]
-[/for][for (op: Operation | aClassifier.ownedMember->filter(Operation)
-                     ->select(o : Operation | (not o.isStatic) 
-                       and (o.isAbstract or 
-                 not o.method._context.oclAsType(Classifier)
-                 ->excluding(aClassifier)->isEmpty()))
-                 ->sortedBy(o:Operation|o.name.toLower()))]
+[/for][for (op: Operation | aClassifier.request_virtual_operations())]
 [spaces/][documentationElement(op,total_indentation)/]
 [spaces/][uml_c_operation_vpointer_decl(op,total_indentation)/]
 [/for]
@@ -492,10 +498,10 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
   + anOperation.featuringClassifier.name 
   + '_' + anOperation.name/][/template]
 
-[template public uml_c_get_behavior_full_name(aBehavior : Behavior)
-][aBehavior.eContainer(Package).name + '_' 
-  + aBehavior._context.name 
-  + '_' + aBehavior.name/][/template]
+[query public uml_c_get_behavior_full_name(aBehavior : Behavior) : String = 
+(if aBehavior.oclIsUndefined() then 'NULL' 
+   else aBehavior.eContainer(Package).name + '_' + aBehavior._context.name 
+   + '_' + aBehavior.name endif)/]
 
 [template public uml_c_declare_structs(aSeq:Sequence(Classifier),
                                            indentation:Integer)
@@ -522,15 +528,70 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
 [/if][/for]
 [/template]
 
+[template private uml_c_get_vtable_qualified_entry(aSeq : Sequence(String), 
+                                                   indentation : Integer,
+                                                   position : Integer)
+    {entry_width : Integer = getProperty('line_width').toInteger()-indentation
+                             -3;}]
+[aSeq->first()/][if aSeq->size() > 1][if 
+ aSeq->drop(1)->first().size() > (entry_width - aSeq->first().size() - position)
+][utils_newline()/][
+ aSeq->drop(1)->uml_c_get_vtable_qualified_entry(indentation,0)
+/][else][aSeq->drop(1)->uml_c_get_vtable_qualified_entry(indentation,position 
++ aSeq->first().size())/][/if][else][if (position + aSeq->first().size()) > 33
+][utils_newline() + utils_indent(33)/][else][
+utils_indent(33 - position - aSeq->first().size())/][/if][/if]
+[/template]
+
+[template public uml_c_init_vtable(aContext : Classifier,
+                                   aTree : Sequence(Classifier),
+                                    indentation : Integer)
+    ?((not aContext.oclIsUndefined()) and (aTree->size() >= 1))
+    {aTop : Classifier = aTree->last();
+     spaces : String = utils_get_indent_string();}]
+[for (bC : Classifier | aTop.generalization.general->select(
+          aC : Classifier | aC.request_needs_storage())
+      ->sortedBy(aC : Classifier | aC.name.toLower()))
+      separator(','+utils_newline()) 
+      after( if aTop.request_virtual_operations()->isEmpty() 
+             then '' else ',' + utils_newline() endif)]
+[aContext.uml_c_init_vtable(aTree->append(bC), indentation)
+/][/for][for (op: Operation | aTop.request_virtual_operations())
+           separator(','+utils_newline())][
+spaces/][aTree->drop(1)->collect(c : Classifier | '.' + c.name)->append(
+          '.' + uml_c_get_vtable_entry_name(op))
+         ->uml_c_get_vtable_qualified_entry(indentation+spaces.size(),0)/]= [
+    request_method_from_context(aTree,op).uml_c_get_behavior_full_name()
+    /][/for][/template]
+
+[template public uml_c_init_vtables(aClSeq : Sequence(Classifier),
+                                    indentation : Integer)
+ {spaces : String = utils_get_indent_string();
+   total_indentation : Integer = indentation + spaces.size();}]
+[for (aClassifier : Classifier | aClSeq) separator(utils_newline())
+ ?(aClassifier.request_needs_vtable())]
+[documentation_string('@brief The initialized virtual table for the ' 
+  + uml_c_get_struct_name(aClassifier) + ' struct.', indentation)/]
+static const [uml_c_get_vtable_type_name(aClassifier)
+/] [uml_c_get_vtable_instance_name(aClassifier)/] = 
+{
+[aClassifier.uml_c_init_vtable(Sequence{aClassifier}, indentation)/]
+};
+[/for]
+[/template]
+
 [**
  * Provides C declaration of an operation.
  * @param anOperation The operation that should be declared.
+ * @param b_is_extern If true the operation should be declared as extern.
  * @param indentation The number of spaces the declaration is indented from 
  * left margin. 
  */]
 [template public uml_c_operation_decl(anOperation : Operation,
+                                      b_is_extern : Boolean,
                                         indentation : Integer)]
-[uml_c_format_param_list(anOperation.visibility.uml_c_function_visibility() 
+[uml_c_format_param_list(
+                 anOperation.visibility.uml_c_function_visibility(b_is_extern) 
                          + uml_c_operation_return_type(anOperation) 
                          + ' ' + anOperation.uml_c_get_operation_full_name(),
                          uml_c_param_strings(anOperation),
@@ -546,9 +607,9 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
 [template public uml_c_operation_vpointer_decl(anOperation : Operation,
                                         indentation : Integer)]
 [uml_c_format_param_list(uml_c_operation_return_type(anOperation) 
-                         + ' (*p_' + anOperation.name+')',
-                         uml_c_param_strings(anOperation),
-                         indentation)/];
+                      + ' (*' + uml_c_get_vtable_entry_name(anOperation)+')',
+                      uml_c_param_strings(anOperation),
+                      indentation)/];
 [/template]
 
 [**
@@ -557,9 +618,11 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
  * @param indentation The number of spaces the declaration is indented from 
  * left margin. 
  */]
-[template public uml_c_behavior_decl(aBehavior : Behavior,
+[template public uml_c_behavior_decl(aBehavior : Behavior, 
+                                     b_is_extern : Boolean,
                                         indentation : Integer)]
-[uml_c_format_param_list( aBehavior.visibility.uml_c_function_visibility()
+[uml_c_format_param_list( 
+     aBehavior.visibility.uml_c_function_visibility(b_is_extern)
      + aBehavior.uml_c_behavior_return_type() 
        + ' ' + aBehavior.uml_c_get_behavior_full_name(),
          uml_c_param_strings(aBehavior.specification.oclAsType(Operation)),
@@ -573,7 +636,7 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
                                       indentation : Integer)
     {indent_width : Integer = getProperty('indent_width').toInteger();}]
 [documentationElement(anOperation,indentation)/]
-[anOperation.visibility.uml_c_function_visibility() 
+[anOperation.visibility.uml_c_function_visibility(false) 
  + uml_c_operation_return_type(anOperation)/]
 [uml_c_format_param_list(anOperation.name,
                                 uml_c_param_strings(anOperation),indentation)/]
@@ -688,27 +751,30 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
 
 [template public uml_c_declare_operations(aSeq:Sequence(Classifier),
                                           vis : Set(VisibilityKind), 
+                                          b_is_extern : Boolean,
                                           indentation : Integer)]
 [for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
-      ?(not aClassifier.ownedMember->filter(Operation)->isEmpty())]
+      ?(not aClassifier.ownedMember->filter(Operation)
+                ->select(o:Operation|vis->includes(o.visibility))->isEmpty())]
 [for (o: Operation | aClassifier.ownedMember->filter(Operation)
                      ->sortedBy(o:Operation|o.name.toLower()))
      ?(vis->includes(o.visibility))]
-[utils_indent(indentation)/][uml_c_operation_decl(o,indentation)/]
+[utils_indent(indentation)/][uml_c_operation_decl(o, b_is_extern, indentation)/]
 [/for]
 [/for]
 [/template]
 
 [template public uml_c_declare_behaviors(aSeq:Sequence(Classifier),
-                                          vis : Set(VisibilityKind), 
+                                          vis : Set(VisibilityKind),
+                                          b_is_extern : Boolean, 
                                           indentation : Integer)]
 [for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
-      ?(not aClassifier.ownedMember->filter(Behavior)->isEmpty())]
-[for (b: Behavior | aClassifier.ownedMember->filter(Behavior)
+      ?(not aClassifier.request_behaviors()
+        ->select(b : Behavior | b.request_has_operation_spec(vis))->isEmpty())]
+[for (b: Behavior | aClassifier.request_behaviors()
                      ->sortedBy(b:Behavior|b.name.toLower()))
-     ?(vis->includes(b.visibility) and (not b.specification.oclIsUndefined())
-       and b.specification.oclIsKindOf(Operation))]
-[utils_indent(indentation)/][uml_c_behavior_decl(b,indentation)/]
+     ?(b.request_has_operation_spec(vis))]
+[utils_indent(indentation)/][uml_c_behavior_decl(b,b_is_extern, indentation)/]
 [/for]
 [/for]
 [/template]
@@ -720,7 +786,7 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
                                       indentation : Integer)
     {indent_width : Integer = getProperty('indent_width').toInteger();}]
 [documentationElement(aBehavior,indentation)/]
-[aBehavior.visibility.uml_c_function_visibility() 
+[aBehavior.visibility.uml_c_function_visibility(false) 
  + aBehavior.uml_c_behavior_return_type()/]
 [uml_c_format_param_list(aBehavior.uml_c_get_behavior_full_name(),
          uml_c_param_strings(aBehavior.specification.oclAsType(Operation)),
@@ -742,12 +808,12 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
                                           vis : Set(VisibilityKind), 
                                           indentation : Integer)]
 [for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
-      ?(not aClassifier.ownedMember->filter(Behavior)->isEmpty())]
-[for (b: Behavior | aClassifier.ownedMember->filter(Behavior)
+      ?(not aClassifier.request_behaviors()
+        ->select(b : Behavior | b.request_has_operation_spec(vis))->isEmpty())]
+[for (b: Behavior | aClassifier.request_behaviors()
                      ->sortedBy(b:Behavior|b.name.toLower()))
      separator(utils_newline())
-     ?(vis->includes(b.visibility) and (not b.specification.oclIsUndefined())
-       and b.specification.oclIsKindOf(Operation))]
+     ?(b.request_has_operation_spec(vis))]
 [utils_indent(indentation)/][uml_c_behavior_definition(b,indentation)/]
 [/for]
 [/for]

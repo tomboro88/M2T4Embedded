@@ -38,7 +38,7 @@ extern "C" {
 [uml_c_declare_structs(headerClassifiers, indentation)/]
 
 [uml_c_declare_operations(headerClassifiers, 
-                          uml_c_header_operation_visibility(), 
+                          uml_c_header_operation_visibility(), false,
                           indentation)/]
 
 #ifdef  __cplusplus

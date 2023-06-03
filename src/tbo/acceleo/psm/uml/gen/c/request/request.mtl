@@ -89,17 +89,15 @@
 
 [query public request_needs_storage(aClassifier : Classifier) 
 : Boolean = aClassifier.request_has_attributes() 
-            or aClassifier.request_needs_generalization_storage()/]
+            or aClassifier.request_needs_generalization_storage()
+            or aClassifier.request_needs_vtable()/]
 
 [query private request_needs_generalization_vtable(aClassifier : Classifier) 
   : Boolean = aClassifier.generalization->exists(g : Generalization
     | g.general.request_needs_vtable())/]
 
 [query public request_needs_vtable(aClassifier : Classifier) : Boolean 
- = let operations : Set(Operation) = aClassifier.ownedMember->filter(Operation)
-   in operations->exists(o : Operation | o.isAbstract)
-   or operations->exists(
-        o : Operation | o.method._context.request_all_generals()->includes(aClassifier))
+ = aClassifier.request_has_virtual_operations()
    or aClassifier.request_needs_generalization_vtable()/]
 
 [query public request_all_generals(aClassifier:Classifier) : Set(Classifier) = 
@@ -127,3 +125,36 @@
         or aClassifier.generalization.general->includes(bClassifier)
         or aClassifier.generalization.general
            ->exists(c:Classifier|c.request_classifier_depends(bClassifier))/]
+
+[query public request_has_virtual_operations(aClassifier : Classifier) : Boolean 
+ = not aClassifier.request_virtual_operations()->isEmpty()/]
+
+[query public request_virtual_operations(aClassifier : Classifier) : 
+ OrderedSet(Operation) = 
+          aClassifier.ownedMember->filter(Operation)
+                 ->select(o : Operation | (not o.isStatic) 
+                       and (o.isAbstract or aClassifier.oclIsKindOf(Interface)
+                       or o.method._context.request_all_generals()
+                        ->includes(aClassifier)))
+                 ->sortedBy(o:Operation|o.name.toLower())/]
+
+[query public request_method_from_context(aTree : Sequence(Classifier),
+                                  anOperation : Operation) : Behavior =
+  if aTree->size() > 0 then 
+   let bhv : Behavior = anOperation.method->any(
+   b : Behavior | b._context.oclAsType(Classifier) = aTree->first()) in 
+   if bhv.oclIsUndefined() 
+      and not anOperation.featuringClassifier->includes(aTree->first()) then 
+      request_method_from_context(aTree->drop(1),anOperation)
+   else bhv endif
+  else null endif/]
+
+[query public request_has_operation_spec(aBehavior : Behavior,
+                                         vis : Set(VisibilityKind)) : Boolean =
+    vis->includes(aBehavior.visibility) 
+    and (not aBehavior.specification.oclIsUndefined())
+    and aBehavior.specification.oclIsKindOf(Operation) 
+ /]
+
+[query public request_behaviors(aClassifier : Classifier) : Set(Behavior) = 
+  aClassifier.ownedMember->filter(Behavior)/]

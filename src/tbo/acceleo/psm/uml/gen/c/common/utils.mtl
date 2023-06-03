@@ -67,6 +67,9 @@ utils_files_newline().characters()
                            and (not n.name.oclIsInvalid()) 
                            and (not n.name->isEmpty())) )
     ->sortedBy(n:NamedElement|n.name.toLower())/]
+
+[query public utils_get_self_name(traceabilityContext: OclAny) : 
+  String = 'p_obj'/]
 [**
  * @brief this template is a template of a newline character.
  * 
