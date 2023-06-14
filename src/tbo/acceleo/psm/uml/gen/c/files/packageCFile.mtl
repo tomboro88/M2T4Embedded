@@ -22,7 +22,9 @@
               .oclAsType(Classifier);
    needs_get_specific : Boolean = not allClassifiers->select(
        aClassifier : Classifier | aClassifier.request_needs_storage() 
-       and not aClassifier.general->isEmpty())->isEmpty();}]
+       and not aClassifier.general->isEmpty())->isEmpty();
+   general_extern_classifiers : Sequence(Classifier) = 
+     allClassifiers.general->select(c:Classifier|c._package <> aPackage);}]
 
 [file (get_package_c_qualified_path(aPackage), false, 'UTF-8')]
 [documentationCFile('The ' + aPackage.name + ' package source file.')/]
@@ -49,36 +51,84 @@
  * Data type, constant, and macro definitions.
  *
  ******************************************************************************/
-
+[if not sourceLiteralSpecifications
+    ->select(ls : LiteralSpecification | ls.uml_c_literalspec_need_define())
+    ->isEmpty() ]
 [uml_c_literal_list(sourceLiteralSpecifications, 0)/]
 
+[/if]
+[if (not allClassifiers->select(
+ aClassifier : Classifier | aClassifier.request_needs_storage() 
+ and not aClassifier.general->isEmpty())->isEmpty())]
+[documentation_string('@brief The macro used to initialize a pointer to the '
+  + 'child class from a pointer to the base class.\n' 
+  + documentation_param(ParameterDirectionKind::_in, 
+               'child_type', 'The name of the child class type.') + '\n'
+  + documentation_param(ParameterDirectionKind::_in, 
+               'base_field', 'The name of the field of the base class.') + '\n'
+  + documentation_param(ParameterDirectionKind::_in, 
+               'child_ptr', 'The name of the child class target pointer.'), 0)/]
+#define [aPackage.name.toUpper()
+         /]_CHILD_FROM_BASE(child_type,base_field,child_ptr)\
+        [aPackage.name/]_set_specific((char*)p_obj, \
+                             offsetof(child_type,base_field), (char**)child_ptr)
+
+[/if]
+[if sourceClassifiers->uml_c_classifiers_need_declare()]
 [uml_c_declare_structs(sourceClassifiers, 0)/]
+[/if]
 /*******************************************************************************
  * 
  * Non-private function prototypes.
  * 
  ******************************************************************************/
-[uml_c_declare_operations(allClassifiers.general
-                          ->select(c:Classifier|c._package <> aPackage), 
+[if general_extern_classifiers
+->uml_c_classifiers_operations_need_declaration(Set{VisibilityKind::protected})]
+[uml_c_declare_operations(general_extern_classifiers, 
                           Set{VisibilityKind::protected}, true, 0)/]
+[/if][if general_extern_classifiers
+ ->uml_c_classifiers_behaviors_need_declaration(
+                       Set{VisibilityKind::protected, VisibilityKind::public})]
 [uml_c_declare_behaviors(
-        allClassifiers.general->select(c:Classifier|c._package <> aPackage), 
+        general_extern_classifiers, 
         Set{VisibilityKind::protected, VisibilityKind::public}, true, 0)/]
+[/if][if sourceClassifiers
+   ->uml_c_classifiers_operations_need_declaration(Set{VisibilityKind::public})]
+[uml_c_declare_operations(sourceClassifiers, 
+                          Set{VisibilityKind::public}, false, 0)/]
+[/if][if allClassifiers
+ ->uml_c_classifiers_operations_need_declaration(Set{VisibilityKind::protected, 
+                              VisibilityKind::_package})]
 [uml_c_declare_operations(allClassifiers, 
                           Set{VisibilityKind::protected, 
                               VisibilityKind::_package}, false, 0)/]
+[/if][if allClassifiers
+ ->uml_c_classifiers_behaviors_need_declaration(Set{VisibilityKind::protected,
+                                         VisibilityKind::_package,
+                                         VisibilityKind::public})]
 [uml_c_declare_behaviors(allClassifiers, Set{VisibilityKind::protected,
                                          VisibilityKind::_package,
                                          VisibilityKind::public}, false, 0)/]
+[/if]
 /*******************************************************************************
  * 
  * Private function prototypes.
  * 
  ******************************************************************************/
+[if allClassifiers
+  ->uml_c_classifiers_operations_need_declaration(Set{VisibilityKind::private})]
 [uml_c_declare_operations(allClassifiers, 
                           Set{VisibilityKind::private}, false, 0)/]
+[/if]
+[if allClassifiers
+ ->uml_c_classifiers_behaviors_need_declaration(Set{VisibilityKind::private})]
 [uml_c_declare_behaviors(allClassifiers, Set{VisibilityKind::private}, 
                                        false, 0)/]
+[/if]
+[if not allClassifiers->select(c:Classifier | c.uml_c_needs_init_defaults())
+    ->isEmpty()]
+[uml_c_declare_defaults(allClassifiers, 0)/]
+[/if]
 /*******************************************************************************
  * 
  * Inline functions.
@@ -125,15 +175,37 @@ static inline bool
  * Public function bodies.
  * 
  ******************************************************************************/
+[if allClassifiers->uml_c_have_operations(Set{VisibilityKind::public})]
+[uml_c_define_operations(allClassifiers, Set{VisibilityKind::public}, 0)/]
+[/if]
+[if allClassifiers
+    ->request_have_operation_behaviors(Set{VisibilityKind::public})]
 [uml_c_define_behaviors(allClassifiers, Set{VisibilityKind::public}, 0)/]
+[/if]
 /*******************************************************************************
  * 
  * Non-public function bodies.
  * 
  ******************************************************************************/
+[if not allClassifiers->select(c : Classifier | 
+                     c.uml_c_needs_init_defaults())->isEmpty()]
+[uml_c_define_defaults(allClassifiers,0)/]
+[/if]
+[if allClassifiers->uml_c_have_operations(Set{VisibilityKind::_package,
+                                            VisibilityKind::private,
+                                            VisibilityKind::protected})]
+[uml_c_define_operations(allClassifiers, Set{VisibilityKind::_package,
+                                            VisibilityKind::private,
+                                            VisibilityKind::protected}, 0)/]
+[/if]
+[if allClassifiers
+    ->request_have_operation_behaviors(Set{VisibilityKind::_package,
+                                            VisibilityKind::private,
+                                            VisibilityKind::protected})]
 [uml_c_define_behaviors(allClassifiers, Set{VisibilityKind::_package,
                                             VisibilityKind::private,
                                             VisibilityKind::protected}, 0)/]
+[/if]
 /*** end of file ***/
 [/file]
 [/template]

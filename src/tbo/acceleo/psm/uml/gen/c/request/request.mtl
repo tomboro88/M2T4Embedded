@@ -129,13 +129,26 @@
 [query public request_has_virtual_operations(aClassifier : Classifier) : Boolean 
  = not aClassifier.request_virtual_operations()->isEmpty()/]
 
+[**
+ * @brief Returns true if an operation can be overriden in child classes. 
+ */]
+[query public request_is_virtual_operation(o : Operation) : Boolean
+ = (not o.isStatic) and (o.isAbstract or 
+    let aClassifier : Classifier = 
+    o.featuringClassifier->any(c : Classifier| not c.oclIsUndefined()) in 
+    if aClassifier.oclIsUndefined() then false 
+    else aClassifier.oclIsKindOf(Interface)
+         or o.method._context.request_all_generals()->includes(aClassifier) 
+    endif )/]
+
+[query public request_is_constructor(anOperation : Operation) : Boolean =
+ not anOperation.getAppliedStereotypes()
+            ->select(s : Stereotype | s.name = 'Create')->isEmpty()/]
+
 [query public request_virtual_operations(aClassifier : Classifier) : 
  OrderedSet(Operation) = 
           aClassifier.ownedMember->filter(Operation)
-                 ->select(o : Operation | (not o.isStatic) 
-                       and (o.isAbstract or aClassifier.oclIsKindOf(Interface)
-                       or o.method._context.request_all_generals()
-                        ->includes(aClassifier)))
+                 ->select(o : Operation | o.request_is_virtual_operation())
                  ->sortedBy(o:Operation|o.name.toLower())/]
 
 [query public request_method_from_context(aTree : Sequence(Classifier),
@@ -158,3 +171,27 @@
 
 [query public request_behaviors(aClassifier : Classifier) : Set(Behavior) = 
   aClassifier.ownedMember->filter(Behavior)/]
+
+[query public request_operation_behaviors(aClassifier:Classifier, 
+                                          vis : Set(VisibilityKind)) 
+: Set(Behavior) = aClassifier.request_behaviors()
+        ->select(b : Behavior | b.request_has_operation_spec(vis))/]
+
+[query public request_have_operation_behaviors(aSeq : Sequence(Classifier),
+                                               vis : Set(VisibilityKind)) 
+ : Boolean = not aSeq->select(c : Classifier | 
+                          not c.request_operation_behaviors(vis)->isEmpty())
+             ->isEmpty()/]
+
+[query public request_has_default_values(aClassifier : Classifier) : Boolean = 
+  (not aClassifier.attribute->select(p : Property | 
+                   not p.defaultValue.oclIsUndefined())->isEmpty())
+  or (not (aClassifier.general.request_has_default_values()
+      ->select(b:Boolean | b))->isEmpty()) /]
+
+[**
+ * @brief returns true if the classifier needs a constructor. 
+ */]
+[query public request_needs_constructor(aClassifier : Classifier) : Boolean = 
+  aClassifier.request_needs_vtable() 
+  or aClassifier.request_has_default_values()/]

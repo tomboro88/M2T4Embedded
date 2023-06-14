@@ -70,6 +70,43 @@ utils_files_newline().characters()
 
 [query public utils_get_self_name(traceabilityContext: OclAny) : 
   String = 'p_obj'/]
+
+[query public utils_get_vtable_name(traceabilityContext: OclAny) :
+ String = 'p_vtable'/]
+[**
+ * @brief Joins the strings in the aSeq Sequence so that whey will fit into a 
+ * line of entry_width and so that the length of the last line is 
+ * last_line_width.
+ * 
+ *   Useful for inserting chains to nested struct fields.
+ */]
+[query public utils_query_nested_field(aSeq : Sequence(String), 
+                                        entry_width : Integer,
+                                        last_line_width : Integer,
+                                        position : Integer) : 
+ String = aSeq->first() + 
+ if aSeq->size() > 1 then
+     if aSeq->drop(1)->first().size() 
+            > (entry_width - aSeq->first().size() - position) then
+         utils_newline() + 
+         aSeq->drop(1)->utils_query_nested_field(entry_width, last_line_width,
+                                                 0)
+     else 
+         aSeq->drop(1)->utils_query_nested_field(entry_width, last_line_width,
+                                                 position 
+                                                 + aSeq->first().size())
+     endif
+ else
+     if position + aSeq->first().size() > last_line_width then
+         utils_newline() + utils_indent(last_line_width)
+     else
+         utils_indent(last_line_width - position - aSeq->first().size())
+     endif
+ endif/]
+
+[query public utils_get_max_name_length(OclTreceabilityContext : OclAny) : 
+ Integer = 31/]
+
 [**
  * @brief this template is a template of a newline character.
  * 

@@ -20,3 +20,8 @@
 [doxygen_doc_block_string(aString, 
                           getProperty('line_width').toInteger() - indentation)/]
 [/template]
+
+[template public documentation_param(aDirection : ParameterDirectionKind,
+                            aName : String, aDescription : String)]
+[doxygen_param(aDirection, aName) + aDescription/]
+[/template]

@@ -15,11 +15,11 @@
  * Get the operation parameter doxygen documentation header.
  * @param aParameter Parameter that should be documented.
  */]
-[query private doxygen_param(aDirection : ParameterDirectionKind,
+[query public doxygen_param(aDirection : ParameterDirectionKind,
                             aName : String) : String = 
       '@param ' + doxygen_param_dir(aDirection) + ' ' + aName + ' '/]
 
-[query private doxygen_return(aString : String) : String = 
+[query public doxygen_return(aString : String) : String = 
       '@return ' + aString/]
 
 [**

@@ -33,14 +33,22 @@ extern "C" {
 //[protected('includes bottom')]
 //[/protected]
 
+[if not headerLiteralSpecifications
+    ->select(ls : LiteralSpecification | ls.uml_c_literalspec_need_define())
+    ->isEmpty() ]
 [uml_c_literal_list(headerLiteralSpecifications, indentation)/]
 
+[/if]
+[if headerClassifiers->uml_c_classifiers_need_declare()]
 [uml_c_declare_structs(headerClassifiers, indentation)/]
-
+[/if]
+[if headerClassifiers
+->uml_c_classifiers_operations_need_declaration(
+                                          uml_c_header_operation_visibility())]
 [uml_c_declare_operations(headerClassifiers, 
                           uml_c_header_operation_visibility(), false,
                           indentation)/]
-
+[/if]
 #ifdef  __cplusplus
 }
 #endif
