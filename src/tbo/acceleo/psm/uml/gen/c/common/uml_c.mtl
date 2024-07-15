@@ -429,8 +429,8 @@ endif/]
                 ->select(o:Operation|vis->includes(o.visibility)) /]
 
 [query public uml_c_classifiers_operations_need_declaration(
-           aSeq:Sequence(Classifier), vis : Set(VisibilityKind)) : Boolean
- = not aSeq->select(c:Classifier | 
+           anOSet:OrderedSet(Classifier), vis : Set(VisibilityKind)) : Boolean
+ = not anOSet->select(c:Classifier | 
     not c.uml_c_operations_need_declaration(vis)->isEmpty())->isEmpty()/]
 
 [query public uml_c_get_event_type_name(aClass : Class) : String
@@ -459,7 +459,7 @@ endif/]
 
 [query public uml_c_get_event_queue_size(aClass : Class, ev : Event) : 
  String = 
- (aClass.uml_c_get_element_full_name() + '_' + ev.name + '_size')
+ (aClass.uml_c_get_element_full_name() + '_' + ev.name + '_cnt')
   .toUpper()/]
 
 [query public uml_c_get_event_count(aClass : Class) : String = 
@@ -467,6 +467,13 @@ endif/]
 
 [query public uml_c_get_region_size(aRegion : Region) : String = 
  (aRegion.uml_c_get_region_full_name() + '_size').toUpper()/]
+
+[query public uml_c_get_region_initial_state_name(aRegion : Region) : String = 
+ (let initialPs:Pseudostate = request_region_initial_state(aRegion) in
+      if initialPs.oclIsUndefined() 
+      then aRegion.uml_c_get_region_full_name() + '_initial' 
+      else initialPs.uml_c_get_vertex_full_name() endif)
+ .toUpper()/]
 
 [query public uml_c_get_entry_name(aState : State) : String = 
  (aState.containingStateMachine().name + '_enter_' + aState.name).toLower()/]
@@ -755,6 +762,10 @@ struct [uml_c_get_struct_name(aClassifier)/]
   + ' Region of ' + sm.name + ' StateMachine.', 
                                 indentation)/]
 typedef enum{
+[spaces/][documentation_string('@brief The default substate of the ' 
+          + r.name + ' Region of ' + sm.name + ' StateMachine.', 
+                                total_indentation)/]
+[spaces/][r.uml_c_get_region_initial_state_name()/],
 [for (s:State | r.request_region_states())
      separator(','+utils_newline()) after(',' + utils_newline())]
 [spaces/][documentationElement(s,total_indentation)/]
@@ -805,9 +816,12 @@ struct [uml_c_get_vtable_struct_name(aClassifier)/]
 ][aRegion.eContainer(Package).name + '_' + aRegion.eContainer(StateMachine).name 
   + '_' + aRegion.name/][/template]
 
+[template public uml_c_get_vertex_full_name(aVertex : Vertex)
+post(toUpper())][aVertex.eContainer(Package).name + '_' 
+  + aVertex.eContainer(StateMachine).name + '_' + aVertex.name/][/template]
+
 [template public uml_c_get_state_full_name(aState : State)
-post(toUpper())][aState.eContainer(Package).name + '_' 
-  + aState.eContainer(StateMachine).name + '_' + aState.name/][/template]
+][uml_c_get_vertex_full_name(aState)/][/template]
 
 [template public uml_c_get_operation_full_name(anOperation : Operation)
 ][(if anOperation.uml_c_is_main_operation() then
@@ -815,14 +829,14 @@ post(toUpper())][aState.eContainer(Package).name + '_'
   + anOperation.featuringClassifier.name 
   + '_' endif + anOperation.name)/][/template]
 
-[query public uml_c_classifiers_need_declare(aSeq:Sequence(Classifier))
- : Boolean = not aSeq->select(c:Classifier | c.request_needs_storage())
+[query public uml_c_classifiers_need_declare(anOSet:OrderedSet(Classifier))
+ : Boolean = not anOSet->select(c:Classifier | c.request_needs_storage())
              ->isEmpty()/]
 
-[template public uml_c_declare_structs(aSeq:Sequence(Classifier),
+[template public uml_c_declare_structs(anOSet:OrderedSet(Classifier),
                                            indentation:Integer)
-     ?(aSeq->uml_c_classifiers_need_declare())
-     {aSorted : Sequence(Classifier) = aSeq->request_sort_classifiers();}]
+     ?(anOSet->uml_c_classifiers_need_declare())
+     {aSorted : OrderedSet(Classifier) = anOSet->request_sort_classifiers();}]
 [for (aClassifier : Classifier | aSorted)
  separator(utils_newline()+utils_newline())
  after(utils_newline()+utils_newline())
@@ -902,11 +916,11 @@ spaces/][aTree->drop(1)->collect(c : Classifier | '.' + c.name)->append(
     request_method_from_context(aTree,op).uml_c_get_behavior_full_name()
     /][/for][/template]
 
-[template public uml_c_init_vtables(aClSeq : Sequence(Classifier),
+[template public uml_c_init_vtables(aClOSet : OrderedSet(Classifier),
                                     indentation : Integer)
  {spaces : String = utils_get_indent_string();
    total_indentation : Integer = indentation + spaces.size();}]
-[for (aClassifier : Classifier | aClSeq) separator(utils_newline())
+[for (aClassifier : Classifier | aClOSet) separator(utils_newline())
  ?(aClassifier.request_needs_vtable() and 
    not aClassifier.oclIsKindOf(Interface))]
 [documentation_string('@brief The initialized virtual table for the ' 
@@ -968,6 +982,10 @@ static const [uml_c_get_vtable_type_name(aClassifier)
                          indentation)/];
 [/template]
 
+[template public uml_c_insert_text(aString : String)]
+[aString/]
+[/template]
+
 [**
  * Provides the C definition of an operation. 
  */]
@@ -984,6 +1002,8 @@ static const [uml_c_get_vtable_type_name(aClassifier)
                                 uml_c_param_strings(anOperation),indentation)/]
 {
     [if anOperation.request_is_virtual_operation()]
+[utils_indent(indent_width)/][uml_c_insert_text('/*Code for handling a virtual'
+                              + ' operation generated automatically.*/')/]
 [utils_indent(indent_width)/]if((NULL != [utils_get_self_name()/]) && (NULL != [
                            utils_get_self_name()/]->[utils_get_vtable_name()/]))
 [utils_indent(indent_width)/]{
@@ -1111,12 +1131,12 @@ static const [uml_c_get_vtable_type_name(aClassifier)
                                /] [ls.uml_c_get_literal_string()/]
 [/template]
 
-[template public uml_c_declare_operations(aSeq:Sequence(Classifier),
+[template public uml_c_declare_operations(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind), 
                                           b_is_extern : Boolean,
                                           indentation : Integer)
- ?(aSeq->uml_c_classifiers_operations_need_declaration(vis))]
-[for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
+ ?(anOSet->uml_c_classifiers_operations_need_declaration(vis))]
+[for (aClassifier : Classifier | anOSet) separator(utils_newline()) 
       ?(not aClassifier.uml_c_operations_need_declaration(vis)
                 ->isEmpty())]
 [for (o: Operation | aClassifier.uml_c_operations_need_declaration(vis)
@@ -1132,17 +1152,17 @@ static const [uml_c_get_vtable_type_name(aClassifier)
         ->select(b : Behavior | b.request_has_virtual_operation_spec(vis))/]
 
 [query public uml_c_classifiers_behaviors_need_declaration(
-       aSeq : Sequence(Classifier), vis : Set(VisibilityKind)) : Boolean
- = not aSeq->select(aClassifier : Classifier | 
+       anOSet : OrderedSet(Classifier), vis : Set(VisibilityKind)) : Boolean
+ = not anOSet->select(aClassifier : Classifier | 
        not aClassifier.uml_c_behaviors_need_declaration(vis)->isEmpty())
    ->isEmpty()/]
 
-[template public uml_c_declare_behaviors(aSeq:Sequence(Classifier),
+[template public uml_c_declare_behaviors(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind),
                                           b_is_extern : Boolean, 
                                           indentation : Integer)
-?(aSeq->uml_c_classifiers_behaviors_need_declaration(vis))]
-[for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
+?(anOSet->uml_c_classifiers_behaviors_need_declaration(vis))]
+[for (aClassifier : Classifier | anOSet) separator(utils_newline()) 
       ?(not aClassifier.uml_c_behaviors_need_declaration(vis)->isEmpty())]
 [for (b: Behavior | aClassifier.uml_c_behaviors_need_declaration(vis)
                      ->sortedBy(b:Behavior|b.name.toLower()))]
@@ -1181,10 +1201,10 @@ static const [uml_c_get_vtable_type_name(aClassifier)
     [/let]
 [/template]
 
-[template public uml_c_define_behaviors(aSeq:Sequence(Classifier),
+[template public uml_c_define_behaviors(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind), 
                                           indentation : Integer)]
-[for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
+[for (aClassifier : Classifier | anOSet) separator(utils_newline()) 
       ?(not aClassifier.request_virtual_behaviors(vis)->isEmpty())]
 [for (b: Behavior | aClassifier.request_virtual_behaviors(vis)
                      ->sortedBy(b:Behavior|b.name.toLower()))
@@ -1199,10 +1219,10 @@ static const [uml_c_get_vtable_type_name(aClassifier)
         not p.defaultValue->oclIsUndefined())->isEmpty())
        or (c.request_needs_vtable() and (not c.oclIsKindOf(Interface)))/]
 
-[template public uml_c_declare_defaults(aSeq:Sequence(Classifier),
+[template public uml_c_declare_defaults(anOSet:OrderedSet(Classifier),
                                        indentation : Integer) ]
 [for (aClassifier : Classifier | 
-      aSeq->select(c : Classifier | c.uml_c_needs_init_defaults()))]
+      anOSet->select(c : Classifier | c.uml_c_needs_init_defaults()))]
 [utils_indent(indentation)/][uml_c_format_param_list('static void ' 
                          + aClassifier.uml_c_get_init_default_name(),
                          Sequence{
@@ -1213,19 +1233,20 @@ static const [uml_c_get_vtable_type_name(aClassifier)
 [/for]
 [/template]
 
-[template public uml_c_define_defaults(aSeq:Sequence(Classifier),
+[template public uml_c_define_defaults(anOSet:OrderedSet(Classifier),
                                        indentation : Integer)
  {indent_width : Integer = getProperty('indent_width').toInteger();
   right_length : Integer = getProperty('line_width').toInteger()
                               -(indentation + indent_width 
                                 + utils_get_max_name_length() + 6);}]
 [for (aClassifier : Classifier | 
-      aSeq->select(c : Classifier | c.uml_c_needs_init_defaults())) 
+      anOSet->select(c : Classifier | c.uml_c_needs_init_defaults())) 
       separator(utils_newline())]
 [utils_indent(indentation)
 /][documentation_string('@brief The initializer function of the default values '
   + 'and virtual tables of the ' 
-  + uml_c_get_struct_name(aClassifier) + ' struct.\n' 
+  + uml_c_get_struct_name(aClassifier) + ' struct. Generated automatically for'
+  + ' properties for which a default value was specified in the UML model.\n' 
   + documentation_param(ParameterDirectionKind::_in, 
                utils_get_self_name(), 'The pointer to the self object.'), 
   indentation)/]
@@ -1281,15 +1302,15 @@ static const [uml_c_get_vtable_type_name(aClassifier)
    .indent_newlines(utils_indent(utils_get_max_name_length() + 5))
     /];[/if][/template]
 
-[query public uml_c_have_operations(aSeq:Sequence(Classifier),
+[query public uml_c_have_operations(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind)):Boolean
- = not aSeq->select(c:Classifier| not c.uml_c_get_operations(vis)->isEmpty())
+ = not anOSet->select(c:Classifier| not c.uml_c_get_operations(vis)->isEmpty())
    ->isEmpty()/]
 
-[template public uml_c_define_operations(aSeq:Sequence(Classifier),
+[template public uml_c_define_operations(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind),
                                           indentation : Integer)]
-[for (aClassifier : Classifier | aSeq) separator(utils_newline()) 
+[for (aClassifier : Classifier | anOSet) separator(utils_newline()) 
       ?(not aClassifier.uml_c_get_operations(vis)->isEmpty())]
 [for (o: Operation | aClassifier.uml_c_get_operations(vis)
                      ->sortedBy(o:Operation|o.name.toLower()))
@@ -1364,7 +1385,7 @@ static inline void
 [spaces/][spaces/][ uml_c_format_param_list(
          aRegion.uml_c_get_region_exit_name(),
          Sequence{ utils_get_self_name(),
-         aRegion.request_region_states()->first().uml_c_get_state_full_name()}, 
+         aRegion.uml_c_get_region_initial_state_name()}, 
          indentation + (spaces.size()*2)+1) /];
 [/for]
 [/if]
@@ -1393,5 +1414,43 @@ static inline void
                   uml_c_param_decl(
                          aRegion.uml_c_get_region_typedef(), 
                                     'exit_state')}, indentation+1)/];
+[/for]
+[/template]
+
+[template public uml_c_define_region_exit(sm : StateMachine, 
+                                          indentation : Integer)
+ {spaces : String = utils_get_indent_string();}]
+[for (aRegion : Region | sm.request_all_orthogonal_regions()
+                ->select(r : Region | r.request_region_needs_exit()))
+ separator(utils_newline())]
+[documentation_string('@brief Exits the ' + aRegion.name + ' region of the ' 
+ + sm.name + ' state machine.\n\nAllows to easily exit a parent state when the'
+ + ' statemachine is in a child state.\n' 
+  + documentation_param(ParameterDirectionKind::_in, 
+               utils_get_self_name(), 'The pointer to the self object.\n')
+  + documentation_param(ParameterDirectionKind::_in, 
+               'exit_state', 'The state that wants to exit.'), 
+  indentation)/]
+static void
+[uml_c_format_param_list(aRegion.uml_c_get_region_exit_name(),
+         Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
+                                    utils_get_self_name()),
+                  uml_c_param_decl(
+                         aRegion.uml_c_get_region_typedef(), 
+                                    'exit_state')}, indentation+1)/]
+{
+[spaces/]switch([utils_get_self_name()/]->[aRegion.name/])
+[spaces/]{
+[for (s:State | aRegion.request_region_states()
+                  ->select(aState : State | aState.request_state_needs_exit()))
+     separator(utils_newline()) after(utils_newline())]
+[spaces/][spaces/]case [s.uml_c_get_state_full_name()/]:
+[spaces/][spaces/][spaces/][uml_c_format_param_list(s.uml_c_get_exit_name(),
+         Sequence{ utils_get_self_name(), 'exit_state'}, indentation)/];
+[spaces/][spaces/][spaces/]break;[/for]
+[spaces/][spaces/]default:
+[spaces/][spaces/][spaces/]break;
+[spaces/]}
+}
 [/for]
 [/template]

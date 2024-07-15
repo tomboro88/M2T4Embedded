@@ -14,17 +14,19 @@
       ->removeAll(header_packages);
    sourceLiteralSpecifications : Sequence(LiteralSpecification) = 
     uml_c_source_literal_specifications(aPackage);
-   allClassifiers : Sequence(Classifier) = 
+   allClassifiers : OrderedSet(Classifier) = 
       utils_sort_by_name(aPackage.request_non_packaged_children()
-                         ->selectByKind(Classifier)).oclAsType(Classifier);
-   sourceClassifiers : Sequence(Classifier) = 
+                         ->selectByKind(Classifier)).oclAsType(Classifier)
+                         ->asOrderedSet();
+   sourceClassifiers : OrderedSet(Classifier) = 
       utils_sort_by_name(aPackage.uml_c_source_classifiers())
-              .oclAsType(Classifier);
+              .oclAsType(Classifier)->asOrderedSet();
    needs_get_specific : Boolean = not allClassifiers->select(
        aClassifier : Classifier | aClassifier.request_needs_storage() 
        and not aClassifier.general->isEmpty())->isEmpty();
-   general_extern_classifiers : Sequence(Classifier) = 
-     allClassifiers.general->select(c:Classifier|c._package <> aPackage);}]
+   general_extern_classifiers : OrderedSet(Classifier) = 
+     allClassifiers.general->asOrderedSet()
+                    ->select(c:Classifier|c._package <> aPackage);}]
 
 [file (get_package_c_qualified_path(aPackage), false, 'UTF-8')]
 [documentationCFile('The ' + aPackage.name + ' package source file.')/]
@@ -221,6 +223,12 @@ static inline bool
                                             VisibilityKind::private,
                                             VisibilityKind::protected}, 0)/]
 [/if]
+[for (sm : StateMachine | allClassifiers->selectByKind(StateMachine)
+      ->select(stm : StateMachine | not stm.request_all_orthogonal_regions()
+                          ->select(r: Region | r.request_region_needs_exit())
+                          ->isEmpty()))]
+[uml_c_define_region_exit(sm,0)/]
+[/for]
 /*** end of file ***/
 [/file]
 [/template]

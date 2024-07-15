@@ -134,18 +134,18 @@
 [query public request_all_generals(aClassifier:Classifier) : Set(Classifier) = 
  aClassifier.general->addAll(aClassifier.general.request_all_generals())/]
 
-[query public request_sort_classifiers(aSeq : Sequence(Classifier)) : 
-  Sequence(Classifier)
-  = if aSeq->size() <=1 then aSeq
+[query public request_sort_classifiers(anOSet : OrderedSet(Classifier)) : 
+  OrderedSet(Classifier)
+  = if anOSet->size() <=1 then anOSet
     else 
-      let aRest : Sequence(Classifier) = aSeq->drop(1) in
-      let aFirst : Classifier = aSeq->first() in
-      let aRest_dependencies:Sequence(Classifier) = aRest->select(
+      let aRest : OrderedSet(Classifier) = anOSet->drop(1) in
+      let aFirst : Classifier = anOSet->first() in
+      let aRest_dependencies:OrderedSet(Classifier) = aRest->select(
           c:Classifier | aFirst.request_classifier_depends(c)) in
-      let aRest_non_dependencies:Sequence(Classifier) 
+      let aRest_non_dependencies:OrderedSet(Classifier) 
           = aRest->removeAll(aRest_dependencies) in
       aRest_dependencies->request_sort_classifiers()->append(aFirst)
-      ->union(aRest_non_dependencies->request_sort_classifiers())
+      ->addAll(aRest_non_dependencies->request_sort_classifiers())
     endif/]
 
 [query public request_classifier_depends(aClassifier:Classifier,
@@ -214,9 +214,9 @@
 : Set(Behavior) = aClassifier.request_behaviors()
         ->select(b : Behavior | b.request_has_virtual_operation_spec(vis))/]
 
-[query public request_have_virtual_behaviors(aSeq : Sequence(Classifier),
+[query public request_have_virtual_behaviors(anOSet : OrderedSet(Classifier),
                                                vis : Set(VisibilityKind)) 
- : Boolean = not aSeq->select(c : Classifier | 
+ : Boolean = not anOSet->select(c : Classifier | 
                           not c.request_virtual_behaviors(vis)->isEmpty())
              ->isEmpty()/]
 
@@ -287,6 +287,13 @@
       ->select(s:State | r.containingStateMachine()
                          .request_all_orthogonal_regions()->excluding(r)
                ->forAll(R:Region|not s.request_is_in_region(R)))/]
+
+[query public request_region_initial_state(aRegion : Region) : Pseudostate = 
+ let initialVertices : Set(Pseudostate) = 
+     aRegion.subvertex->selectByKind(Pseudostate)
+            ->select(pS:Pseudostate | pS.kind = PseudostateKind::initial) in 
+     if(initialVertices->size() = 1) then initialVertices->any(true) 
+     else null endif/]
 
 [query public request_state_region(st : State) : Region = 
   st.containingStateMachine().request_all_orthogonal_regions()

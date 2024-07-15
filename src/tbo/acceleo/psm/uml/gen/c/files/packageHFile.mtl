@@ -11,9 +11,9 @@
   visible_dependencies : Set(Package) = uml_c_header_dependencies(aPackage);
   headerLiteralSpecifications : Sequence(LiteralSpecification) = 
     uml_c_header_literal_specifications(aPackage);
-  headerClassifiers : Sequence(Classifier) = 
+  headerClassifiers : OrderedSet(Classifier) = 
     utils_sort_by_name(aPackage.uml_c_header_classifiers())
-    .oclAsType(Classifier);
+    .oclAsType(Classifier)->asOrderedSet();
   indentation : Integer = getProperty('indent_width').toInteger();}]
 
 [file (get_package_h_qualified_path(aPackage), false, 'UTF-8')]
