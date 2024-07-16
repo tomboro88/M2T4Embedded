@@ -137,6 +137,12 @@
                           ->isEmpty()))]
 [uml_c_declare_region_exit(sm,0)/]
 [/for]
+[for (sm : StateMachine | allClassifiers->selectByKind(StateMachine)
+      ->select(stm : StateMachine | not stm.request_all_orthogonal_regions()
+                                    ->isEmpty()))]
+[uml_c_declare_region_dispatch(sm,0)/]
+[uml_c_declare_state_dispatch(sm, 0)/]
+[/for]
 /*******************************************************************************
  * 
  * Inline functions.

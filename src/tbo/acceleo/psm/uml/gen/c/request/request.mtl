@@ -282,11 +282,20 @@
       sm.eAllContents(Region)->select(r:Region|not r.state->isEmpty())
       ->select(r:Region|r.state.region->size()>1))->request_regions_sorted()/]
 
-[query public request_region_states(r:Region) : Sequence(State) = 
+[query public request_region_states(r:Region) : OrderedSet(State) = 
     r.containingStateMachine().eAllContents(State)
       ->select(s:State | r.containingStateMachine()
                          .request_all_orthogonal_regions()->excluding(r)
-               ->forAll(R:Region|not s.request_is_in_region(R)))/]
+               ->forAll(R:Region|not s.request_is_in_region(R)))
+      ->asOrderedSet()/]
+
+[query public request_region_events(aRegion:Region) : OrderedSet(Event) = 
+    let states:Set(State) = aRegion.subvertex->selectByKind(State) in
+    let events:OrderedSet(Event) = states.outgoing->flatten().trigger->flatten()
+                                .event->select(e:Event|not e->oclIsUndefined())
+                                ->asOrderedSet() in
+    states->select(s:State|not s.region->isEmpty()).region->flatten()
+          .request_region_events()->flatten()->asOrderedSet()->addAll(events)/]
 
 [query public request_region_initial_state(aRegion : Region) : Pseudostate = 
  let initialVertices : Set(Pseudostate) = 
@@ -314,6 +323,10 @@
                           ->select(t : Trigger | not t.event.oclIsUndefined())
                           .event->asOrderedSet()/]
 
+[query public request_sm_context(sm: StateMachine) : 
+  BehavioredClassifier = if sm._context.oclIsUndefined() then sm 
+           else sm._context endif/]
+
 [query public request_parent_state_needs_exit(aState : State): Boolean
  = ((not aState.container.oclIsUndefined())
        and (not aState.container.state.oclIsUndefined()) 
@@ -333,6 +346,12 @@
 [query public request_region_needs_exit(aRegion : Region): Boolean
  = not aRegion.subvertex->selectByKind(State)
     ->select(st : State | st.request_state_needs_exit())->isEmpty()/]
+
+[query public request_region_needs_dispatch(aRegion : Region, anEvent : Event)
+   : Boolean
+ = let regionStates : OrderedSet(State) = aRegion.request_region_states() in
+   let regionEvents : OrderedSet(Event) = null in
+     false/]
 
 [query public request_parent_exit_state(aState : State): State
  = if (not aState.container.oclIsUndefined())

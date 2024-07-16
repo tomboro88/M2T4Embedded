@@ -448,8 +448,9 @@ endif/]
 [query public uml_c_get_event_enum(aClass : Class, ev : Event) : String = 
  (aClass.uml_c_get_element_full_name() + '_' + ev.name).toUpper()/]
 
-[query public uml_c_get_event_typedef(aClass : Class, ev : Event) : String = 
- (aClass.uml_c_get_element_full_name() + '_' + ev.name)
+[query public uml_c_get_event_typedef(bClass : BehavioredClassifier, ev : Event) 
+  : String = 
+ (bClass.uml_c_get_element_full_name() + '_' + ev.name)
   .uml_c_get_string_typedef_name()/]
 
 [query public uml_c_get_event_queue_typedef(aClass : Class, ev : Event) : 
@@ -1157,6 +1158,14 @@ static const [uml_c_get_vtable_type_name(aClassifier)
        not aClassifier.uml_c_behaviors_need_declaration(vis)->isEmpty())
    ->isEmpty()/]
 
+[query public uml_c_get_region_event_dispatch(aRegion:Region, anEvent: Event)
+  : String = aRegion.containingStateMachine().name + '_dispatch_' 
+             + anEvent.name + '_' + aRegion.name/]
+
+[query public uml_c_get_state_event_dispatch(aState:State, anEvent: Event)
+  : String = aState.containingStateMachine().name + '_dispatch_' 
+             + anEvent.name + '_' + aState.name/]
+
 [template public uml_c_declare_behaviors(anOSet:OrderedSet(Classifier),
                                           vis : Set(VisibilityKind),
                                           b_is_extern : Boolean, 
@@ -1452,5 +1461,50 @@ static void
 [spaces/][spaces/][spaces/]break;
 [spaces/]}
 }
+[/for]
+[/template]
+
+[**
+ * Creates a dispatch function of each event for each region for which a state
+ * variable was defined. 
+ */]
+[template public uml_c_declare_region_dispatch(sm : StateMachine, 
+                                          indentation : Integer)]
+[for (aRegion : Region | sm.request_all_orthogonal_regions()) 
+     separator(utils_newline())
+     ?(not aRegion.request_region_events()->isEmpty())]
+[for (anEvent : Event | aRegion.request_region_events())]
+[uml_c_format_param_list('static void ' 
+                         + aRegion.uml_c_get_region_event_dispatch(anEvent),
+         Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
+                                    utils_get_self_name()),
+                  uml_c_param_decl(
+                  uml_c_get_event_typedef(sm.request_sm_context(), anEvent) 
+                         + '*', 'p_event')}, indentation+1)/];
+[/for]
+[/for]
+[/template]
+
+[**
+ * Creates a dispatch function of each event for each state. 
+ */]
+[template public uml_c_declare_state_dispatch(sm : StateMachine, 
+                                          indentation : Integer)]
+[for (aRegion : Region | sm.request_all_orthogonal_regions()) 
+     separator(utils_newline())
+     ?(not aRegion.request_region_events()->isEmpty())]
+[for (anEvent : Event | aRegion.request_region_events())]
+[for (aState : State | aRegion.request_region_states()
+                       ->select(s:State|s.outgoing.trigger->flatten()
+                                        .event->includes(anEvent)))]
+[uml_c_format_param_list('static void ' 
+                         + aState.uml_c_get_state_event_dispatch(anEvent),
+         Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
+                                    utils_get_self_name()),
+                  uml_c_param_decl(
+                  uml_c_get_event_typedef(sm.request_sm_context(), anEvent) 
+                         + '*', 'p_event')}, indentation+1)/];
+[/for]
+[/for]
 [/for]
 [/template]
