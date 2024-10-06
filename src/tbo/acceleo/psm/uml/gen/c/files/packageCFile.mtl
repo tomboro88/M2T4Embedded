@@ -46,6 +46,10 @@
 #include <stdint.h>
 [/if][if needs_get_specific]
 #include <stdbool.h>
+[/if][if (not sourceClassifiers->selectByKind(StateMachine)->isEmpty())
+    and aPackage.uml_c_header_classifiers()
+        ->selectByKind(StateMachine)->isEmpty()]
+#include <sm.h>
 [/if]//[protected('includes bottom')]
 //[/protected]
 /*******************************************************************************
@@ -231,9 +235,14 @@ static inline bool
 [/if]
 [for (sm : StateMachine | allClassifiers->selectByKind(StateMachine)
       ->select(stm : StateMachine | not stm.request_all_orthogonal_regions()
-                          ->select(r: Region | r.request_region_needs_exit())
                           ->isEmpty()))]
+[if not sm.request_all_orthogonal_regions()
+                          ->select(r: Region | r.request_region_needs_exit())
+                          ->isEmpty()]
 [uml_c_define_region_exit(sm,0)/]
+[/if]
+[uml_c_implement_region_dispatch(sm,0)/]
+[uml_c_implement_state_dispatch(sm, 0)/]
 [/for]
 /*** end of file ***/
 [/file]

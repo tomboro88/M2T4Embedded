@@ -3,20 +3,20 @@
 
 
 [**
- * Gets the OrderedSet of parameters without the return parameter.
- * @param o The operation for which the list of parameters should be returned. 
+ * Filters the OrderedSet of parameters from the return parameter.
+ * @param oP The list of parameters should be filtered. 
  */]
-[query public request_parameter_only(o : Operation) 
+[query public request_parameter_only(osP : OrderedSet(Parameter)) 
  : OrderedSet(Parameter) 
- = o.ownedParameter->select(direction <> ParameterDirectionKind::return)/]
+ = osP->select(direction <> ParameterDirectionKind::return)/]
 
 [**
  * @brief Get the OrderedSet of the Operation return values.
  * @param o The operation for which the return values will be given.
  */]
-[query public request_return_value(o : Operation) 
+[query public request_return_value(osP : OrderedSet(Parameter)) 
  : OrderedSet(Parameter) 
- = o.ownedParameter->select(direction = ParameterDirectionKind::return)/]
+ = osP->select(direction = ParameterDirectionKind::return)/]
 
 [**
  * Get a set of packages on which the given element depends. 
@@ -209,15 +209,17 @@
 [query public request_behaviors(aClassifier : Classifier) : Set(Behavior) = 
   aClassifier.ownedMember->filter(Behavior)/]
 
-[query public request_virtual_behaviors(aClassifier:Classifier, 
+[query public request_standalone_behaviors(aClassifier:Classifier, 
                                           vis : Set(VisibilityKind)) 
 : Set(Behavior) = aClassifier.request_behaviors()
-        ->select(b : Behavior | b.request_has_virtual_operation_spec(vis))/]
+        ->select(b : Behavior | b.request_has_virtual_operation_spec(vis)
+        or (b.specification.oclIsUndefined() 
+             and vis->includes(VisibilityKind::private)))/]
 
 [query public request_have_virtual_behaviors(anOSet : OrderedSet(Classifier),
                                                vis : Set(VisibilityKind)) 
  : Boolean = not anOSet->select(c : Classifier | 
-                          not c.request_virtual_behaviors(vis)->isEmpty())
+                          not c.request_standalone_behaviors(vis)->isEmpty())
              ->isEmpty()/]
 
 [query public request_has_default_values(aClassifier : Classifier) : Boolean = 
@@ -271,22 +273,30 @@
  ->sortedBy(r:Region|r.containingStateMachine().eAllContents()->indexOf(r)) /]
 
 [query public request_is_in_region(v:Vertex,r:Region):Boolean = 
+ if (v.containingStateMachine() <> r.containingStateMachine()) then false
+ else
  if (v.container = r) then true
  else
  if (v.container.state->isEmpty() or v.container.state.isOrthogonal) then false
  else v.container.state.request_is_in_region(r)
- endif endif/]
+ endif endif endif/]
 
 [query public request_all_orthogonal_regions(sm:StateMachine):OrderedSet(Region)
   = sm.region->addAll(
-      sm.eAllContents(Region)->select(r:Region|not r.state->isEmpty())
+      sm.eAllContents(Region)->select(r:Region|r.containingStateMachine() = sm)
+      ->select(r:Region|not r.state->isEmpty())
       ->select(r:Region|r.state.region->size()>1))->request_regions_sorted()/]
 
 [query public request_region_states(r:Region) : OrderedSet(State) = 
-    r.containingStateMachine().eAllContents(State)
-      ->select(s:State | r.containingStateMachine()
+    r.request_region_vertices()->selectByKind(State)/]
+
+[query public request_region_vertices(r:Region) : OrderedSet(Vertex) = 
+    r.containingStateMachine().eAllContents(Vertex)
+      ->select(v:Vertex | 
+                     v.containingStateMachine() = r.containingStateMachine())
+      ->select(v:Vertex | r.containingStateMachine()
                          .request_all_orthogonal_regions()->excluding(r)
-               ->forAll(R:Region|not s.request_is_in_region(R)))
+               ->forAll(R:Region|not v.request_is_in_region(R)))
       ->asOrderedSet()/]
 
 [query public request_region_events(aRegion:Region) : OrderedSet(Event) = 
@@ -297,6 +307,41 @@
     states->select(s:State|not s.region->isEmpty()).region->flatten()
           .request_region_events()->flatten()->asOrderedSet()->addAll(events)/]
 
+[query public request_state_events(aState:State) : OrderedSet(Event) =
+    let events:OrderedSet(Event) = aState.outgoing.trigger->flatten()
+                                .event->select(e:Event|not e->oclIsUndefined())
+                                ->asOrderedSet() in events/]
+
+[query public request_state_handles_event(aState:State, anEvent : Event) 
+ : Boolean =
+    aState.request_state_events()->includes(anEvent)/]
+
+[query public request_parent_state_handles_event(aState:State, anEvent : Event) 
+ : Boolean =
+    (not aState.container.state.oclIsUndefined())
+     and (not aState.container.state.isOrthogonal)
+     and (aState.container.state.request_state_handles_event(anEvent)
+      or aState.container.state.request_parent_state_handles_event(anEvent))/]
+
+[query public request_parent_state_event_handler(aState:State, anEvent : Event) 
+ : State =
+    if (not aState.container.state.oclIsUndefined())
+     and (not aState.container.state.isOrthogonal) then
+        if aState.container.state.request_state_handles_event(anEvent) then
+            aState.container.state
+        else
+            if aState.container.state
+                     .request_parent_state_handles_event(anEvent) then
+                aState.container.state
+                                  .request_parent_state_event_handler(anEvent)
+            else
+                null
+            endif
+        endif
+    else
+     null
+    endif/]
+
 [query public request_region_initial_state(aRegion : Region) : Pseudostate = 
  let initialVertices : Set(Pseudostate) = 
      aRegion.subvertex->selectByKind(Pseudostate)
@@ -304,9 +349,9 @@
      if(initialVertices->size() = 1) then initialVertices->any(true) 
      else null endif/]
 
-[query public request_state_region(st : State) : Region = 
-  st.containingStateMachine().request_all_orthogonal_regions()
-  ->select(r : Region | r.request_region_states()->includes(st))->any(true)/]
+[query public request_vertex_region(v : Vertex) : Region = 
+  v.containingStateMachine().request_all_orthogonal_regions()
+  ->select(r : Region | r.request_region_vertices()->includes(v))->any(true)/]
 
 [query public request_needs_event_loop(aClassifier : Classifier): Boolean  = 
     if aClassifier.oclIsKindOf(StateMachine) then
@@ -347,6 +392,14 @@
  = not aRegion.subvertex->selectByKind(State)
     ->select(st : State | st.request_state_needs_exit())->isEmpty()/]
 
+[query public request_region_event_states(aRegion:Region, anEvent:Event) 
+  : OrderedSet(State) = 
+    aRegion.request_region_states()
+                       ->select(s:State|s.outgoing.trigger->flatten()
+                                        .event->includes(anEvent)
+      or s.region->collect(r:Region|r.request_region_events())
+                 ->flatten()->includes(anEvent))/]
+
 [query public request_region_needs_dispatch(aRegion : Region, anEvent : Event)
    : Boolean
  = let regionStates : OrderedSet(State) = aRegion.request_region_states() in
@@ -363,3 +416,77 @@
          aState.container.state
       endif
    else null endif/]
+
+[query public request_event_subregions(aState: State, anEvent : Event)
+  : Set(Region) = aState.region
+           ->select(r:Region|r.request_region_events()->includes(anEvent))/]
+
+[query public request_else_transitions(transitions : OrderedSet(Transition))
+       : OrderedSet(Transition) = transitions
+                 ->select(t:Transition | not t.guard.oclIsUndefined() 
+                           and t.guard.oclIsKindOf(Expression) 
+                           and t.guard.oclAsType(Expression).symbol = 'else')/]
+[**
+ * @brief Returns The topmost state that should be exited to execute the 
+ * transition.
+ */]
+[query public request_transition_exit_state(aTransition:Transition) : State
+ = 
+      let sourceHierarchy : OrderedSet(State) =
+        aTransition.source.request_parent_states() in
+      let targetHierarchy : OrderedSet(State) = 
+        aTransition.target.request_parent_states()in
+      let exitHierarchy : OrderedSet(State) =
+        sourceHierarchy->removeAll(targetHierarchy) in
+      if exitHierarchy->isEmpty() then 
+      if aTransition.source.oclIsKindOf(State) 
+         then aTransition.source.oclAsType(State) else null endif
+      else exitHierarchy->first() endif/]
+
+[**
+ * @brief Returns a list of parent state with the top most state in the 
+ * hierarchy as the first.
+ * @param aVertex The vertex for which parent hierarchy should be returned 
+ */]
+[query public request_parent_states(aVertex:Vertex):OrderedSet(State) = 
+ if aVertex.container.state.oclIsUndefined() then
+    OrderedSet{}
+ else
+    aVertex.container.state.request_parent_states()
+                            ->append(aVertex.container.state)
+ endif/]
+
+[**
+ * @brief Get a list of states that will be exited when the transition occurs.
+ * Does not include substates of a compound source state. 
+ */]
+[query public request_transition_exit_states(aTransition : Transition):
+OrderedSet(State) = 
+ let exitState : State = aTransition.request_transition_exit_state() in
+ let parentStates : OrderedSet(State) = if exitState.oclIsUndefined() 
+       then OrderedSet{} else if aTransition.source.oclIsKindOf(State) then
+           aTransition.source.request_parent_states()
+                          ->append(aTransition.source.oclAsType(State)) 
+       else aTransition.source.request_parent_states() endif endif in
+ if parentStates->isEmpty() 
+          then OrderedSet{} else parentStates
+                               ->drop(parentStates->indexOf(exitState)) endif /]
+
+[query public request_transition_behaviors(aTransition : Transition) 
+  : Sequence(Behavior) = 
+   null/]
+
+[query public request_state_machine_states(sm:StateMachine):OrderedSet(State) = 
+ sm.eAllContents(State)->select(s:State|s.containingStateMachine() = sm)
+    ->asOrderedSet()/]
+
+[query public request_state_machine_transitions(sm:StateMachine):
+  OrderedSet(Transition) = 
+ sm.eAllContents(Transition)
+    ->select(t:Transition|t.containingStateMachine() = sm)
+    ->asOrderedSet()/]
+
+[query public request_transition_effect_region(aTransition:Transition):
+  Region = let exit_state : State = aTransition.request_transition_exit_state()
+  in if not exit_state.oclIsUndefined() then exit_state.request_vertex_region()
+  else aTransition.source.request_vertex_region() endif/]

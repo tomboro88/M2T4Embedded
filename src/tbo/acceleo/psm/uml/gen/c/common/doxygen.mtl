@@ -161,11 +161,11 @@
 /]The pointer to the self object.
 [/if]
 [for (aParameter : Parameter | 
-                      request_parameter_only(anOp))
+                      request_parameter_only(anOp.ownedParameter))
 ][doxygen_comments(aParameter, doxygen_param(aParameter),line_width)
 /][/for][if (not anOp.type.oclIsUndefined())]
 [doxygen_comments(
-   request_return_value(anOp)->first(),
+   request_return_value(anOp.ownedParameter)->first(),
    doxygen_return(''),line_width)/][/if]
 [else]
 [if anElement.oclIsKindOf(Behavior) 

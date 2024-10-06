@@ -29,7 +29,10 @@ extern "C" {
 //[protected('includes top')]
 //[/protected]
 [uml_c_include_dependencies(visible_dependencies, visible_subpackages, 
-                            indentation)/]
+                            indentation)
+/][if not headerClassifiers->selectByKind(StateMachine)->isEmpty()]
+#[utils_indent(indentation)/]include <sm.h>
+[/if]
 //[protected('includes bottom')]
 //[/protected]
 

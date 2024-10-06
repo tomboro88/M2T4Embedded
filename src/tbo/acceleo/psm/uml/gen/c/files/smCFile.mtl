@@ -1,0 +1,19 @@
+[comment encoding = UTF-8 /]
+[module smCFile('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[import tbo::acceleo::psm::uml::gen::c::common::uml_c /]
+[import tbo::acceleo::psm::uml::gen::c::common::utils /]
+
+[template public generate_smCFile(traceabilityContext : OclAny)
+ {indentation : Integer = getProperty('indent_width').toInteger();
+  spaces : String = utils_get_indent_string();}]
+
+[file ('sm.c', false, 'UTF-8')]
+
+#include "sm.h"
+
+[uml_c_implement_event_resolve_status(0)/]
+
+/*** end of file ***/
+[/file]
+[/template]

@@ -6,6 +6,8 @@
 
 [import tbo::acceleo::psm::uml::gen::c::files::packageHFile /]
 [import tbo::acceleo::psm::uml::gen::c::files::packageCFile /]
+[import tbo::acceleo::psm::uml::gen::c::files::smHFile /]
+[import tbo::acceleo::psm::uml::gen::c::files::smCFile /]
 
 [**
  * The documentation of the template uml2c.
@@ -20,4 +22,6 @@
     [generatePackageH(aPackage)/]
     [generatePackageC(aPackage)/]
 [/for]
+[generate_smHFile()/]
+[generate_smCFile()/]
 [/template]
