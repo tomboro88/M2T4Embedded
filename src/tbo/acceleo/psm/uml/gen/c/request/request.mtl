@@ -418,8 +418,9 @@
    else null endif/]
 
 [query public request_event_subregions(aState: State, anEvent : Event)
-  : Set(Region) = aState.region
-           ->select(r:Region|r.request_region_events()->includes(anEvent))/]
+  : OrderedSet(Region) = aState.region
+           ->select(r:Region|r.request_region_events()->includes(anEvent))
+           ->asOrderedSet()->sortedBy(r:Region|r.name.toLowerCase())/]
 
 [query public request_else_transitions(transitions : OrderedSet(Transition))
        : OrderedSet(Transition) = transitions

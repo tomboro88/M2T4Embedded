@@ -144,6 +144,7 @@
 [for (sm : StateMachine | allClassifiers->selectByKind(StateMachine)
       ->select(stm : StateMachine | not stm.request_all_orthogonal_regions()
                                     ->isEmpty()))]
+[uml_c_declare_sm_dispatch(sm, 0)/]
 [uml_c_declare_region_dispatch(sm,0)/]
 [uml_c_declare_state_dispatch(sm, 0)/]
 [/for]
@@ -241,6 +242,7 @@ static inline bool
                           ->isEmpty()]
 [uml_c_define_region_exit(sm,0)/]
 [/if]
+[uml_c_implement_sm_dispatch(sm, 0)/]
 [uml_c_implement_region_dispatch(sm,0)/]
 [uml_c_implement_state_dispatch(sm, 0)/]
 [/for]
