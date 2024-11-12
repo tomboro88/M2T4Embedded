@@ -41,7 +41,7 @@ return EXIT_SUCCESS;</body>
 &#xD;
 return p_obj;</body>
       </ownedBehavior>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_493YoOqfEe2Yz7yVfkC93Q" name="main" visibility="protected" isStatic="true" method="_-jbgsOqkEe2Yz7yVfkC93Q">
+      <ownedOperation xmi:type="uml:Operation" xmi:id="_493YoOqfEe2Yz7yVfkC93Q" name="main" visibility="public" isStatic="true" method="_-jbgsOqkEe2Yz7yVfkC93Q">
         <ownedComment xmi:type="uml:Comment" xmi:id="_u0EW8OrHEe2Yz7yVfkC93Q" annotatedElement="_493YoOqfEe2Yz7yVfkC93Q">
           <body>The test application entrypoint.</body>
         </ownedComment>
@@ -168,7 +168,7 @@ return p_obj;</body>
             <trigger xmi:type="uml:Trigger" xmi:id="_VvbgYERaEe-tgayrQDjOzA" name="flyptrigger" event="_VXaB8ERaEe-tgayrQDjOzA"/>
           </transition>
           <subvertex xmi:type="uml:State" xmi:id="_UIisgBRpEe64zY9rdp8WsA" name="FLOP">
-            <entry xmi:type="uml:OpaqueBehavior" xmi:id="_d11IMCEBEe6IytxEsQJDFg" name="enter_flop">
+            <entry xmi:type="uml:OpaqueBehavior" xmi:id="_d11IMCEBEe6IytxEsQJDFg" name="enter_flop" visibility="public">
               <language>C</language>
               <body>printf(&quot;entered FLOP&quot;);</body>
             </entry>
@@ -176,7 +176,7 @@ return p_obj;</body>
               <language>C</language>
               <body>printf(&quot;exit FLOP&quot;);</body>
             </exit>
-            <region xmi:type="uml:Region" xmi:id="_A49dEE34Ee-UVuf5FAWQag" name="Region3">
+            <region xmi:type="uml:Region" xmi:id="_A49dEE34Ee-UVuf5FAWQag" name="Region2">
               <transition xmi:type="uml:Transition" xmi:id="_CKQX0JGOEe-fD7of-XDBVw" source="_nK758FdeEe-z7O3lQgKGqA" target="_nK758FdeEe-z7O3lQgKGqA">
                 <trigger xmi:type="uml:Trigger" xmi:id="_MOxJsJGOEe-fD7of-XDBVw" event="_kvy1oEMEEe-O8N-dEULY-w"/>
               </transition>
@@ -184,7 +184,7 @@ return p_obj;</body>
                 <trigger xmi:type="uml:Trigger" xmi:id="_XWqrMJGOEe-fD7of-XDBVw" event="_SkUEMBRqEe64zY9rdp8WsA"/>
               </transition>
               <subvertex xmi:type="uml:State" xmi:id="_CDxqYE34Ee-UVuf5FAWQag" name="SUBFLOP">
-                <exit xmi:type="uml:OpaqueBehavior" xmi:id="_u10-gFddEe-z7O3lQgKGqA">
+                <exit xmi:type="uml:OpaqueBehavior" xmi:id="_u10-gFddEe-z7O3lQgKGqA" name="prntex">
                   <language>C</language>
                   <body>printf(&quot;Exit subflop&quot;);</body>
                 </exit>

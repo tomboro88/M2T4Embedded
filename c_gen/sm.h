@@ -6,11 +6,12 @@ extern "C" {
 #endif
 
     typedef enum {
-        IGNORED,
-        DEFERRED,
-        SAMESTATE,
-        CHANGEDSTATE,
-        TRANSITION
+        IGNORED,      /**< Event ignored.*/
+        DEFERRED,     /**< Event deferred.*/
+        SAMESTATE,    /**< Event handled, no state change.*/
+        CHANGEDSTATE, /**< Event handled, state changed.*/
+        TRANSITION    /**< Event processing started, but paused \
+                                      on some submachine action.*/
     }sm_event_status_t;
 
     sm_event_status_t sm_event_resolve_status(sm_event_status_t const status1,\

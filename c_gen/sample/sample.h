@@ -75,9 +75,6 @@ extern "C" {
         SAMPLE_FLT_FILTER_INVALID,
         /**
          */
-        SAMPLE_FLT_FILTER_ERROR,
-        /**
-         */
         SAMPLE_FLT_FILTER_VALID,
         /**
          * @brief The number of all substates of filter_state Region of flt
@@ -85,6 +82,26 @@ extern "C" {
          */
         SAMPLE_FLT_FILTER_STATE_SIZE
     }sample_flt_filter_state_t;
+    
+    /**
+     * @brief The enumeration of all substates of finvalid_state Region of flt
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the finvalid_state Region of flt
+         * StateMachine.
+         */
+        SAMPLE_FLT_FINVALID_STATE_INITIAL,
+        /**
+         */
+        SAMPLE_FLT_FILTER_ERROR,
+        /**
+         * @brief The number of all substates of finvalid_state Region of flt
+         * StateMachine.
+         */
+        SAMPLE_FLT_FINVALID_STATE_SIZE
+    }sample_flt_finvalid_state_t;
     
     /**
      * @brief The enumeration of all substates of value_state Region of flt
@@ -512,6 +529,9 @@ extern "C" {
         /**
          */
         sample_flt_filter_state_t       filter_state;
+        /**
+         */
+        sample_flt_finvalid_state_t     finvalid_state;
         /**
          */
         sample_flt_value_state_t        value_state;

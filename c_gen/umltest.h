@@ -289,12 +289,6 @@ extern "C" {
         UMLTEST_SM1_FLOP,
         /**
          */
-        UMLTEST_SM1_SUBFLOP,
-        /**
-         */
-        UMLTEST_SM1_SUBFLOP2,
-        /**
-         */
         UMLTEST_SM1_FLIP,
         /**
          * @brief The number of all substates of Region1 Region of sm1
@@ -302,6 +296,29 @@ extern "C" {
          */
         UMLTEST_SM1_REGION1_SIZE
     }umltest_sm1_region1_t;
+    
+    /**
+     * @brief The enumeration of all substates of Region2 Region of sm1
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the Region2 Region of sm1
+         * StateMachine.
+         */
+        UMLTEST_SM1_REGION2_INITIAL,
+        /**
+         */
+        UMLTEST_SM1_SUBFLOP,
+        /**
+         */
+        UMLTEST_SM1_SUBFLOP2,
+        /**
+         * @brief The number of all substates of Region2 Region of sm1
+         * StateMachine.
+         */
+        UMLTEST_SM1_REGION2_SIZE
+    }umltest_sm1_region2_t;
     
     /**
      * @brief The enumeration of all substates of Region3 Region of sm1
@@ -358,6 +375,9 @@ extern "C" {
         /**
          */
         umltest_sm1_region1_t           region1;
+        /**
+         */
+        umltest_sm1_region2_t           region2;
         /**
          */
         umltest_sm1_region3_t           region3;
@@ -675,15 +695,15 @@ extern "C" {
     void umltest_classtmp_add(umltest_classtmp_t* const p_obj,\
                               const umltest_E_t* const x);
 
-    void umltest_iface_accelerate(umltest_iface_t* const p_obj);
-    void umltest_iface_decelerate(umltest_iface_t* const p_obj);
     void umltest_iface_start(umltest_iface_t* const p_obj);
     void umltest_iface_stop(umltest_iface_t* const p_obj);
+    void umltest_iface_accelerate(umltest_iface_t* const p_obj);
+    void umltest_iface_decelerate(umltest_iface_t* const p_obj);
 
+    void umltest_tmpCombo_flop(umltest_tmpCombo_t* const p_obj);
+    void umltest_tmpCombo_flip(umltest_tmpCombo_t* const p_obj);
     void umltest_tmpCombo_flap(umltest_tmpCombo_t* const p_obj);
     void umltest_tmpCombo_flep(umltest_tmpCombo_t* const p_obj);
-    void umltest_tmpCombo_flip(umltest_tmpCombo_t* const p_obj);
-    void umltest_tmpCombo_flop(umltest_tmpCombo_t* const p_obj);
     void umltest_tmpCombo_flup(umltest_tmpCombo_t* const p_obj);
 
 #ifdef  __cplusplus
