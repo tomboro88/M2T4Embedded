@@ -189,6 +189,7 @@ static inline bool
 [/if]
 [for (sm : StateMachine | allClassifiers->selectByKind(StateMachine))]
 [uml_c_define_state_entry(sm,0)/]
+[uml_c_implement_initial_transition(sm, 0)/]
 [if not sm.eAllContents(State)
           ->select(aState : State | aState.request_state_needs_exit())
           ->isEmpty() ]

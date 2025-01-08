@@ -71,6 +71,9 @@ utils_files_newline().characters()
 [query public utils_get_self_name(traceabilityContext: OclAny) : 
   String = 'p_obj'/]
 
+[query public utils_get_context_name(traceabilityContext: OclAny) : 
+  String = 'p_ctx'/]
+
 [query public utils_get_vtable_name(traceabilityContext: OclAny) :
  String = 'p_vtable'/]
 
