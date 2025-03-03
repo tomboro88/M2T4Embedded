@@ -1468,27 +1468,34 @@ static inline void
 [/for]
 [/template]
 
+[template private uml_c_call_exit_behavior(aBehavior:Behavior,
+                                           indentation : Integer)
+ {modify_result : String = 'b_is_completed &= ';}]
+[if aBehavior.request_is_behavior_named()]
+[aBehavior.uml_c_get_behavior_full_name()/]([utils_get_self_name()/]);
+[else]
+[uml_c_implement_behavior(aBehavior,'C',indentation)/]
+[/if]
+[modify_result/][(if aBehavior.request_behavior_needs_async_call() 
+                  then 'false' else 'true' endif)/]
+[/template]
+
 [template public uml_c_define_state_exit(sm : StateMachine, 
                                           indentation : Integer)
  {indent_width : Integer = getProperty('indent_width').toInteger();
   spaces : String = utils_get_indent_string();
-  modify_result : String = 'b_is_completed &= '}]
+  modify_result : String = 'b_is_completed &= ';}]
 [for (st : State | sm.request_state_machine_states()
                    ->select(aState : State | aState.request_state_needs_exit()))
      separator(utils_newline())]
-[if not st.exit.oclIsUndefined()]
+[if st.exit.request_is_behavior_named()]
 [documentationElement(st.exit,indentation)/]
-static inline bool
+static inline void
 [uml_c_format_param_list(st.exit.uml_c_get_behavior_full_name(),
          Sequence{ uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
                                     utils_get_self_name())}, indentation)/]
 {
 [spaces/][uml_c_implement_behavior(st.exit,'C',indentation+spaces.size())/]
-[if st.exit.request_behavior_needs_async_call()]
-[spaces/]return false;
-[else]
-[spaces/]return true;
-[/if]
 }
 
 [/if]
@@ -1519,9 +1526,10 @@ static inline bool
 
 [spaces/]if(b_is_completed)
 [spaces/]{
-[spaces/][/if][spaces/][modify_result
-                                 /][st.exit.uml_c_get_behavior_full_name()
-                                             /]([utils_get_self_name()/]);
+[spaces/][/if][spaces/][(let indent_exit : Integer = indentation
+  +  if st.request_state_needs_region_exit() then spaces.size()*2 
+     else spaces.size() endif
+ in uml_c_call_exit_behavior(st.exit, indent_exit))/]
 [if st.request_state_needs_region_exit()]
 [spaces/]}
 
@@ -1594,6 +1602,11 @@ static bool
     Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
                                     utils_get_self_name())}/]
 
+[query public uml_c_get_choice_entry_params(aChoice:Pseudostate):Sequence(String)
+  = let sm :StateMachine = aChoice.containingStateMachine() in
+    Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
+                                    utils_get_self_name())}/]
+
 [query public uml_c_get_region_event_dispatch_params(aRegion:Region, 
    anEvent:Event):Sequence(String)
   = let sm :StateMachine = aRegion.containingStateMachine() in
@@ -1647,7 +1660,7 @@ static bool
 [template public uml_c_implement_region_dispatch(sm : StateMachine, 
                                           indentation : Integer)
  {spaces : String = utils_get_indent_string();
-  assign_result : String = 'result = ';}]
+  assign_result : String = request_dispatch_result_name() + ' = ';}]
 [for (aRegion : Region | sm.request_all_regions()) 
      separator(utils_newline())
      ?(not aRegion.request_region_events()->isEmpty()
@@ -1672,7 +1685,7 @@ static [uml_c_get_event_status_type()/]
 
 [uml_c_region_dispatch_body(aRegion, anEvent, indentation)/]
 
-[spaces/]return result;
+[spaces/]return [request_dispatch_result_name()/];
 }
 [/for]
 [/for]
@@ -1685,7 +1698,7 @@ static [uml_c_get_event_status_type()/]
 [template public uml_c_region_dispatch_body(aRegion:Region, anEvent:Event, 
                                             indentation : Integer)
  {spaces : String = utils_get_indent_string();
-  assign_result : String = 'result = ';}]
+  assign_result : String = request_dispatch_result_name()+' = ';}]
 [spaces/]switch([utils_get_self_name()/]->[
                               aRegion.uml_c_get_region_state_property_name()/])
 [spaces/]{
@@ -1726,8 +1739,9 @@ static [uml_c_get_event_status_type()/]
 [template public uml_c_implement_sm_dispatch(sm : StateMachine, 
                                           indentation : Integer)
  {spaces : String = utils_get_indent_string();
-  assign_temp_status : String = 'temp_status = ';
-  assign_result : String = 'result = ';}]
+  temp_name : String = request_temp_dispatch_result_name();
+  assign_temp_status : String = temp_name + ' = ';
+  assign_result : String = request_dispatch_result_name() + ' = ';}]
 [for (anEvent : Event | sm.request_sm_events()) 
      separator(utils_newline())]
 [documentation_string('@brief Implements ' + anEvent.name + ' event handling by'
@@ -1757,7 +1771,7 @@ static [uml_c_get_event_status_type()/]
                     indentation+spaces.size()+assign_temp_status.size()+1)/];
 [spaces/][assign_result/][uml_c_format_param_list(
                     uml_c_get_event_resolve_status_name(),
-                    Sequence{ 'result', 'temp_status'}, 
+                    Sequence{ request_dispatch_result_name(), temp_name}, 
                     indentation+spaces.size()+assign_result.size()+1)/];
 [/for]
 [elseif sm.region->request_event_subregions(anEvent)->size() = 1]
@@ -1766,7 +1780,7 @@ static [uml_c_get_event_status_type()/]
                             ->any(true), anEvent, indentation)/]
 [/if]
 
-[spaces/]return result;
+[spaces/]return [request_dispatch_result_name()/];
 }
 [/for]
 [/template]
@@ -1798,8 +1812,9 @@ static [uml_c_get_event_status_type()/]
 [template public uml_c_implement_state_dispatch(sm : StateMachine, 
                                           indentation : Integer)
  {spaces : String = utils_get_indent_string();
-  assign_temp_status : String = 'temp_status = ';
-  assign_result : String = 'result = ';}]
+  temp_name : String = request_temp_dispatch_result_name();
+  assign_temp_status : String = temp_name + ' = ';
+  assign_result : String = request_dispatch_result_name()+' = ';}]
 [for (aRegion : Region | sm.request_all_regions()) 
      separator(utils_newline())
      ?(not aRegion.request_region_events()->isEmpty())]
@@ -1839,14 +1854,15 @@ static [uml_c_get_event_status_type()/]
 [if aState.region->request_event_subregions(anEvent)->size() > 1]
 [spaces/][assign_result/][uml_c_format_param_list(
                     uml_c_get_event_resolve_status_name(),
-                    Sequence{ 'result', 'temp_status'}, 
+                    Sequence{ request_dispatch_result_name(), temp_name}, 
                     indentation+spaces.size()+assign_result.size()+1)/];
 [/if]
 [/for]
 [if aState.request_state_handles_event(anEvent)]
 [if (aState.region->request_event_subregions(anEvent)->size() > 0)]
 
-[spaces/]if([request_transition_ignored_state()/] == result)
+[spaces/]if([request_transition_ignored_state()
+                                      /] == [request_dispatch_result_name()/])
 [spaces/]{
 [spaces/][spaces/][uml_c_implement_event_handler(aState, anEvent, 
                                                  indentation+spaces.size()*2)/]
@@ -1858,7 +1874,7 @@ static [uml_c_get_event_status_type()/]
 [/if]
 [/if]
 
-[spaces/]return result;
+[spaces/]return [request_dispatch_result_name()/];
 }
 [/for]
 [/for]
@@ -1965,71 +1981,131 @@ else
  * to true. 
  */]
 [template public uml_c_implement_transition_execution(aTransition:Transition,
-                                                      indentation : Integer)]
+                                                      indentation : Integer)
+    {aState:State = aTransition.request_transition_exit_state();
+     exit_result : String = 'bool b_is_completed = ';
+     spaces : String = utils_get_indent_string();}]
 [if aTransition.kind = TransitionKind::internal and
     aTransition.source.oclIsKindOf(State)]
 [if not aTransition.effect.oclIsUndefined()]
 [uml_c_implement_transition_effect(aTransition, indentation)/]
 [/if]
-result = [aTransition.request_transition_dispatch_result() 
-/];[elseif aTransition.kind = TransitionKind::local
-   and aTransition.source.oclIsKindOf(State)
-   and (aTransition.target.request_parent_states()->includes(aTransition.source)
-        or aTransition.target = aTransition.source)]
-[uml_c_implement_transition_transit(aTransition, indentation)/]
-result = [aTransition.request_transition_dispatch_result() 
-/];[elseif aTransition.kind = TransitionKind::external]
-[uml_c_implement_external_transition(aTransition, indentation)/][else]
-#error Transition specification is ill formed.
-[/if]
-[/template]
-
-[template public uml_c_implement_external_transition(aTransition:Transition,
-                                                      indentation : Integer)
-{aState:State = aTransition.request_transition_exit_state();
- exit_result : String = 'bool b_is_completed = ';
- spaces : String = utils_get_indent_string();}]
+[request_dispatch_result_name()
+                         /] = [aTransition.request_transition_dispatch_result() 
+/];[else]
 [if aTransition.request_transition_needs_exit()]
+[if aTransition.request_transition_is_local()]
+[comment local transitions require the exit of the transition topmost region/]
+[exit_result/][ uml_c_format_param_list(
+         aTransition.request_transition_effect_region()
+                                                  .uml_c_get_region_exit_name(),
+         Sequence{ utils_get_self_name()}, 
+         indentation + exit_result.size() +1) /];
+[else]
 [exit_result/][uml_c_format_param_list(aState.uml_c_get_exit_name(),
                             Sequence{ utils_get_self_name()}, 
                             indentation + exit_result.size() + 1)/];
+[/if]
 
 if(b_is_completed)
 {
 [spaces/][uml_c_implement_transition_transit(aTransition, 
                                              spaces.size() + indentation)/]
-[spaces/]result = [aTransition.request_transition_dispatch_result()/];
 }
 else
 {
-[spaces/]result = [request_transition_transit_state()/];
+[spaces/][request_dispatch_result_name()
+                                     /] = [request_transition_transit_state()/];
 }[else]
 [uml_c_implement_transition_transit(aTransition, 
-                                             spaces.size() + indentation)/]
-result = [aTransition.request_transition_dispatch_result()/];[/if]
+                                             spaces.size() + indentation)/][/if]
+[/if]
 [/template]
 
 [**
  * Implements the steps of the transition after the source state exit is 
  * completed.
+ * The following variables are initialized:
+ * assign_choice_result - necessary, because ordinary States do not return entry
+ *                 status, but Choice pseudostates return entry status.
+ * sync_vertices - When the transition is executed after the effect behavior
+ *                 is completed, a number of states may be entered before
+ *                 the target state is reached. Some of them have entry 
+ *                 behaviors that are executed synchronously, some need
+ *                 some time to be completed and must be called asynchronously.
+ *                 This list contains all states that must be entered directly
+ *                 by the transition, and that can be entered by a synchronous 
+ *                 call. Only the last vertex on this list is allowed to have 
+ *                 asynchronous call, since it will trigger the rest of the
+ *                 state entry chain.
  */]
 [template public uml_c_implement_transition_transit(aTransition:Transition,
                                                    indentation : Integer)
    ?(not aTransition.oclIsUndefined())
-   post(trim())]
+   post(trim())
+   {assign_choice_result : String = 
+        if aTransition.target.request_vertex_is_choice() then 
+            request_dispatch_result_name() + ' = ' 
+        else '' endif;
+    assign_result : String = request_dispatch_result_name() + ' = ';
+    temp_name : String = request_temp_dispatch_result_name();
+    assign_temp_status : String = temp_name + ' = ';
+    sync_vertices : OrderedSet(Vertex) = 
+                 request_transition_target_sync_vertices(aTransition);}]
 [if not aTransition.effect.oclIsUndefined()]
 [uml_c_implement_transition_effect(aTransition, indentation)/]
 [/if]
 [if not aTransition.effect.request_behavior_needs_async_call()]
-[for (aVertex:Vertex | request_transition_target_sync_vertices(aTransition))
-     separator(utils_newline())
-     after(utils_newline())]
+[comment first enter all states that are directly entered by the transition/]
+[for (aVertex:Vertex | sync_vertices)]
+[if aVertex = aTransition.target]
+[comment This is executed only if all state entries up to the target vertex
+ are executed synchronously/]
+[assign_choice_result/][uml_c_format_param_list(aVertex.uml_c_get_entry_name(),
+                                         Sequence{ utils_get_self_name()}, 
+                    indentation + assign_choice_result.size() + 1)/];
+[else]
+[comment All states that appear on the path to the target vertex, must be 
+ entered/]
 [uml_c_format_param_list(aVertex.uml_c_get_entry_name(),
-         Sequence{ utils_get_self_name()}, indentation+1)/];[/for]
+         Sequence{ utils_get_self_name()}, indentation+1)/];
+[/if]
+[/for]
+[if aTransition.request_is_transition_local_to_parent()]
+[comment In case of a local transition to parent the sync_vertices list
+  is empty and it is ok/]
+[request_dispatch_result_name()/] = [request_transition_changed_state()/];
+[elseif sync_vertices->isEmpty()]
+[comment This is not the case when the target vertex is a Choice pseudostate./]
+[request_dispatch_result_name()/] = [request_transition_transit_state()/];
+[elseif sync_vertices->last() <> aTransition.target
+        or sync_vertices->last().request_vertex_needs_async_entry()]
+[comment There are still some asynchronous calls that must be completed./]
+[request_dispatch_result_name()/] = [request_transition_transit_state()/];
+[elseif not aTransition.target.request_vertex_is_choice()]
+[comment This line is needed only if the target is not a Choice pseudostate,
+         since for a Choice pseudostate the result is assigned above in the 
+         for loop./]
+[request_dispatch_result_name()/] = [request_transition_changed_state()/];
+[/if]
+[comment then initialize all other concurrent regions that are
+ activated as a side effect/]
 [for (aRegion:Region | request_transition_target_sync_regions_init(aTransition))
-     separator(utils_newline())]
-[uml_c_format_param_list(aRegion.uml_c_get_region_entry_name(),
-         Sequence{ utils_get_self_name()}, indentation+1)/];[/for]
+     before(uml_c_get_event_status_type() + ' ' + assign_temp_status 
+            + request_transition_ignored_state() + ';' + utils_newline())]
+[assign_temp_status/][uml_c_format_param_list(
+         aRegion.uml_c_get_region_entry_name(),
+         Sequence{ utils_get_self_name()}, 
+         indentation + assign_temp_status.size() + 1)/];
+[assign_result/][uml_c_format_param_list(
+                    uml_c_get_event_resolve_status_name(),
+                    Sequence{ request_dispatch_result_name(), temp_name}, 
+                    indentation+assign_result.size()+1)/];
+[/for]
+[else]
+[comment When the transition effect behavior needs an asynchronous call, then 
+ the transition must remain in the Transit state./]
+[request_dispatch_result_name()/] = [request_transition_transit_state()/];
 [/if]
 [/template]
 
@@ -2078,40 +2154,41 @@ typedef enum {
 [/template]
 
 [template public uml_c_implement_event_resolve_status(indentation : Integer)
-    {spaces : String = utils_get_indent_string();}]
+    {spaces : String = utils_get_indent_string();
+     result_name : String = request_dispatch_result_name();}]
 [uml_c_get_event_status_type()/]
 [uml_c_format_param_list(uml_c_get_event_resolve_status_name(),
         uml_c_get_event_resolve_state_params(), indentation)/]
 {
 [spaces/][uml_c_get_event_status_type()
-                              /] result = [request_transition_ignored_state()/];
+                      /] [result_name/] = [request_transition_ignored_state()/];
 
 [spaces/]if([request_transition_transit_state()
              /]==status1 || [request_transition_transit_state()/]==status2)
 [spaces/]{
-[spaces/][spaces/]result = [request_transition_transit_state()/];
+[spaces/][spaces/][result_name/] = [request_transition_transit_state()/];
 [spaces/]}
 [spaces/]else if([request_transition_changed_state()
                   /]==status1 || [request_transition_changed_state()/]==status2)
 [spaces/]{
-[spaces/][spaces/]result = [request_transition_changed_state()/];
+[spaces/][spaces/][result_name/] = [request_transition_changed_state()/];
 [spaces/]}
 [spaces/]else if([request_transition_same_state()
                  /]==status1 || [request_transition_same_state()/]==status2)
 [spaces/]{
-[spaces/][spaces/]status = [request_transition_same_state()/];
+[spaces/][spaces/][result_name/] = [request_transition_same_state()/];
 [spaces/]}
 [spaces/]else if ([request_transition_deferred_state()
                  /]==status1 || [request_transition_deferred_state()/]==status2)
 [spaces/]{
-[spaces/][spaces/]status = [request_transition_deferred_state()/];
+[spaces/][spaces/][result_name/] = [request_transition_deferred_state()/];
 [spaces/]}
 [spaces/]else
 [spaces/]{
-[spaces/][spaces/]status = [request_transition_ignored_state()/];
+[spaces/][spaces/][result_name/] = [request_transition_ignored_state()/];
 [spaces/]}
 
-[spaces/]return result;
+[spaces/]return [result_name/];
 }
 [/template]
 
@@ -2119,26 +2196,44 @@ typedef enum {
  * Implements an initial transition for each region for which an initial
  * pseudostate is defined. 
  */]
-[template public uml_c_implement_initial_transition(sm : StateMachine, 
+[template public uml_c_implement_initial_transitions(sm : StateMachine, 
                                           indentation : Integer)
  {spaces : String = utils_get_indent_string();}]
 [for (aRegion : Region | sm.request_all_regions()->request_sort_regions()) 
      separator(utils_newline())  ]
+[uml_c_implement_initial_transition(aRegion, indentation)/]
+[/for]
+[/template]
+
+[**
+ * Implements an initialisation function for a region. It also implements
+ * the initial transition for a region for which an initial
+ * pseudostate is defined. 
+ */]
+[template public uml_c_implement_initial_transition(aRegion: Region, 
+                                          indentation : Integer)
+ {spaces : String = utils_get_indent_string();}]
 [if aRegion.request_region_initial_pseudostates()->size()>1]
 #error Region [aRegion.uml_c_get_region_full_name()/] may have max one initial\
        Pseudostate.
 [else]
 [documentation_string('@brief Implements entry of'
- +' the ' + aRegion.name + ' region of the ' + sm.name + ' state machine.\n' 
+  + ' the ' + aRegion.name + ' region of the ' 
+  + aRegion.containingStateMachine().name + ' state machine.\n' 
   + documentation_param(ParameterDirectionKind::_in, 
                utils_get_self_name(), 'The pointer to the self object.\n')
-  + '@return true if the initial transition is completed.',
-  indentation)/]
-static inline void
+  + '@return the initial transition dispatch status.', indentation)/]
+static inline [uml_c_get_event_status_type()/]
+[comment the initial transition needs to
+return a result because it may happen that the initial transition
+points to a choice Pseudostate with outgoing transitions one of which may or 
+may not complete synchronously. /]
 [uml_c_format_param_list(aRegion.uml_c_get_region_entry_name(),
                         aRegion.uml_c_get_region_entry_params(),
                          indentation)/]
 {
+[spaces/][uml_c_get_event_status_type()
+                                      /] [request_dispatch_result_name()/];
 [spaces/][utils_get_self_name()
       /]->[aRegion
            .uml_c_get_region_state_property_name()
@@ -2148,9 +2243,78 @@ static inline void
 [spaces/][uml_c_implement_transition_transit(aRegion
        .request_region_initial_pseudostate().outgoing->any(true), 
                       spaces.size() + indentation)/]
+[else]
+[spaces/][request_dispatch_result_name()
+                                     /] = [request_transition_changed_state()/];
 [/if]
+[spaces/]return [request_dispatch_result_name()/];
 }
 [/if]
+[/template]
+
+[**
+ * Implements a choice pseudostate entry function. 
+ */]
+[template public uml_c_implement_choice(aChoice : Pseudostate, 
+                                          indentation : Integer)
+ ?(aChoice.kind = PseudostateKind::choice)
+ {spaces : String = utils_get_indent_string();
+  transitions : OrderedSet(Transition) = aChoice.containingStateMachine()
+                  .eAllContents(Transition)->select(t:Transition
+                  | aChoice.outgoing->includes(t))->asOrderedSet();
+  assign_result : String = request_dispatch_result_name() + ' = ';}]
+[documentation_string('@brief Implements entry of'
+ +' the ' + aChoice.name + ' choice Pseudostate of the ' 
+ + aChoice.containingStateMachine().name + ' state machine.\n' 
+  + documentation_param(ParameterDirectionKind::_in, 
+               utils_get_self_name(), 'The pointer to the self object.\n')
+  + '@return the event dispatch status.', indentation)/]
+static [uml_c_get_event_status_type()/]
+[uml_c_format_param_list(aChoice.uml_c_get_entry_name(),
+                        aChoice.uml_c_get_choice_entry_params(),
+                         indentation)/]
+{
+[spaces/][uml_c_get_event_status_type()/] [assign_result
+                                        /][request_transition_changed_state()/];
+
+[if transitions->exists(t:Transition | t.trigger->notEmpty())]
+#error A choice vertex outgoing transitions cannot contain any trigger.
+[else]
+[spaces/][uml_c_implement_vertex_transitions(aChoice, transitions, 
+                                             indentation+spaces.size())/]
+[/if]
+
+[spaces/]return [request_dispatch_result_name()/];
+}
+[/template]
+
+[**
+ * Declares a Choice Pseudostate entry function. 
+ */]
+[template public uml_c_declare_choice(aChoice : Pseudostate, indentation : Integer)
+ ?(aChoice.kind = PseudostateKind::choice)]
+[uml_c_format_param_list('static ' + uml_c_get_event_status_type() + ' ' 
+                        + aChoice.uml_c_get_entry_name(),
+                        aChoice.uml_c_get_choice_entry_params(), 
+                        indentation+1)/];
+[/template]
+
+[**
+ * Declares all Choice Pseudostate entry functions for a StateMachine. 
+ */]
+[template public uml_c_declare_choices(sm : StateMachine, indentation : Integer)
+ ?(sm.request_state_machine_choices()->notEmpty())]
+[for (aChoice : Pseudostate | request_state_machine_choices(sm)) ]
+[uml_c_declare_choice(aChoice, indentation)/]
 [/for]
 [/template]
 
+[**
+ * Implements all Choice Pseudostate entry functions for a StateMachine. 
+ */]
+[template public uml_c_implement_choices(sm : StateMachine, indentation : Integer)
+ ?(sm.request_state_machine_choices()->notEmpty())]
+[for (aChoice : Pseudostate | request_state_machine_choices(sm)) ]
+[uml_c_implement_choice(aChoice, indentation)/]
+[/for]
+[/template]

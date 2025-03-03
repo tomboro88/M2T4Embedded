@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Acceleo C Module Runtime Plug-in
-Bundle-SymbolicName: tbo.acceleo.psm.uml.gen.c
+Bundle-SymbolicName: tbo.acceleo.psm.uml.gen.c;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: tbo.acceleo.psm.uml.gen.c.Activator
 Bundle-Vendor: Eclipse Modeling Project

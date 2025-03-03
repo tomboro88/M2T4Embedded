@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="generate" name="tbo.acceleo.psm.uml.gen.c">
-    <property name="ECLIPSE_HOME" value="../../../../../../../../../home/tomasz/Pobrane/papyrus-2024-06-6.7.0-linux64/Papyrus"/>
+    <property name="ECLIPSE_HOME" value="../../../../../../../../../home/tomasz/Papyrus"/>
     <property name="ECLIPSE_WORKSPACE" value="../../../UMLWorkspace"/>
 
     <!-- The classpath with only the dependencies used by the project -->
@@ -32,10 +32,10 @@
         <pathelement location="${ECLIPSE_HOME}/plugins/lpg.runtime.java_2.0.17.v201004271640.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.ocl.common_1.21.0.v20240603-0658.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.ocl.ecore_3.21.0.v20240603-0658.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.common_3.7.17.202408201303.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.model_3.7.17.202408201303.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.profiler_3.7.17.202408201303.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.engine_3.7.17.202408201303.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.common_3.7.15.202402190857.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.model_3.7.15.202402190857.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.profiler_3.7.15.202402190857.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.acceleo.engine_3.7.15.202402190857.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.codegen.ecore_2.38.0.v20240314-1003.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.emf.codegen_2.23.0.v20230211-1150.jar"/>
         <pathelement location="${ECLIPSE_HOME}/plugins/com.google.guava_33.2.0.jre.jar"/>

@@ -26,7 +26,11 @@
        and not aClassifier.general->isEmpty())->isEmpty();
    general_extern_classifiers : OrderedSet(Classifier) = 
      allClassifiers.general->asOrderedSet()
-                    ->select(c:Classifier|c._package <> aPackage);}]
+                    ->select(c:Classifier|c._package <> aPackage);
+   non_public_bodies_visibility : Set(VisibilityKind) = 
+                                        Set{VisibilityKind::_package,
+                                            VisibilityKind::private,
+                                            VisibilityKind::protected};}]
 
 [file (get_package_c_qualified_path(aPackage), false, 'UTF-8')]
 [documentationCFile('The ' + aPackage.name + ' package source file.')/]
@@ -137,18 +141,27 @@
        or aClassifier
             .request_has_standalone_behaviors(Set{VisibilityKind::private})
        or aClassifier.uml_c_needs_init_defaults()
-       or aClassifier.oclIsKindOf(StateMachine))]
-[uml_c_declare_operations(aClassifier, Set{VisibilityKind::private}, 
-                          false, 0)/]
+       or aClassifier.oclIsKindOf(StateMachine))
+    {vis : Set(VisibilityKind) = Set{VisibilityKind::private};}]
+[if aClassifier.uml_c_operations_need_declaration(vis)->notEmpty()]
+[uml_c_declare_operations(aClassifier, vis, false, 0)/]
+[/if]
 [let bc:BehavioredClassifier=aClassifier]
-[uml_c_declare_behaviors(bc, Set{VisibilityKind::private}, false, 0)/]
+[if bc.request_standalone_behaviors(vis)->notEmpty()]
+[uml_c_declare_behaviors(bc, vis, false, 0)/]
+[/if]
 [/let]
+[if aClassifier.uml_c_needs_init_defaults()]
 [uml_c_declare_defaults(aClassifier, 0)/]
+[/if]
 [let sm:StateMachine=aClassifier]
 [uml_c_declare_region_exit(sm,0)/]
 [uml_c_declare_sm_dispatch(sm, 0)/]
 [uml_c_declare_region_dispatch(sm,0)/]
 [uml_c_declare_state_dispatch(sm, 0)/]
+[if sm.request_state_machine_choices()->notEmpty() ]
+[uml_c_declare_choices(sm, 0)/]
+[/if]
 [/let]
 [/for]
 /*******************************************************************************
@@ -189,7 +202,7 @@ static inline bool
 [/if]
 [for (sm : StateMachine | allClassifiers->selectByKind(StateMachine))]
 [uml_c_define_state_entry(sm,0)/]
-[uml_c_implement_initial_transition(sm, 0)/]
+[uml_c_implement_initial_transitions(sm, 0)/]
 [if not sm.eAllContents(State)
           ->select(aState : State | aState.request_state_needs_exit())
           ->isEmpty() ]
@@ -224,23 +237,21 @@ static inline bool
  ******************************************************************************/
 [for (aClassifier:Classifier|allClassifiers)
      ?(aClassifier.uml_c_needs_init_defaults()
-       or aClassifier.uml_c_get_operations(Set{VisibilityKind::_package,
-                                            VisibilityKind::private,
-                                            VisibilityKind::protected})
-                                          ->notEmpty()
+       or aClassifier.uml_c_get_operations(non_public_bodies_visibility)
+                                                                    ->notEmpty()
        or aClassifier.request_has_standalone_behaviors(
-                           Set{VisibilityKind::_package,
-                               VisibilityKind::private,
-                               VisibilityKind::protected})
+                                                   non_public_bodies_visibility)
        or aClassifier.oclIsKindOf(StateMachine)) ]
+[if aClassifier.uml_c_needs_init_defaults()]
 [uml_c_define_defaults(aClassifier,0)/]
-[uml_c_define_operations(aClassifier, Set{VisibilityKind::_package,
-                                            VisibilityKind::private,
-                                            VisibilityKind::protected}, 0)/]
+[/if]
+[if aClassifier.uml_c_get_operations(non_public_bodies_visibility)->notEmpty()]
+[uml_c_define_operations(aClassifier, non_public_bodies_visibility, 0)/]
+[/if]
 [let bc:BehavioredClassifier=aClassifier]
-[uml_c_define_behaviors(bc,Set{VisibilityKind::_package,
-                               VisibilityKind::private,
-                               VisibilityKind::protected}, 0)/]
+[if bc.request_standalone_behaviors(non_public_bodies_visibility)->notEmpty()]
+[uml_c_define_behaviors(bc, non_public_bodies_visibility, 0)/]
+[/if]
 [/let]
 [let sm:StateMachine=aClassifier]
 [if sm.request_all_regions()
@@ -251,6 +262,9 @@ static inline bool
 [uml_c_implement_sm_dispatch(sm, 0)/]
 [uml_c_implement_region_dispatch(sm,0)/]
 [uml_c_implement_state_dispatch(sm, 0)/]
+[if sm.request_state_machine_choices()->notEmpty() ]
+[uml_c_implement_choices(sm, 0)/]
+[/if]
 [/let]
 [/for]
 /*** end of file ***/

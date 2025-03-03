@@ -313,6 +313,13 @@
 [query public request_vertex_region(v : Vertex) : Region = 
   v.container/]
 
+[**
+ * @brief Returns all parent regions of the vertex. The first is the one at the 
+ * top of the regions hierarchy.
+*/]
+[query public request_vertex_regions(v : Vertex) : OrderedSet(Region) = 
+  v.container.request_parent_regions()->append(v.container)/]
+
 [query public request_needs_event_loop(aClassifier : Classifier): Boolean  = 
     if aClassifier.oclIsKindOf(StateMachine) then
         aClassifier.oclAsType(Behavior)._context.oclIsUndefined()
@@ -373,9 +380,10 @@
 */]
 [query public request_else_transitions(transitions : OrderedSet(Transition))
        : OrderedSet(Transition) = transitions
-                 ->select(t:Transition | not t.guard.oclIsUndefined() 
-                           and t.guard.oclIsKindOf(Expression) 
-                           and t.guard.oclAsType(Expression).symbol = 'else')/]
+                 ->select(t:Transition | (not t.guard.oclIsUndefined()) 
+                           and (not t.guard.specification.oclIsUndefined()) 
+                           and t.guard.specification.oclIsKindOf(Expression) 
+                           and t.guard.specification.oclAsType(Expression).symbol = 'else')/]
 
 [**
  * brief Selects transitions with specified guards, including 'else' guards.
@@ -390,16 +398,30 @@
  */]
 [query public request_transition_exit_state(aTransition:Transition) : State
  = 
+      let exitHierarchy : OrderedSet(State) =
+        request_transition_exit_states(aTransition) in
+      if exitHierarchy->isEmpty() then 
+          null
+      else exitHierarchy->first() endif/]
+
+[**
+ * @brief Returns The list of states that should be exited to execute the 
+ * transition. The first state is the the last to exit. 
+ */]
+[query public request_transition_exit_states(aTransition:Transition) : 
+ OrderedSet(State)
+ = 
       let sourceHierarchy : OrderedSet(State) =
         aTransition.source.request_parent_states() in
       let targetHierarchy : OrderedSet(State) = 
         aTransition.target.request_parent_states()in
       let exitHierarchy : OrderedSet(State) =
         sourceHierarchy->removeAll(targetHierarchy) in
-      if exitHierarchy->isEmpty() then 
-      if aTransition.source.oclIsKindOf(State) 
-         then aTransition.source.oclAsType(State) else null endif
-      else exitHierarchy->first() endif/]
+      if aTransition.source.oclIsKindOf(State) then
+          exitHierarchy->append(aTransition.source.oclAsType(State))
+      else
+          exitHierarchy
+      endif /]
 
 [**
  * @brief Returns The states that should be entered to to complete the 
@@ -415,34 +437,27 @@ OrderedSet(State)
         aTransition.target.request_parent_states()in
       let entry_states : OrderedSet(State) = 
         targetHierarchy->removeAll(sourceHierarchy) in 
-        if aTransition.source.oclIsKindOf(State) and
-           aTransition.kind=TransitionKind::local
-           and targetHierarchy->includes(aTransition.source.oclAsType(State))
-           and targetHierarchy->first()=aTransition.source
+        if aTransition.request_is_transition_local_to_child()
         then entry_states->drop(1)
         else entry_states endif/]
 
 [**
- * @brief Returns The states that should be entered to to complete the 
- * transition. the first state is the first to enter.
- */]
-[query public request_transition_entry_vertices(aTransition:Transition) : 
-OrderedSet(Vertex)
- = request_transition_entry_states(aTransition)->append(aTransition.target)
-   /]
-
-[**
  * @brief Returns The  additional regions that should be entered to 
  * complete the transition with the given entry vertex sequence. The first 
- * region is the first to enter.
+ * region is the first to enter. By definition these are all regions of the
+ * entered states that do not contain any target state.
  */]
-[query public request_regions_init(anOS:OrderedSet(Vertex)) : 
+[query public request_regions_init(aTransition:Transition) : 
 OrderedSet(Region)
- = anOS->selectByKind(State)
+ = if aTransition.request_is_transition_local_to_parent() 
+  then OrderedSet{aTransition.request_transition_effect_region()}
+  else let target_vertices : OrderedSet(Vertex) = 
+        aTransition.request_transition_target_vertices() in
+      target_vertices->selectByKind(State)
        ->select(aState:State | aState.region->notEmpty())
        ->collect(aState : State | aState.region->request_regions_sorted()
-                         ->select(r:Region|anOS->excludesAll(r.subvertex)))
-       ->asOrderedSet()
+                   ->select(r:Region|target_vertices->excludesAll(r.subvertex)))
+       ->asOrderedSet() endif
    /]
 
 [**
@@ -471,23 +486,6 @@ OrderedSet(Region)
                             ->append(aRegion.state.container)
  endif/]
 
-[**
- * @brief Get a list of states that will be exited when the transition occurs.
- * Does not include substates of a compound source state. 
- * The topmost state is at index 0, child states are at lower indexes.
- */]
-[query public request_transition_exit_states(aTransition : Transition):
-OrderedSet(State) = 
- let exitState : State = aTransition.request_transition_exit_state() in
- let parentStates : OrderedSet(State) = if exitState.oclIsUndefined() 
-       then OrderedSet{} else if aTransition.source.oclIsKindOf(State) then
-           aTransition.source.request_parent_states()
-                          ->append(aTransition.source.oclAsType(State)) 
-       else aTransition.source.request_parent_states() endif endif in
- if parentStates->isEmpty() 
-          then OrderedSet{} else parentStates
-                               ->drop(parentStates->indexOf(exitState)) endif /]
-
 [query public request_state_machine_states(sm:StateMachine):OrderedSet(State) = 
  sm.eAllContents(State)->select(s:State|s.containingStateMachine() = sm)
     ->asOrderedSet()/]
@@ -498,10 +496,64 @@ OrderedSet(State) =
     ->select(t:Transition|t.containingStateMachine() = sm)
     ->asOrderedSet()/]
 
+[**
+ *@brief Returns the region that should handle the effect behavior of the 
+ *       transition. This is the topmost region that will be reached
+ *       during transition traversal.
+*/]
 [query public request_transition_effect_region(aTransition:Transition):
   Region = let exit_state : State = aTransition.request_transition_exit_state()
-  in if not exit_state.oclIsUndefined() then exit_state.request_vertex_region()
+  in if not exit_state.oclIsUndefined() then 
+      if aTransition.kind = TransitionKind::external
+          or aTransition.kind = TransitionKind::internal
+      then exit_state.request_vertex_region()
+      else 
+          if aTransition.request_is_transition_local_to_parent()
+          then request_vertex_regions(aTransition.source)
+                        ->removeAll(request_vertex_regions(exit_state))->first()
+          else
+              if aTransition.request_is_transition_local_to_child()
+              then
+                  aTransition.request_transition_target_vertices()
+                                                           ->first().container
+              else
+                  exit_state.request_vertex_region()
+              endif
+          endif
+      endif
   else aTransition.source.request_vertex_region() endif/]
+
+[**
+ * @brief Checks if the transition meets all the conditions to be treated as 
+ * local transition.
+*/]
+[query public request_transition_is_local(aTransition : Transition) :
+ Boolean = 
+ aTransition.request_is_transition_local_to_parent()
+ or aTransition.request_is_transition_local_to_child()/]
+
+[**
+ * @brief Checks if the transition meets all the conditions to be treated as 
+ * local transition.
+*/]
+[query public request_is_transition_local_to_parent(aTransition : Transition) :
+ Boolean = 
+ aTransition.kind = TransitionKind::local
+      and aTransition.target.oclIsKindOf(State) 
+      and aTransition.source.request_parent_states()
+                           ->includes(aTransition.target.oclAsType(State))/]
+
+[**
+ * @brief Checks if the transition meets all the conditions to be treated as 
+ * local transition.
+*/]
+[query public request_is_transition_local_to_child(aTransition : Transition) :
+ Boolean = 
+ aTransition.kind = TransitionKind::local
+      and aTransition.source.oclIsKindOf(State) 
+      and aTransition.target.request_parent_states()
+                           ->includes(aTransition.source.oclAsType(State))/]
+
 
 [query public request_region_effect_sm_transitions(aRegion:Region):
   OrderedSet(Transition) = aRegion.containingStateMachine()
@@ -520,6 +572,10 @@ OrderedSet(State) =
  let sm : StateMachine = aRegion.containingStateMachine() in  
   (sm.region->size() = 1) and (sm.region->includes(aRegion))/]
 
+[**
+ * Returns vertex outgoing transitions thet handle the given event.
+ * The transitions are ordered in the same sequence as they appear in the model.
+ */]
 [query public request_outgoing_transitions(aVertex:Vertex, anEvent:Event):
  OrderedSet(Transition) = 
  let aStateMachine : StateMachine = aVertex.containingStateMachine() in
@@ -537,11 +593,18 @@ aClassifier.oclIsKindOf(BehavioredClassifier)
            and aClassifier.oclAsType(BehavioredClassifier)
                .request_standalone_behaviors(vis)->notEmpty()/]
 
-[query public request_transition_needs_exit(aTransition:Transition):Boolean = 
+[query public request_transition_needs_exit(aTransition:Transition):Boolean =
 let exitState : State = request_transition_exit_state(aTransition) in
-    aTransition.kind = TransitionKind::external
-      and (not exitState.oclIsUndefined())
-      and  exitState.request_state_needs_exit()/]
+    (not exitState.oclIsUndefined())
+    and (
+    if aTransition.request_transition_is_local() then
+        aTransition.request_transition_effect_region()
+                                                   .request_region_needs_exit()
+    else
+        (aTransition.kind = TransitionKind::external
+         or aTransition.kind = TransitionKind::local)
+              and  exitState.request_state_needs_exit()
+    endif)/]
 
 [query public request_region_initial_pseudostates(r:Region) 
  : Set(Pseudostate) = 
@@ -603,7 +666,7 @@ let exitState : State = request_transition_exit_state(aTransition) in
         aTransition.request_transition_target_vertices() in
     target_vertices
     ->select(v:Vertex|v.request_vertex_needs_async_entry())->notEmpty()
-    or target_vertices->request_regions_init()
+    or aTransition.request_regions_init()
        ->select(r:Region|r.request_region_needs_async_entry())->notEmpty())/]
 
 [**
@@ -612,8 +675,10 @@ let exitState : State = request_transition_exit_state(aTransition) in
  * the remaining regions that need to be initialized.
 */]
 [query public request_transition_target_vertices(aTransition:Transition)
- : OrderedSet(Vertex) = request_transition_entry_states(aTransition)
-                        ->append(aTransition.target)/]
+ : OrderedSet(Vertex) = let entry_states : OrderedSet(State) = 
+            request_transition_entry_states(aTransition) in
+   if aTransition.request_is_transition_local_to_parent() then
+      entry_states else entry_states->append(aTransition.target) endif/]
 
 [**
  * @brief Returns the list of the first synchronous entry call vertices
@@ -634,14 +699,17 @@ let exitState : State = request_transition_exit_state(aTransition) in
 [query public request_transition_target_sync_regions_init
                                                         (aTransition:Transition)
  : OrderedSet(Region) = 
- let sync_entry_calls : OrderedSet(Vertex) = 
-     request_transition_target_sync_vertices(aTransition) in
- let last_vertex : Vertex = sync_entry_calls->last() in
- let only_sync_calls : OrderedSet(Vertex) = 
-     if last_vertex.oclIsUndefined() 
-        or not last_vertex.request_vertex_needs_async_entry() then
-        sync_entry_calls else sync_entry_calls->dropRight(1) endif in
- only_sync_calls->request_regions_init() /]
+ let additional_regions : OrderedSet(Region) = 
+                   aTransition.request_regions_init() in 
+ if aTransition.request_is_transition_local_to_parent()
+ then additional_regions else
+   let sync_entry_states : OrderedSet(State) = 
+     request_transition_target_sync_vertices(aTransition)
+     ->selectByKind(State)
+     ->select(s:State|not s.request_vertex_needs_async_entry()) 
+     in
+   additional_regions->select(r:Region|sync_entry_states->includes(r.state)) 
+ endif /]
 
 [query public request_transition_dispatch_result(aTransition : Transition)
  : String = if aTransition.request_transition_needs_async_call() 
@@ -679,3 +747,20 @@ let exitState : State = request_transition_exit_state(aTransition) in
       ->addAll(aRest_non_children->request_sort_regions())
     endif/]
 
+[query public request_state_machine_choices(sm : StateMachine)
+ : Sequence(Pseudostate) = sm.eAllContents(Pseudostate)
+      ->select(p : Pseudostate | p.kind = PseudostateKind::choice)/]
+
+[query public request_vertex_is_choice(aVertex : Vertex) : Boolean = 
+ aVertex.oclIsKindOf(Pseudostate) 
+ and aVertex.oclAsType(Pseudostate).kind = PseudostateKind::choice/]
+
+[query public request_dispatch_result_name(traceabilityContext : OclAny)
+ : String = 'result'/]
+
+[query public request_temp_dispatch_result_name(traceabilityContext : OclAny)
+ : String = 'temp_status'/]
+
+[query public request_is_behavior_named(aBehavior:Behavior) : Boolean = 
+    (not aBehavior.oclIsUndefined()) 
+    and (not aBehavior.name.oclIsUndefined()) and aBehavior.name->notEmpty()/]
