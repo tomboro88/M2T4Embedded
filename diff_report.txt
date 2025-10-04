@@ -1,0 +1,5 @@
+ .../src/TJunction/TJunction.c                      | 320 [32m+++++++++++[m[31m----------[m
+ .../src/TJunction/TJunction.h                      |  13 [31m-[m
+ {c_expected => c_generated}/src/Tkind/Tkind.c      |  80 [32m++++[m[31m--[m
+ {c_expected => c_generated}/src/Tkind/Tkind.h      |  22 [32m+[m[31m-[m
+ 4 files changed, 232 insertions(+), 203 deletions(-)

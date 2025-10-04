@@ -13,8 +13,26 @@ extern "C" {
 //Start of user code includes top
 //End of user code
 #    include <sm.h>
+#    include <stdbool.h>
+#    include <stddef.h>
 //Start of user code includes bottom
 //End of user code
+
+#    define TKIND_CTEST_I_CNT 2
+#    define TKIND_CTEST_O_CNT 2
+#    define TKIND_CTEST_A_CNT 2
+#    define TKIND_CTEST_B_CNT 2
+#    define TKIND_CTEST_C_CNT 2
+#    define TKIND_CTEST_F_CNT 2
+#    define TKIND_CTEST_E_CNT 2
+#    define TKIND_CTEST_D_CNT 2
+#    define TKIND_CTEST_N_CNT 2
+#    define TKIND_CTEST_H_CNT 2
+#    define TKIND_CTEST_G_CNT 2
+#    define TKIND_CTEST_J_CNT 2
+#    define TKIND_CTEST_M_CNT 2
+#    define TKIND_CTEST_K_CNT 2
+#    define TKIND_CTEST_L_CNT 2
 
     /**
      * @brief The type representing the Tkind_ctest_s struct.
@@ -868,6 +886,8 @@ extern "C" {
         /**
          */
         tkind_sm1_region6_t             region6;
+
+        bool                            b_test_condition;
     };
 
     void Tkind_ctest_a(Tkind_ctest_t* const p_obj);

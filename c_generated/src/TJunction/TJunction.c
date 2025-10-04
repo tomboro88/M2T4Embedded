@@ -201,7 +201,7 @@ TJunction_Jtest_d(TJunction_Jtest_t* const p_obj)
 static void
 TJunction_Jtest_sm1(TJunction_Jtest_t* const p_obj)
 {
-    #error effect Behavior type not supported
+    #warning effect Behavior type not supported
 }
 
 /**
@@ -321,7 +321,9 @@ sm1_dispatch_a_state1(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_a_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_junction2(p_obj);
     result = CHANGEDSTATE;
 
@@ -340,7 +342,9 @@ sm1_dispatch_b_state1(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_b_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_junction2(p_obj);
     result = CHANGEDSTATE;
 
@@ -359,17 +363,24 @@ sm1_dispatch_c_state3(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_c_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
-    if(b_guard1
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard1
        && sm1_enter_junction8_c_5(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
-    else if(b_guard6
+    else if(p_obj->b_guard6
        && sm1_enter_junction11_17(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_junction11(p_obj);
         result = CHANGEDSTATE;
     }
@@ -389,21 +400,29 @@ sm1_dispatch_c_state4(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_c_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
-    if(b_guard2
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard2
        && sm1_enter_junction8_c_4(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
-    else if(b_guard4)
+    else if(p_obj->b_guard4)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state17(p_obj);
         result = CHANGEDSTATE;
     }
     else if(sm1_enter_junction24_c_11(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return result;
@@ -421,12 +440,16 @@ sm1_dispatch_c_state13(TJunction_sm1_t* const p_obj,\
                        tjunction_jtest_c_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
+    /*debug marker uml_c_implement_vertex_transitions 1*/
     if(sm1_enter_junction20_c_13(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return result;
@@ -444,12 +467,16 @@ sm1_dispatch_c_state17(TJunction_sm1_t* const p_obj,\
                        tjunction_jtest_c_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
+    /*debug marker uml_c_implement_vertex_transitions 1*/
     if(sm1_enter_junction24_c_14(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return result;
@@ -467,13 +494,17 @@ sm1_dispatch_d_state3(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_d_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
-    if(b_guard1
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard1
        && sm1_enter_junction8_d_5(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return result;
@@ -491,13 +522,17 @@ sm1_dispatch_d_state4(TJunction_sm1_t* const p_obj,\
                       tjunction_jtest_d_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
+/*debug marker uml_c_implement_state_dispatch 2*/
 
-    if(b_guard2
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard2
        && sm1_enter_junction8_d_4(p_obj, &result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return result;
@@ -517,6 +552,7 @@ sm1_enter_junction2_a_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_state3(p_obj);
     result = CHANGEDSTATE;
 
@@ -537,6 +573,7 @@ sm1_enter_junction2_b_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_state4(p_obj);
     result = CHANGEDSTATE;
 
@@ -557,12 +594,17 @@ sm1_enter_junction8_c_4(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(sm1_enter_junction11_46(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(sm1_enter_junction11_4_6(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
         printf("Common c event effect");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_junction11(p_obj);
         result = CHANGEDSTATE;
     }
@@ -584,6 +626,7 @@ sm1_enter_junction8_d_4(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_state17(p_obj);
     result = CHANGEDSTATE;
 
@@ -604,12 +647,17 @@ sm1_enter_junction8_c_5(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(sm1_enter_junction11_56(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(sm1_enter_junction11_5_6(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
         printf("Common c event effect");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_junction11(p_obj);
         result = CHANGEDSTATE;
     }
@@ -631,6 +679,7 @@ sm1_enter_junction8_d_5(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
+    /*debug marker uml_c_implement_transition_transit 1*/
     sm1_enter_state17(p_obj);
     result = CHANGEDSTATE;
 
@@ -646,19 +695,26 @@ sm1_enter_junction8_d_5(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction11_46(TJunction_sm1_t* const p_obj,\
-                        sm_event_status_t* const p_result)
+sm1_enter_junction11_4_6(TJunction_sm1_t* const p_obj,\
+                         sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -675,19 +731,26 @@ sm1_enter_junction11_46(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction11_56(TJunction_sm1_t* const p_obj,\
-                        sm_event_status_t* const p_result)
+sm1_enter_junction11_5_6(TJunction_sm1_t* const p_obj,\
+                         sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -705,19 +768,26 @@ sm1_enter_junction11_56(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction11_1312(TJunction_sm1_t* const p_obj,\
-                          sm_event_status_t* const p_result)
+sm1_enter_junction11_13_12(TJunction_sm1_t* const p_obj,\
+                           sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -734,19 +804,26 @@ sm1_enter_junction11_1312(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction11_111512(TJunction_sm1_t* const p_obj,\
-                            sm_event_status_t* const p_result)
+sm1_enter_junction11_11_15_12(TJunction_sm1_t* const p_obj,\
+                              sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -763,19 +840,26 @@ sm1_enter_junction11_111512(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction11_141512(TJunction_sm1_t* const p_obj,\
-                            sm_event_status_t* const p_result)
+sm1_enter_junction11_14_15_12(TJunction_sm1_t* const p_obj,\
+                              sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -799,14 +883,21 @@ sm1_enter_junction11_16(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -828,14 +919,21 @@ sm1_enter_junction11_17(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(b_guard3)
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard3)
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
+    /*debug marker uml_c_implement_transition_guard 2*/
         printf("b_guard3 was true");
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state12(p_obj);
         result = CHANGEDSTATE;
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
+    /*debug marker uml_c_implement_vertex_transitions 3*/
+        /*debug marker uml_c_implement_transition_transit 1*/
         sm1_enter_state13(p_obj);
         result = CHANGEDSTATE;
     }
@@ -857,12 +955,15 @@ sm1_enter_junction20_c_13(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(b_guard5
-       && sm1_enter_junction11_1312(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard5
+       && sm1_enter_junction11_13_12(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return b_is_handled;
@@ -877,17 +978,20 @@ sm1_enter_junction20_c_13(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction20_c_1115(TJunction_sm1_t* const p_obj,\
-                            sm_event_status_t* const p_result)
+sm1_enter_junction20_c_11_15(TJunction_sm1_t* const p_obj,\
+                             sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard5
-       && sm1_enter_junction11_111512(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard5
+       && sm1_enter_junction11_11_15_12(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return b_is_handled;
@@ -902,17 +1006,20 @@ sm1_enter_junction20_c_1115(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction20_c_1415(TJunction_sm1_t* const p_obj,\
-                            sm_event_status_t* const p_result)
+sm1_enter_junction20_c_14_15(TJunction_sm1_t* const p_obj,\
+                             sm_event_status_t* const p_result)
 {
     bool b_is_handled = false;
 
-    if(b_guard5
-       && sm1_enter_junction11_141512(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(p_obj->b_guard5
+       && sm1_enter_junction11_14_15_12(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return b_is_handled;
@@ -933,11 +1040,14 @@ sm1_enter_junction24_c_11(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(sm1_enter_junction20_c_1115(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(sm1_enter_junction20_c_11_15(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return b_is_handled;
@@ -957,11 +1067,14 @@ sm1_enter_junction24_c_14(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = false;
 
-    if(sm1_enter_junction20_c_1415(p_obj, p_result))
+    /*debug marker uml_c_implement_vertex_transitions 1*/
+    if(sm1_enter_junction20_c_14_15(p_obj, p_result))
     {
+    /*debug marker uml_c_implement_transition_guard 1*/
     }
     else 
     {
+    /*debug marker uml_c_implement_vertex_transitions 2*/
     }
 
     return b_is_handled;

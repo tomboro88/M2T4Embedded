@@ -12,6 +12,7 @@
 //Start of user code includes top
 //End of user code
 #include "Tkind.h"
+#include <stdio.h>
 //Start of user code includes bottom
 //End of user code
 /*******************************************************************************
@@ -409,7 +410,7 @@ sm1_exit_state1(Tkind_sm1_t* const p_obj)
     if(b_is_completed)
     {
         printf("Exit State1");
-        b_is_completed &= true
+        b_is_completed &= true;
     }
 
     return b_is_completed;
@@ -429,7 +430,7 @@ sm1_exit_state3(Tkind_sm1_t* const p_obj)
     if(b_is_completed)
     {
         printf("Exit State3");
-        b_is_completed &= true
+        b_is_completed &= true;
     }
 
     return b_is_completed;
@@ -443,9 +444,10 @@ sm1_exit_state3(Tkind_sm1_t* const p_obj)
 static inline bool
 sm1_exit_state5(Tkind_sm1_t* const p_obj)
 {
+	(void) p_obj;
     bool b_is_completed = true;
     printf("Exit State5");
-    b_is_completed &= true
+    b_is_completed &= true;
     return b_is_completed;
 }
 
@@ -457,9 +459,10 @@ sm1_exit_state5(Tkind_sm1_t* const p_obj)
 static inline bool
 sm1_exit_state2(Tkind_sm1_t* const p_obj)
 {
+	(void) p_obj;
     bool b_is_completed = true;
     printf("Exit State2");
-    b_is_completed &= true
+    b_is_completed &= true;
     return b_is_completed;
 }
 
@@ -477,7 +480,7 @@ sm1_exit_state4(Tkind_sm1_t* const p_obj)
     if(b_is_completed)
     {
         printf("Exit State4");
-        b_is_completed &= true
+        b_is_completed &= true;
     }
 
     return b_is_completed;
@@ -491,9 +494,10 @@ sm1_exit_state4(Tkind_sm1_t* const p_obj)
 static inline bool
 sm1_exit_state6(Tkind_sm1_t* const p_obj)
 {
+	(void) p_obj;
     bool b_is_completed = true;
     printf("Exit State6");
-    b_is_completed &= true
+    b_is_completed &= true;
     return b_is_completed;
 }
 
@@ -505,9 +509,10 @@ sm1_exit_state6(Tkind_sm1_t* const p_obj)
 static inline bool
 sm1_exit_state7(Tkind_sm1_t* const p_obj)
 {
+	(void) p_obj;
     bool b_is_completed = true;
     printf("Exit State7");
-    b_is_completed &= true
+    b_is_completed &= true;
     return b_is_completed;
 }
 
@@ -525,7 +530,7 @@ sm1_exit_state8(Tkind_sm1_t* const p_obj)
     if(b_is_completed)
     {
         printf("Exit State8");
-        b_is_completed &= true
+        b_is_completed &= true;
     }
 
     return b_is_completed;
@@ -539,9 +544,10 @@ sm1_exit_state8(Tkind_sm1_t* const p_obj)
 static inline bool
 sm1_exit_state9(Tkind_sm1_t* const p_obj)
 {
+	(void) p_obj;
     bool b_is_completed = true;
     printf("Exit State9");
-    b_is_completed &= true
+    b_is_completed &= true;
     return b_is_completed;
 }
 
@@ -687,7 +693,7 @@ Tkind_ctest_o(Tkind_ctest_t* const p_obj)
 static void
 Tkind_ctest_sm1(Tkind_ctest_t* const p_obj)
 {
-    #error effect Behavior type not supported
+    //#error effect Behavior type not supported
 }
 
 /**
@@ -2474,7 +2480,7 @@ sm1_enter_choice1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
-    if(b_test_condition)
+    if(p_obj->b_test_condition)
     {
         sm1_enter_state8(p_obj);
         result = CHANGEDSTATE;

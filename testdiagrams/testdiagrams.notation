@@ -1201,7 +1201,7 @@
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_03Zx9QHsEfCcqpIlgsjzBA" type="Transition_GuardLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_3yFfgF9kEfC39tAyEYeQwA" name="IS_UPDATED_POSITION" booleanValue="true"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_03aZAAHsEfCcqpIlgsjzBA" x="13" y="40"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_03aZAAHsEfCcqpIlgsjzBA" x="-21" y="58"/>
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_03aZAQHsEfCcqpIlgsjzBA" type="Transition_StereotypeLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_3yZokF9kEfC39tAyEYeQwA" name="IS_UPDATED_POSITION" booleanValue="true"/>
@@ -1308,5 +1308,22 @@
       <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZKHREBz_EfCL28h_BDpjrA" id="(1.0,0.45454545454545453)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZKH4IBz_EfCL28h_BDpjrA" id="(0.15,0.3333333333333333)"/>
     </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_k56kIJ_lEfC8UZpzv1rbug" type="PapyrusUMLClassDiagram" name="NewPackageDiagram" measurementUnit="Pixel">
+    <children xmi:type="notation:Shape" xmi:id="_mXShEJ_lEfC8UZpzv1rbug" type="Package_Shape">
+      <children xmi:type="notation:DecorationNode" xmi:id="_mXWygJ_lEfC8UZpzv1rbug" type="Package_NameLabel"/>
+      <children xmi:type="notation:BasicCompartment" xmi:id="_mXXZkJ_lEfC8UZpzv1rbug" type="Package_PackagedElementCompartment">
+        <styles xmi:type="notation:TitleStyle" xmi:id="_mXXZkZ_lEfC8UZpzv1rbug"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mXXZkp_lEfC8UZpzv1rbug"/>
+      </children>
+      <element xmi:type="uml:Package" href="testdiagrams.uml#_tzRuEAHPEfCgXv5ODs4Seg"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mXShEZ_lEfC8UZpzv1rbug" x="357" y="258"/>
+    </children>
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_k56kIZ_lEfC8UZpzv1rbug" name="diagram_compatibility_version" stringValue="1.4.0"/>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_k56kIp_lEfC8UZpzv1rbug"/>
+    <styles xmi:type="style:PapyrusDiagramStyle" xmi:id="_k56kI5_lEfC8UZpzv1rbug" diagramKindId="org.eclipse.papyrus.uml.diagram.package">
+      <owner xmi:type="uml:Model" href="testdiagrams.uml#_ye_tMOqeEe2Yz7yVfkC93Q"/>
+    </styles>
+    <element xmi:type="uml:Model" href="testdiagrams.uml#_ye_tMOqeEe2Yz7yVfkC93Q"/>
   </notation:Diagram>
 </xmi:XMI>

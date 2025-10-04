@@ -17,6 +17,10 @@ extern "C" {
 //End of user code
 
     /**
+     */
+#    define TKIND_CTEST_I_CNT 2u
+
+    /**
      * @brief The type representing the Tkind_ctest_s struct.
      */
     typedef struct Tkind_ctest_s \

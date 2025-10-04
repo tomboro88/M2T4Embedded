@@ -3,6 +3,7 @@
 
 [import tbo::acceleo::psm::uml::gen::c::common::documentation/]
 [import tbo::acceleo::psm::uml::gen::c::common::utils/]
+[import tbo::acceleo::psm::uml::gen::c::common::debug/]
 [import tbo::acceleo::psm::uml::gen::c::request::request/]
 
 [query private uml_c_function_visibility(vis:VisibilityKind, 
@@ -518,7 +519,7 @@ endif/]
 
 [query public uml_c_getjunction_entry_id(aSeq : Sequence(Transition)):String
  = if aSeq->notEmpty() and aSeq->last().target.request_is_static_junction() then 
-      aSeq->first().containingStateMachine().eAllContents(Transition)
+      '_' + aSeq->first().containingStateMachine().eAllContents(Transition)
           ->indexOf(aSeq->first()).toString()
              .concat(aSeq->drop(1)->uml_c_getjunction_entry_id())else '' endif/]
 
@@ -530,7 +531,7 @@ endif/]
                + aSeq->last().target.name 
                + if anEvent.oclIsUndefined() then '' 
                     else '_' + anEvent.name endif
-               + '_' + aSeq->uml_c_getjunction_entry_id()).toLower() 
+               + aSeq->uml_c_getjunction_entry_id()).toLower() 
             else ' #error Empty transition sequence' endif/]
 
 [query public uml_c_get_exit_name(aState : State) : String = 
@@ -1364,7 +1365,7 @@ memset(&[return_name/], 0, sizeof([return_name/]));
 /][/let]
     [/if]
     [else]
-#error effect Behavior type not supported[/let]
+#warning effect Behavior type not supported[/let]
 [/template]
 
 [template public uml_c_define_behaviors(aClassifier:BehavioredClassifier,
@@ -1899,7 +1900,7 @@ static [uml_c_get_event_status_type()/]
 [/for]
 [if aState.request_state_handles_event(anEvent)]
 [if (aState.region->request_event_subregions(anEvent)->size() > 0)]
-
+[debug_marker('uml_c_implement_state_dispatch 1')/]
 [spaces/]if([request_transition_ignored_state()
                                       /] == [utils_dispatch_result_name()/])
 [spaces/]{
@@ -1907,7 +1908,7 @@ static [uml_c_get_event_status_type()/]
                                                  indentation+spaces.size()*2)/]
 [spaces/]}
 [else]
-
+[debug_marker('uml_c_implement_state_dispatch 2')/]
 [spaces/][uml_c_implement_event_handler(aState, anEvent,
                                         indentation+spaces.size())/]
 [/if]
@@ -1959,7 +1960,8 @@ static [uml_c_get_event_status_type()/]
      spaces : String = utils_get_indent_string();}]
 [if aTransition.kind = TransitionKind::internal and
     aTransition.source.oclIsKindOf(State)]
-[if not aTransition.effect.oclIsUndefined()]
+[debug_marker('uml_c_implement_transition_execution 1')
+/][if not aTransition.effect.oclIsUndefined()]
 [uml_c_implement_transition_effect(aTransition, indentation)/]
 [/if]
 [utils_dispatch_result_name()
@@ -1972,13 +1974,15 @@ static [uml_c_get_event_status_type()/]
          and aTransition.request_transition_is_local())]
 [if aTransition.request_transition_is_local()]
 [comment local transitions require the exit of the transition topmost region/]
-[exit_result/][ uml_c_format_param_list(
+[debug_marker('uml_c_implement_transition_execution 2')
+/][exit_result/][ uml_c_format_param_list(
          aTransition.request_transition_effect_region()
                                                   .uml_c_get_region_exit_name(),
          Sequence{ utils_get_self_name()}, 
          indentation + exit_result.size() +1) /];
 [else]
-[exit_result/][uml_c_format_param_list(aState.uml_c_get_exit_name(),
+[debug_marker('uml_c_implement_transition_execution 3')
+/][exit_result/][uml_c_format_param_list(aState.uml_c_get_exit_name(),
                             Sequence{ utils_get_self_name()}, 
                             indentation + exit_result.size() + 1)/];
 [/if]
@@ -2041,7 +2045,8 @@ else
 [if aVertex = aTransition.target]
 [comment This is executed only if all state entries up to the target vertex
  are executed synchronously/]
-[assign_choice_result/][uml_c_format_param_list(aVertex.uml_c_get_entry_name(),
+[debug_marker('uml_c_implement_transition_transit 1')
+/][assign_choice_result/][uml_c_format_param_list(aVertex.uml_c_get_entry_name(),
                                          Sequence{ utils_get_self_name()}, 
                     indentation + assign_choice_result.size() + 1)/];
 [else]
@@ -2520,12 +2525,15 @@ static bool
 [comment There is only one transition without a guard./]
 [uml_c_implement_transition_execution(transitions->first(), indentation)
 /][/if][elseif guardTransitions->notEmpty()]
-[for (aTransition : Transition | sortedTransitions) after(utils_newline())]
+[debug_marker('uml_c_implement_vertex_transitions 1')
+/][for (aTransition : Transition | sortedTransitions) after(utils_newline())]
 [uml_c_implement_transition_guard(aTransition, aSeq, anEvent, indentation)
 /] [/for]
 {
-[if elseTransitions->notEmpty()]
-[spaces/][uml_c_implement_transition_execution(elseTransitions->first(), 
+[debug_marker('uml_c_implement_vertex_transitions 2')
+/][if elseTransitions->notEmpty()]
+[debug_marker('uml_c_implement_vertex_transitions 3')
+/][spaces/][uml_c_implement_transition_execution(elseTransitions->first(), 
                                                indentation + spaces.size())/]
 [elseif aVertex.oclIsKindOf(Pseudostate) 
         and aVertex.oclAsType(Pseudostate).kind = PseudostateKind::choice]
@@ -2554,8 +2562,10 @@ static bool
 if([uml_c_implement_guard_expression(aTransition, aSeq, anEvent, 
                                      indentation + 4)/])
 {
-[if not aTransition.target.request_is_static_junction()]
-[spaces/][uml_c_implement_transition_execution(aTransition, 
+[debug_marker('uml_c_implement_transition_guard 1')
+/][if not aTransition.target.request_is_static_junction()]
+[debug_marker('uml_c_implement_transition_guard 2')
+/][spaces/][uml_c_implement_transition_execution(aTransition, 
                                                indentation + spaces.size())/]
 [/if]
 }

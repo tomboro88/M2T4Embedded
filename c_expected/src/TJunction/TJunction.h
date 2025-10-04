@@ -12,10 +12,15 @@ extern "C" {
 
 //Start of user code includes top
 //End of user code
-#    include <stddef.h>
 #    include <sm.h>
+#    include <stddef.h>
+#    include <stdbool.h>
 //Start of user code includes bottom
 //End of user code
+#    define TJUNCTION_JTEST_A_CNT 2
+#    define TJUNCTION_JTEST_B_CNT 2
+#    define TJUNCTION_JTEST_C_CNT 2
+#    define TJUNCTION_JTEST_D_CNT 2
 
     /**
      * @brief The type representing the TJunction_Jtest_s struct.
@@ -283,6 +288,13 @@ extern "C" {
         /**
          */
         tjunction_sm1_region1_t         region1;
+
+        bool                            b_guard1;
+        bool                            b_guard2;
+        bool                            b_guard3;
+        bool                            b_guard4;
+        bool                            b_guard5;
+        bool                            b_guard6;
     };
 
     void TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);

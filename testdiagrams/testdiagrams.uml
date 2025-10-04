@@ -221,6 +221,7 @@
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_iePp4N28Ee-8CKMu-ENa-A" name="m" operation="_gM9jwN28Ee-8CKMu-ENa-A"/>
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_Cf5OAOAZEe-Dn89-xPPa6w" name="n" operation="_CMnssOAZEe-Dn89-xPPa6w"/>
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_SJivUPh2Ee-9W4mcsGdJGQ" name="o" operation="_RWp50Ph2Ee-9W4mcsGdJGQ"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_51O44G2PEfCUtIW8tiOy3A" name="CTEST_I_CNT" value="2"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Package" xmi:id="_tzRuEAHPEfCgXv5ODs4Seg" name="TJunction">
     <packagedElement xmi:type="uml:Class" xmi:id="_0eQ_YAHPEfCgXv5ODs4Seg" name="Jtest">
@@ -237,7 +238,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_ZwnmIAHREfCgXv5ODs4Seg">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_ZwnmIQHREfCgXv5ODs4Seg">
                 <language>C</language>
-                <body>b_guard2</body>
+                <body>p_obj->b_guard2</body>
               </specification>
             </ownedRule>
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_zeptwAHVEfCgXv5ODs4Seg">
@@ -249,7 +250,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_T-ZI0AHREfCgXv5ODs4Seg">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_T-ZI0QHREfCgXv5ODs4Seg">
                 <language>C</language>
-                <body>b_guard1</body>
+                <body>p_obj->b_guard1</body>
               </specification>
             </ownedRule>
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_tQe7UAHVEfCgXv5ODs4Seg">
@@ -273,7 +274,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_nAFREAHREfCgXv5ODs4Seg">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_nAFREQHREfCgXv5ODs4Seg">
                 <language>C</language>
-                <body>b_guard3</body>
+                <body>p_obj->b_guard3</body>
               </specification>
             </ownedRule>
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_E6FC0AHWEfCgXv5ODs4Seg">
@@ -288,7 +289,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_CVJqIAHlEfCcqpIlgsjzBA">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_CVJqIQHlEfCcqpIlgsjzBA">
                 <language>C</language>
-                <body>b_guard4</body>
+                <body>p_obj->b_guard4</body>
               </specification>
             </ownedRule>
             <trigger xmi:type="uml:Trigger" xmi:id="_yBl8EAHkEfCcqpIlgsjzBA" event="_IY2pEAHREfCgXv5ODs4Seg"/>
@@ -298,7 +299,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_I4TUcAHtEfCcqpIlgsjzBA">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_I4TUcQHtEfCcqpIlgsjzBA">
                 <language>C</language>
-                <body>b_guard5</body>
+                <body>p_obj->b_guard5</body>
               </specification>
             </ownedRule>
             <trigger xmi:type="uml:Trigger" xmi:id="_7T1p4AHsEfCcqpIlgsjzBA" event="_IY2pEAHREfCgXv5ODs4Seg"/>
@@ -316,7 +317,7 @@
             <ownedRule xmi:type="uml:Constraint" xmi:id="_rx65sBz_EfCL28h_BDpjrA">
               <specification xmi:type="uml:OpaqueExpression" xmi:id="_rx65sRz_EfCL28h_BDpjrA">
                 <language>C</language>
-                <body>b_guard6</body>
+                <body>p_obj->b_guard6</body>
               </specification>
             </ownedRule>
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_cmWR8B0AEfCL28h_BDpjrA">

@@ -1,0 +1,20 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module debug.
+ */]
+[module debug('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+
+[**
+ * Inserts a debugging comment into the generated code, so that the acceleo
+ * code responsible for the result can be located easily. This template can be 
+ * placed inline before another template, so that it will insert additional line
+ * before it when the debug markers are enabled, and no additional characters 
+ * when the markers are disabled.
+ * @param aString The text that will be placed inside the marker comment.
+ */]
+[template public debug_marker(aString : String)]
+[if getProperty('include_debug_markers').toBoolean()]
+/*debug marker [aString/]*/
+[/if]
+[/template]

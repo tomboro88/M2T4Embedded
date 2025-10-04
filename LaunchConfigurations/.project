@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>LaunchConfigurations</name>
+	<comment></comment>
+	<projects>
+		<project>c_expected</project>
+		<project>c_generated</project>
+		<project>c_test_expected</project>
+		<project>tbo.acceleo.psm.uml.gen.c</project>
+		<project>testdiagrams</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

@@ -1,1 +1,3 @@
 tbo.acceleo.psm.uml.gen.c/bin
+/c_expected/obj/*
+/c_generated/Debug/*
