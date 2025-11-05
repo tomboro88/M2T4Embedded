@@ -1116,7 +1116,7 @@
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_ENDzggHQEfCgXv5ODs4Seg" type="Transition_GuardLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_mbXP4AHQEfCgXv5ODs4Seg" name="IS_UPDATED_POSITION" booleanValue="true"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_ENDzgwHQEfCgXv5ODs4Seg" x="1" y="-18"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ENDzgwHQEfCgXv5ODs4Seg" x="-39" y="34"/>
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_ENDzhAHQEfCgXv5ODs4Seg" type="Transition_StereotypeLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_mbfLsAHQEfCgXv5ODs4Seg" name="IS_UPDATED_POSITION" booleanValue="true"/>

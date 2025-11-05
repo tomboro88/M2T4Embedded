@@ -1967,7 +1967,7 @@ static [uml_c_get_event_status_type()/]
  * @brief Implements the transition execution after the guard is fulfilled 
  * to true. 
  * @param aTransition The Transition that should be implemented.
- * @param aSeq The sequence of previous transitions thet need to be executed
+ * @param aSeq The sequence of previous transitions that need to be executed
  *             before the aTransition in case the source is a static junction.
  * @param b_is_always_handled true if the transition doesn't have to return
  *        the status if it was executed, because at the top level there is 
@@ -2023,7 +2023,8 @@ else
 }[else]
 [debug_marker('uml_c_implement_transition_execution 4')
 /][uml_c_implement_transition_transit(aTransition, aSeq, not b_is_always_handled,
-                                             spaces.size() + indentation)/][/if]
+                                             spaces.size() + indentation)
+/][/if]
 [/if]
 [/template]
 

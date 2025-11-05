@@ -982,6 +982,7 @@ sm1_enter_junction2_a_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = true;
 
+    printf("Enter junction2");
     sm1_enter_state3(p_obj);
 
     *p_result = CHANGEDSTATE;
@@ -1003,6 +1004,7 @@ sm1_enter_junction2_b_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = true;
 
+    printf("Enter junction2");
     sm1_enter_state4(p_obj);
 
     *p_result = CHANGEDSTATE;
@@ -1727,6 +1729,7 @@ sm1_enter_junction361_1_24_23(TJunction_sm1_t* const p_obj,\
 
     if(p_obj->b_guard5)
     {
+        printf("Enter junction2");
         printf("Exit junction 37");
         sm1_enter_state36_1(p_obj);
         *p_result = CHANGEDSTATE;
@@ -1734,6 +1737,7 @@ sm1_enter_junction361_1_24_23(TJunction_sm1_t* const p_obj,\
     }
     else if(p_obj->b_guard6)
     {
+        printf("Enter junction2");
         printf("Exit junction 37");
         sm1_enter_state36_2(p_obj);
         *p_result = CHANGEDSTATE;

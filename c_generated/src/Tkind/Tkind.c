@@ -45,6 +45,25 @@ uint32_t Tkind_cbase1_GetUintProp(Tkind_cbase1_t* const p_obj);
 void Tkind_cbase1_set_uint_default(Tkind_cbase1_t* const p_obj,\
                                    uint32_t const param1);
 
+void Tkind_ctest_a(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_b(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_c(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_d(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_e(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_f(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_g(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_h(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_i(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_j(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_k(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_l(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_m(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_n(Tkind_ctest_t* const p_obj);
+void Tkind_ctest_o(Tkind_ctest_t* const p_obj);
+
+void Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj,\
+                               uint32_t const param1);
+
 /*******************************************************************************
  * 
  * Private function prototypes.
@@ -55,8 +74,6 @@ static float Tkind_cbase2_get_flt_dflt(Tkind_cbase2_t* const p_obj);
 
 static void Tkind_cbase2_init_df(Tkind_cbase2_t* const p_obj);
 static void Tkind_ctest_sm1(Tkind_ctest_t* const p_obj);
-static void Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj,\
-                                      uint32_t const param1);
 static float Tkind_ctest_get_flt_from_uint(Tkind_cbase2_t* const p_obj);
 
 static void Tkind_ctest_init_df(Tkind_ctest_t* const p_obj);
@@ -820,6 +837,15 @@ void
 Tkind_ctest_o(Tkind_ctest_t* const p_obj)
 {
 }
+/**
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] param1 
+ */
+void
+Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj, uint32_t const param1)
+{
+    p_obj->Property1 = param1 + 1u;
+}
 
 /*******************************************************************************
  * 
@@ -888,16 +914,6 @@ static void
 Tkind_ctest_sm1(Tkind_ctest_t* const p_obj)
 {
     #warning effect Behavior type not supported
-}
-
-/**
- * @param [in] p_obj The pointer to the self object.
- * @param [in] param1 
- */
-static void
-Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj, uint32_t const param1)
-{
-    p_obj->Property1 = param1 + 1u;
 }
 
 /**

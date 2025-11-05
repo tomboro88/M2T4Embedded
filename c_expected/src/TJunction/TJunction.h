@@ -308,11 +308,37 @@ extern "C" {
          */
         TJUNCTION_SM1_STATE30,
         /**
+         */
+        TJUNCTION_SM1_STATE36,
+        /**
          * @brief The number of all substates of Region1 Region of sm1
          * StateMachine.
          */
         TJUNCTION_SM1_REGION1_SIZE
     }tjunction_sm1_region1_t;
+    
+    /**
+     * @brief The enumeration of all substates of Region36 Region of sm1
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the Region36 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_REGION36_INL,
+        /**
+         */
+        TJUNCTION_SM1_STATE36_1,
+        /**
+         */
+        TJUNCTION_SM1_STATE36_2,
+        /**
+         * @brief The number of all substates of Region36 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_REGION36_SIZE
+    }tjunction_sm1_region36_t;
     
     /**
      */
@@ -321,6 +347,9 @@ extern "C" {
         /**
          */
         tjunction_sm1_region1_t         region1;
+        /**
+         */
+        tjunction_sm1_region36_t        region36;
 
         bool                            b_guard1;
         bool                            b_guard2;

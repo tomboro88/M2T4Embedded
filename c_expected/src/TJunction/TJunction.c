@@ -32,6 +32,8 @@
  ******************************************************************************/
 static void TJunction_Jtest_sm1(TJunction_Jtest_t* const p_obj);
 
+static bool sm1_exit_region1(TJunction_sm1_t* const p_obj);
+static bool sm1_exit_region36(TJunction_sm1_t* const p_obj);
 
 static sm_event_status_t sm1_dispatch_a(TJunction_sm1_t* const p_obj,\
                                         tjunction_jtest_a_t* const p_event);
@@ -42,12 +44,27 @@ static sm_event_status_t sm1_dispatch_c(TJunction_sm1_t* const p_obj,\
 static sm_event_status_t sm1_dispatch_d(TJunction_sm1_t* const p_obj,\
                                         tjunction_jtest_d_t* const p_event);
 
+static sm_event_status_t sm1_dispatch_a_region36(TJunction_sm1_t* const p_obj,\
+                                                 tjunction_jtest_a_t* \
+                                                 /**/const p_event);
 
 static sm_event_status_t sm1_dispatch_a_state1(TJunction_sm1_t* const p_obj,\
                                                tjunction_jtest_a_t* \
                                                /**/const p_event);
+static sm_event_status_t sm1_dispatch_a_state4(TJunction_sm1_t* const p_obj,\
+                                               tjunction_jtest_a_t* \
+                                               /**/const p_event);
+static sm_event_status_t sm1_dispatch_a_state17(TJunction_sm1_t* const p_obj,\
+                                                tjunction_jtest_a_t* \
+                                                /**/const p_event);
+static sm_event_status_t sm1_dispatch_a_state36(TJunction_sm1_t* const p_obj,\
+                                                tjunction_jtest_a_t* \
+                                                /**/const p_event);
 static sm_event_status_t sm1_dispatch_b_state1(TJunction_sm1_t* const p_obj,\
                                                tjunction_jtest_b_t* \
+                                               /**/const p_event);
+static sm_event_status_t sm1_dispatch_c_state1(TJunction_sm1_t* const p_obj,\
+                                               tjunction_jtest_c_t* \
                                                /**/const p_event);
 static sm_event_status_t sm1_dispatch_c_state3(TJunction_sm1_t* const p_obj,\
                                                tjunction_jtest_c_t* \
@@ -68,9 +85,20 @@ static sm_event_status_t sm1_dispatch_d_state4(TJunction_sm1_t* const p_obj,\
                                                tjunction_jtest_d_t* \
                                                /**/const p_event);
 
+static sm_event_status_t sm1_dispatch_a_state36_1(TJunction_sm1_t* \
+                                                  /**/const p_obj,\
+                                                  tjunction_jtest_a_t* \
+                                                  /**/const p_event);
+static sm_event_status_t sm1_dispatch_a_state36_2(TJunction_sm1_t* \
+                                                  /**/const p_obj,\
+                                                  tjunction_jtest_a_t* \
+                                                  /**/const p_event);
+
 static bool sm1_enter_junction2_a_1(TJunction_sm1_t* const p_obj,\
                                     sm_event_status_t* const p_result);
 static bool sm1_enter_junction2_b_1(TJunction_sm1_t* const p_obj,\
+                                    sm_event_status_t* const p_result);
+static bool sm1_enter_junction2_c_1(TJunction_sm1_t* const p_obj,\
                                     sm_event_status_t* const p_result);
 
 static bool sm1_enter_junction8_c_4(TJunction_sm1_t* const p_obj,\
@@ -104,7 +132,11 @@ static bool sm1_enter_junction20_c_11_15(TJunction_sm1_t* const p_obj,\
 static bool sm1_enter_junction20_c_14_15(TJunction_sm1_t* const p_obj,\
                                          sm_event_status_t* const p_result);
 
+static bool sm1_enter_junction24_a_11(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
 static bool sm1_enter_junction24_c_11(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
+static bool sm1_enter_junction24_a_14(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
 static bool sm1_enter_junction24_c_14(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
@@ -112,6 +144,25 @@ static bool sm1_enter_junction24_c_14(TJunction_sm1_t* const p_obj,\
 static bool sm1_enter_junction31_4_18(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
 static bool sm1_enter_junction31_5_18(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
+
+static bool sm1_enter_junction361_11_22_23(TJunction_sm1_t* const p_obj,\
+                                           sm_event_status_t* const p_result);
+static bool sm1_enter_junction361_14_22_23(TJunction_sm1_t* const p_obj,\
+                                           sm_event_status_t* const p_result);
+static bool sm1_enter_junction361_1_24_23(TJunction_sm1_t* const p_obj,\
+                                          sm_event_status_t* const p_result);
+
+static bool sm1_enter_junction37_11_22(TJunction_sm1_t* const p_obj,\
+                                       sm_event_status_t* const p_result);
+static bool sm1_enter_junction37_14_22(TJunction_sm1_t* const p_obj,\
+                                       sm_event_status_t* const p_result);
+static bool sm1_enter_junction37_1_24(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
+
+static bool sm1_enter_junction41_a_28(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
+static bool sm1_enter_junction41_a_29(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
 
 /*******************************************************************************
@@ -200,6 +251,51 @@ sm1_enter_state30(TJunction_sm1_t* const p_obj)
 }
 
 /**
+ * @brief Enters the State36 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ */
+static inline void
+sm1_enter_state36(TJunction_sm1_t* const p_obj)
+{
+    p_obj->region1 = TJUNCTION_SM1_STATE36;
+    printf("Enter State36);
+}
+
+/**
+ * @brief Enters the State36_1 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ */
+static inline void
+sm1_enter_state36_1(TJunction_sm1_t* const p_obj)
+{
+    p_obj->region36 = TJUNCTION_SM1_STATE36_1;
+}
+
+/**
+ * @brief Enters the State36_2 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ */
+static inline void
+sm1_enter_state36_2(TJunction_sm1_t* const p_obj)
+{
+    p_obj->region36 = TJUNCTION_SM1_STATE36_2;
+}
+
+/**
+ * @brief Implements entry of the Region36 region of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return the initial transition dispatch status.
+ */
+static inline sm_event_status_t
+sm1_enter_region36(TJunction_sm1_t* const p_obj)
+{
+    sm_event_status_t result;
+    p_obj->region36 = TJUNCTION_SM1_REGION36_INL;
+    result = CHANGEDSTATE;
+    return result;
+}
+
+/**
  * @brief Implements entry of the Region1 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
  * @return the initial transition dispatch status.
@@ -211,6 +307,61 @@ sm1_enter_region1(TJunction_sm1_t* const p_obj)
     p_obj->region1 = TJUNCTION_SM1_REGION1_INL;
     result = CHANGEDSTATE;
     return result;
+}
+
+/**
+ * @brief Exits the State1 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static inline bool
+sm1_exit_state1(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+    printf("Exit State1");
+    b_is_completed &= true
+    return b_is_completed;
+}
+
+/**
+ * @brief Exits the State36 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static inline bool
+sm1_exit_state36(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+    b_is_completed &= sm1_exit_region36(p_obj);
+    return b_is_completed;
+}
+
+/**
+ * @brief Exits the State36_1 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static inline bool
+sm1_exit_state36_1(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+    printf("Exit State36_1");
+    b_is_completed &= true
+    return b_is_completed;
+}
+
+/**
+ * @brief Exits the State36_2 state of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static inline bool
+sm1_exit_state36_2(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+    printf("Exit State36_2");
+    b_is_completed &= true
+    return b_is_completed;
 }
 
 /*******************************************************************************
@@ -270,6 +421,62 @@ TJunction_Jtest_sm1(TJunction_Jtest_t* const p_obj)
 }
 
 /**
+ * @brief Exits the Region1 region of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static bool
+sm1_exit_region1(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+
+    switch(p_obj->region1)
+    {
+        case TJUNCTION_SM1_STATE1:
+            b_is_completed &= sm1_exit_state1(p_obj);
+            break;
+        case TJUNCTION_SM1_STATE36:
+            b_is_completed &= sm1_exit_state36(p_obj);
+            break;
+        default:
+            break;
+    }
+
+    // Mark the region is already exited.
+    p_obj->region1 = TJUNCTION_SM1_REGION1_INL;
+
+    return b_is_completed;
+}
+
+/**
+ * @brief Exits the Region36 region of the sm1 state machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @return true if the exit is completed, otherwise false.
+ */
+static bool
+sm1_exit_region36(TJunction_sm1_t* const p_obj)
+{
+    bool b_is_completed = true;
+
+    switch(p_obj->region36)
+    {
+        case TJUNCTION_SM1_STATE36_1:
+            b_is_completed &= sm1_exit_state36_1(p_obj);
+            break;
+        case TJUNCTION_SM1_STATE36_2:
+            b_is_completed &= sm1_exit_state36_2(p_obj);
+            break;
+        default:
+            break;
+    }
+
+    // Mark the region is already exited.
+    p_obj->region36 = TJUNCTION_SM1_REGION36_INL;
+
+    return b_is_completed;
+}
+
+/**
  * @brief Implements a event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
  * @param [in] p_event The pointer to the event data.
@@ -284,6 +491,15 @@ sm1_dispatch_a(TJunction_sm1_t* const p_obj, tjunction_jtest_a_t* const p_event)
     {
         case TJUNCTION_SM1_STATE1:
             result = sm1_dispatch_a_state1(p_obj, p_event);
+            break;
+        case TJUNCTION_SM1_STATE4:
+            result = sm1_dispatch_a_state4(p_obj, p_event);
+            break;
+        case TJUNCTION_SM1_STATE17:
+            result = sm1_dispatch_a_state17(p_obj, p_event);
+            break;
+        case TJUNCTION_SM1_STATE36:
+            result = sm1_dispatch_a_state36(p_obj, p_event);
             break;
         default:
             break;
@@ -328,6 +544,9 @@ sm1_dispatch_c(TJunction_sm1_t* const p_obj, tjunction_jtest_c_t* const p_event)
 
     switch(p_obj->region1)
     {
+        case TJUNCTION_SM1_STATE1:
+            result = sm1_dispatch_c_state1(p_obj, p_event);
+            break;
         case TJUNCTION_SM1_STATE3:
             result = sm1_dispatch_c_state3(p_obj, p_event);
             break;
@@ -373,6 +592,33 @@ sm1_dispatch_d(TJunction_sm1_t* const p_obj, tjunction_jtest_d_t* const p_event)
     return result;
 }
 
+/**
+ * @brief Implements a event handling by the Region36 region of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_region36(TJunction_sm1_t* const p_obj,\
+                        tjunction_jtest_a_t* const p_event)
+{
+    sm_event_status_t result = IGNORED;
+
+    switch(p_obj->region36)
+    {
+        case TJUNCTION_SM1_STATE36_1:
+            result = sm1_dispatch_a_state36_1(p_obj, p_event);
+            break;
+        case TJUNCTION_SM1_STATE36_2:
+            result = sm1_dispatch_a_state36_2(p_obj, p_event);
+            break;
+        default:
+            break;
+    }
+
+    return result;
+}
 
 /**
  * @brief Implements a event handling by the State1 state of the sm1 state
@@ -403,6 +649,84 @@ sm1_dispatch_a_state1(TJunction_sm1_t* const p_obj,\
 }
 
 /**
+ * @brief Implements a event handling by the State4 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_state4(TJunction_sm1_t* const p_obj,\
+                      tjunction_jtest_a_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    if(sm1_enter_junction24_a_11(p_obj, &result))
+    {
+    }
+    else
+    {
+        result = IGNORED;
+    }
+
+    return result;
+}
+
+/**
+ * @brief Implements a event handling by the State17 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_state17(TJunction_sm1_t* const p_obj,\
+                       tjunction_jtest_a_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    if(sm1_enter_junction24_a_14(p_obj, &result))
+    {
+    }
+    else
+    {
+        result = IGNORED;
+    }
+
+    return result;
+}
+
+/**
+ * @brief Implements a event handling by the State36 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_state36(TJunction_sm1_t* const p_obj,\
+                       tjunction_jtest_a_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    result = sm1_dispatch_a_region36(p_obj, p_event);
+
+    return result;
+}
+
+/**
  * @brief Implements b event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
@@ -420,6 +744,34 @@ sm1_dispatch_b_state1(TJunction_sm1_t* const p_obj,\
     sm_event_status_t result = IGNORED;
 
     if(sm1_enter_junction2_b_1(p_obj, &result))
+    {
+    }
+    else
+    {
+        result = IGNORED;
+    }
+
+    return result;
+}
+
+/**
+ * @brief Implements c event handling by the State1 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_c_state1(TJunction_sm1_t* const p_obj,\
+                      tjunction_jtest_c_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    if(sm1_enter_junction2_c_1(p_obj, &result))
     {
     }
     else
@@ -618,6 +970,62 @@ sm1_dispatch_d_state4(TJunction_sm1_t* const p_obj,\
 }
 
 /**
+ * @brief Implements a event handling by the State36_1 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_state36_1(TJunction_sm1_t* const p_obj,\
+                         tjunction_jtest_a_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    if(sm1_enter_junction41_a_28(p_obj, &result))
+    {
+    }
+    else
+    {
+        result = IGNORED;
+    }
+
+    return result;
+}
+
+/**
+ * @brief Implements a event handling by the State36_2 state of the sm1 state
+ * machine.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [in] p_event The pointer to the event data.
+ * @return the event dispatch status.
+ */
+static sm_event_status_t
+sm1_dispatch_a_state36_2(TJunction_sm1_t* const p_obj,\
+                         tjunction_jtest_a_t* const p_event)
+{
+    /**
+     * @todo p_event must be processed here.
+     */
+    (void) p_event;
+    sm_event_status_t result = IGNORED;
+
+    if(sm1_enter_junction41_a_29(p_obj, &result))
+    {
+    }
+    else
+    {
+        result = IGNORED;
+    }
+
+    return result;
+}
+
+/**
  * @brief Implements entry of the Junction2 junction Pseudostate of the sm1
  * state machine at the a event.
  * @details Transition sequence: State1, Junction2.
@@ -631,6 +1039,8 @@ sm1_enter_junction2_a_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = true;
 
+    (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+    printf("Enter junction2");
     sm1_enter_state3(p_obj);
 
     *p_result = CHANGEDSTATE;
@@ -652,9 +1062,37 @@ sm1_enter_junction2_b_1(TJunction_sm1_t* const p_obj,\
 {
     bool b_is_handled = true;
 
+    (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+    printf("Enter junction2");
     sm1_enter_state4(p_obj);
 
     *p_result = CHANGEDSTATE;
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction2 junction Pseudostate of the sm1
+ * state machine at the c event.
+ * @details Transition sequence: State1, Junction2.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction2_c_1(TJunction_sm1_t* const p_obj,\
+                        sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(sm1_enter_junction37_1_24(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
 
     return b_is_handled;
 }
@@ -1080,6 +1518,32 @@ sm1_enter_junction20_c_14_15(TJunction_sm1_t* const p_obj,\
 
 /**
  * @brief Implements entry of the Junction24 junction Pseudostate of the sm1
+ * state machine at the a event.
+ * @details Transition sequence: State4, Junction24.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction24_a_11(TJunction_sm1_t* const p_obj,\
+                          sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(sm1_enter_junction37_11_22(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction24 junction Pseudostate of the sm1
  * state machine at the c event.
  * @details Transition sequence: State4, Junction24.
  * @param [in] p_obj The pointer to the self object.
@@ -1093,6 +1557,32 @@ sm1_enter_junction24_c_11(TJunction_sm1_t* const p_obj,\
     bool b_is_handled = false;
 
     if(sm1_enter_junction20_c_11_15(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction24 junction Pseudostate of the sm1
+ * state machine at the a event.
+ * @details Transition sequence: State17, Junction24.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction24_a_14(TJunction_sm1_t* const p_obj,\
+                          sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(sm1_enter_junction37_14_22(p_obj, p_result))
     {
         b_is_handled = true;
     }
@@ -1206,6 +1696,243 @@ sm1_enter_junction31_5_18(TJunction_sm1_t* const p_obj,\
     {
         *p_result = IGNORED;
     }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction361 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State4, Junction24, Junction37, Junction361.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction361_11_22_23(TJunction_sm1_t* const p_obj,\
+                               sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard5)
+    {
+        printf("Exit junction 37");
+        sm1_enter_state36_1(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else if(p_obj->b_guard6)
+    {
+        printf("Exit junction 37");
+        sm1_enter_state36_2(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction361 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State17, Junction24, Junction37, Junction361.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction361_14_22_23(TJunction_sm1_t* const p_obj,\
+                               sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard5)
+    {
+        printf("Exit junction 37");
+        sm1_enter_state36_1(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else if(p_obj->b_guard6)
+    {
+        printf("Exit junction 37");
+        sm1_enter_state36_2(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction361 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State1, Junction2, Junction37, Junction361.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction361_1_24_23(TJunction_sm1_t* const p_obj,\
+                              sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard5)
+    {
+        (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+        printf("Enter junction2");
+        printf("Exit junction 37");
+        sm1_enter_state36_1(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else if(p_obj->b_guard6)
+    {
+        (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+        printf("Enter junction2");
+        printf("Exit junction 37");
+        sm1_enter_state36_2(p_obj);
+        *p_result = CHANGEDSTATE;
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction37 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State4, Junction24, Junction37.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction37_11_22(TJunction_sm1_t* const p_obj,\
+                           sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard4
+       && sm1_enter_junction361_11_22_23(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction37 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State17, Junction24, Junction37.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction37_14_22(TJunction_sm1_t* const p_obj,\
+                           sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard4
+       && sm1_enter_junction361_14_22_23(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction37 junction Pseudostate of the sm1
+ * state machine.
+ * @details Transition sequence: State1, Junction2, Junction37.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction37_1_24(TJunction_sm1_t* const p_obj,\
+                          sm_event_status_t* const p_result)
+{
+    bool b_is_handled = false;
+
+    if(p_obj->b_guard4
+       && sm1_enter_junction361_1_24_23(p_obj, p_result))
+    {
+        b_is_handled = true;
+    }
+    else
+    {
+        *p_result = IGNORED;
+    }
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction41 junction Pseudostate of the sm1
+ * state machine at the a event.
+ * @details Transition sequence: State36_1, Junction41.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction41_a_28(TJunction_sm1_t* const p_obj,\
+                          sm_event_status_t* const p_result)
+{
+    bool b_is_handled = true;
+
+    (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+    sm1_enter_state30(p_obj);
+
+    *p_result = CHANGEDSTATE;
+
+    return b_is_handled;
+}
+
+/**
+ * @brief Implements entry of the Junction41 junction Pseudostate of the sm1
+ * state machine at the a event.
+ * @details Transition sequence: State36_2, Junction41.
+ * @param [in] p_obj The pointer to the self object.
+ * @param [out] p_result The pointer to the transition execution result object.
+ * @return true if the junction transition was executed.
+ */
+static bool
+sm1_enter_junction41_a_29(TJunction_sm1_t* const p_obj,\
+                          sm_event_status_t* const p_result)
+{
+    bool b_is_handled = true;
+
+    (void)sm1_exit_region1(p_obj); /*will see what are the options to put here*/
+    sm1_enter_state30(p_obj);
+
+    *p_result = CHANGEDSTATE;
 
     return b_is_handled;
 }

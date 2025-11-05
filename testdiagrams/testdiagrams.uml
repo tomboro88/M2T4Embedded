@@ -333,7 +333,12 @@ for static evaluation of a sequence of guard conditions before any transition is
     <packagedElement xmi:type="uml:Class" xmi:id="_0eQ_YAHPEfCgXv5ODs4Seg" name="Jtest">
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_5YXh4AHPEfCgXv5ODs4Seg" name="sm1">
         <region xmi:type="uml:Region" xmi:id="_9FNnEAHPEfCgXv5ODs4Seg" name="Region1">
-          <transition xmi:type="uml:Transition" xmi:id="_EME8EAHQEfCgXv5ODs4Seg" source="_-JOBwAHPEfCgXv5ODs4Seg" target="__1fWUAHPEfCgXv5ODs4Seg"/>
+          <transition xmi:type="uml:Transition" xmi:id="_EME8EAHQEfCgXv5ODs4Seg" source="_-JOBwAHPEfCgXv5ODs4Seg" target="__1fWUAHPEfCgXv5ODs4Seg">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_-WOGoLnUEfC0UfKG-fUG3g">
+              <language>C</language>
+              <body>printf(&quot;Enter junction2&quot;);</body>
+            </effect>
+          </transition>
           <transition xmi:type="uml:Transition" xmi:id="_FbXZsAHQEfCgXv5ODs4Seg" source="__1fWUAHPEfCgXv5ODs4Seg" target="_BzEdUAHQEfCgXv5ODs4Seg">
             <trigger xmi:type="uml:Trigger" xmi:id="_W1MzUAHQEfCgXv5ODs4Seg" event="_WdHqgAHQEfCgXv5ODs4Seg"/>
           </transition>
