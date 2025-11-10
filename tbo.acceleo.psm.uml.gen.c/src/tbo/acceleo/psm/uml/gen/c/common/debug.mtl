@@ -14,7 +14,7 @@
  * @param aString The text that will be placed inside the marker comment.
  */]
 [template public debug_marker(aString : String)]
-[if getProperty('include_debug_markers').toBoolean()]
+[if (getProperty('include_debug_markers').toBoolean())]
 /*debug marker [aString/]*/
 [/if]
 [/template]

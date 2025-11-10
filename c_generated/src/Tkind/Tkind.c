@@ -77,12 +77,12 @@ static void Tkind_ctest_sm1(Tkind_ctest_t* const p_obj);
 static float Tkind_ctest_get_flt_from_uint(Tkind_cbase2_t* const p_obj);
 
 static void Tkind_ctest_init_df(Tkind_ctest_t* const p_obj);
-static bool sm1_exit_region1(Tkind_sm1_t* const p_obj);
-static bool sm1_exit_region2(Tkind_sm1_t* const p_obj);
-static bool sm1_exit_region3(Tkind_sm1_t* const p_obj);
-static bool sm1_exit_region4(Tkind_sm1_t* const p_obj);
-static bool sm1_exit_region5(Tkind_sm1_t* const p_obj);
-static bool sm1_exit_region6(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region1(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region2(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region3(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region4(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region5(Tkind_sm1_t* const p_obj);
+static void sm1_exit_region6(Tkind_sm1_t* const p_obj);
 
 static sm_event_status_t sm1_dispatch_a(Tkind_sm1_t* const p_obj,\
                                         tkind_ctest_a_t* const p_event);
@@ -376,244 +376,161 @@ sm1_enter_state9(Tkind_sm1_t* const p_obj)
 /**
  * @brief Implements entry of the Region3 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region3(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region3 = TKIND_SM1_REGION3_INL;
-    result = CHANGEDSTATE;
-    return result;
 }
 
 /**
  * @brief Implements entry of the Region4 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region4(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region4 = TKIND_SM1_REGION4_INL;
-    result = CHANGEDSTATE;
-    return result;
 }
 
 /**
  * @brief Implements entry of the Region2 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region2(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region2 = TKIND_SM1_INITIAL3;
     sm1_enter_state2(p_obj);
-    result = CHANGEDSTATE;
-    return result;
 }
 
 /**
  * @brief Implements entry of the Region6 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region6(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region6 = TKIND_SM1_INITIAL4;
     sm1_enter_state9(p_obj);
-    result = CHANGEDSTATE;
-    return result;
 }
 
 /**
  * @brief Implements entry of the Region5 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region5(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region5 = TKIND_SM1_REGION5_INL;
-    result = CHANGEDSTATE;
-    return result;
 }
 
 /**
  * @brief Implements entry of the Region1 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return the initial transition dispatch status.
  */
-static inline sm_event_status_t
+static inline void
 sm1_enter_region1(Tkind_sm1_t* const p_obj)
 {
-    sm_event_status_t result;
     p_obj->region1 = TKIND_SM1_INITIAL1;
     sm1_enter_state1(p_obj);
-    result = CHANGEDSTATE;
-    sm_event_status_t temp_status = IGNORED;
-    temp_status = sm1_enter_region2(p_obj);
-    result = sm_event_resolve_status(result, temp_status);
-    temp_status = sm1_enter_region5(p_obj);
-    result = sm_event_resolve_status(result, temp_status);
-    return result;
+    sm1_enter_region2(p_obj);
+    sm1_enter_region5(p_obj);
 }
 
 /**
  * @brief Exits the State1 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state1(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-    b_is_completed &= sm1_exit_region2(p_obj);
-    b_is_completed &= sm1_exit_region5(p_obj);
-
-    if(b_is_completed)
-    {
-        printf("Exit State1");
-        b_is_completed &= true
-    }
-
-    return b_is_completed;
+    sm1_exit_region2(p_obj);
+    sm1_exit_region5(p_obj);
+    printf("Exit State1");
 }
 
 /**
  * @brief Exits the State3 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state3(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-    b_is_completed &= sm1_exit_region3(p_obj);
-
-    if(b_is_completed)
-    {
-        printf("Exit State3");
-        b_is_completed &= true
-    }
-
-    return b_is_completed;
+    sm1_exit_region3(p_obj);
+    printf("Exit State3");
 }
 
 /**
  * @brief Exits the State5 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state5(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
     printf("Exit State5");
-    b_is_completed &= true
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the State2 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state2(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
     printf("Exit State2");
-    b_is_completed &= true
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the State4 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state4(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-    b_is_completed &= sm1_exit_region4(p_obj);
-
-    if(b_is_completed)
-    {
-        printf("Exit State4");
-        b_is_completed &= true
-    }
-
-    return b_is_completed;
+    sm1_exit_region4(p_obj);
+    printf("Exit State4");
 }
 
 /**
  * @brief Exits the State6 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state6(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
     printf("Exit State6");
-    b_is_completed &= true
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the State7 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state7(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
     printf("Exit State7");
-    b_is_completed &= true
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the State8 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state8(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-    b_is_completed &= sm1_exit_region6(p_obj);
-
-    if(b_is_completed)
-    {
-        printf("Exit State8");
-        b_is_completed &= true
-    }
-
-    return b_is_completed;
+    sm1_exit_region6(p_obj);
+    printf("Exit State8");
 }
 
 /**
  * @brief Exits the State9 state of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static inline bool
+static inline void
 sm1_exit_state9(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
     printf("Exit State9");
-    b_is_completed &= true
-    return b_is_completed;
 }
 
 /*******************************************************************************
@@ -948,17 +865,14 @@ Tkind_ctest_get_flt_from_uint(Tkind_cbase2_t* const p_obj)
 /**
  * @brief Exits the Region1 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region1(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            b_is_completed &= sm1_exit_state1(p_obj);
+            sm1_exit_state1(p_obj);
             break;
         default:
             break;
@@ -966,30 +880,25 @@ sm1_exit_region1(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region1 = TKIND_SM1_INITIAL1;
-
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the Region2 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region2(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE3:
-            b_is_completed &= sm1_exit_state3(p_obj);
+            sm1_exit_state3(p_obj);
             break;
         case TKIND_SM1_STATE2:
-            b_is_completed &= sm1_exit_state2(p_obj);
+            sm1_exit_state2(p_obj);
             break;
         case TKIND_SM1_STATE4:
-            b_is_completed &= sm1_exit_state4(p_obj);
+            sm1_exit_state4(p_obj);
             break;
         default:
             break;
@@ -997,24 +906,19 @@ sm1_exit_region2(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region2 = TKIND_SM1_INITIAL3;
-
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the Region3 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region3(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region3)
     {
         case TKIND_SM1_STATE5:
-            b_is_completed &= sm1_exit_state5(p_obj);
+            sm1_exit_state5(p_obj);
             break;
         default:
             break;
@@ -1022,24 +926,19 @@ sm1_exit_region3(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region3 = TKIND_SM1_REGION3_INL;
-
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the Region4 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region4(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region4)
     {
         case TKIND_SM1_STATE6:
-            b_is_completed &= sm1_exit_state6(p_obj);
+            sm1_exit_state6(p_obj);
             break;
         default:
             break;
@@ -1047,27 +946,22 @@ sm1_exit_region4(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region4 = TKIND_SM1_REGION4_INL;
-
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the Region5 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region5(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region5)
     {
         case TKIND_SM1_STATE7:
-            b_is_completed &= sm1_exit_state7(p_obj);
+            sm1_exit_state7(p_obj);
             break;
         case TKIND_SM1_STATE8:
-            b_is_completed &= sm1_exit_state8(p_obj);
+            sm1_exit_state8(p_obj);
             break;
         default:
             break;
@@ -1075,24 +969,19 @@ sm1_exit_region5(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region5 = TKIND_SM1_REGION5_INL;
-
-    return b_is_completed;
 }
 
 /**
  * @brief Exits the Region6 region of the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @return true if the exit is completed, otherwise false.
  */
-static bool
+static void
 sm1_exit_region6(Tkind_sm1_t* const p_obj)
 {
-    bool b_is_completed = true;
-
     switch(p_obj->region6)
     {
         case TKIND_SM1_STATE9:
-            b_is_completed &= sm1_exit_state9(p_obj);
+            sm1_exit_state9(p_obj);
             break;
         default:
             break;
@@ -1100,8 +989,6 @@ sm1_exit_region6(Tkind_sm1_t* const p_obj)
 
     // Mark the region is already exited.
     p_obj->region6 = TKIND_SM1_INITIAL4;
-
-    return b_is_completed;
 }
 
 /**
@@ -2077,21 +1964,10 @@ sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state1(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state1(p_obj);
-        sm1_enter_state7(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state1(p_obj);
+    sm1_enter_state1(p_obj);
+    sm1_enter_state7(p_obj);
+    sm1_enter_region2(p_obj);
     return result;
 }
 
@@ -2192,21 +2068,10 @@ sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state1(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state1(p_obj);
-        result = sm1_enter_choice1(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state1(p_obj);
+    sm1_enter_state1(p_obj);
+    sm1_enter_choice1(p_obj);
+    sm1_enter_region2(p_obj);
     return result;
 }
 
@@ -2222,20 +2087,9 @@ sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state2(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state3(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region3(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state2(p_obj);
+    sm1_enter_state3(p_obj);
+    sm1_enter_region3(p_obj);
     return result;
 }
 
@@ -2251,20 +2105,9 @@ sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state2(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state4(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region4(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state2(p_obj);
+    sm1_enter_state4(p_obj);
+    sm1_enter_region4(p_obj);
     return result;
 }
 
@@ -2280,18 +2123,9 @@ sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_region3(p_obj);
-    
-    if(b_is_completed)
-    {
-        printf("c event transition fired!");
-        sm1_enter_state5(p_obj);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_region3(p_obj);
+    printf("c event transition fired!");
+    sm1_enter_state5(p_obj);
     return result;
 }
 
@@ -2341,18 +2175,9 @@ sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state4(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state4(p_obj);
-        sm1_enter_state6(p_obj);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state4(p_obj);
+    sm1_enter_state4(p_obj);
+    sm1_enter_state6(p_obj);
     return result;
 }
 
@@ -2419,20 +2244,8 @@ sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_region3(p_obj);
-    
-    if(b_is_completed)
-    {
-        result = CHANGEDSTATE;
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region3(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_region3(p_obj);
+    sm1_enter_region3(p_obj);
     return result;
 }
 
@@ -2448,20 +2261,8 @@ sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_region2(p_obj);
-    
-    if(b_is_completed)
-    {
-        result = CHANGEDSTATE;
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_region2(p_obj);
+    sm1_enter_region2(p_obj);
     return result;
 }
 
@@ -2477,18 +2278,9 @@ sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state3(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state4(p_obj);
-        sm1_enter_state6(p_obj);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state3(p_obj);
+    sm1_enter_state4(p_obj);
+    sm1_enter_state6(p_obj);
     return result;
 }
 
@@ -2504,20 +2296,9 @@ sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state4(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state4(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region4(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state4(p_obj);
+    sm1_enter_state4(p_obj);
+    sm1_enter_region4(p_obj);
     return result;
 }
 
@@ -2533,22 +2314,10 @@ sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state1(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state1(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-        temp_status = sm1_enter_region5(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state1(p_obj);
+    sm1_enter_state1(p_obj);
+    sm1_enter_region2(p_obj);
+    sm1_enter_region5(p_obj);
     return result;
 }
 
@@ -2564,20 +2333,9 @@ sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state7(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state8(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region6(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state7(p_obj);
+    sm1_enter_state8(p_obj);
+    sm1_enter_region6(p_obj);
     return result;
 }
 
@@ -2627,22 +2385,10 @@ sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state1(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state1(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-        temp_status = sm1_enter_region5(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state1(p_obj);
+    sm1_enter_state1(p_obj);
+    sm1_enter_region2(p_obj);
+    sm1_enter_region5(p_obj);
     return result;
 }
 
@@ -2658,20 +2404,9 @@ sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state8(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state8(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region6(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state8(p_obj);
+    sm1_enter_state8(p_obj);
+    sm1_enter_region6(p_obj);
     return result;
 }
 
@@ -2687,22 +2422,10 @@ sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
 {
     sm_event_status_t result = IGNORED;
 
-    bool b_is_completed = sm1_exit_state1(p_obj);
-    
-    if(b_is_completed)
-    {
-        sm1_enter_state1(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region2(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-        temp_status = sm1_enter_region5(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
-    }
-    else
-    {
-        result = TRANSITION;
-    }
-
+    sm1_exit_state1(p_obj);
+    sm1_enter_state1(p_obj);
+    sm1_enter_region2(p_obj);
+    sm1_enter_region5(p_obj);
     return result;
 }
 
@@ -2720,17 +2443,13 @@ sm1_enter_choice1(Tkind_sm1_t* const p_obj)
     if(b_test_condition)
     {
         sm1_enter_state8(p_obj);
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region6(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
+        sm1_enter_region6(p_obj);
     }
     else
     {
-        result = CHANGEDSTATE;
-        sm_event_status_t temp_status = IGNORED;
-        temp_status = sm1_enter_region5(p_obj);
-        result = sm_event_resolve_status(result, temp_status);
+        sm1_enter_region5(p_obj);
     }
+    
 
     return result;
 }

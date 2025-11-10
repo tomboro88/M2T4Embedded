@@ -9,9 +9,7 @@ extern "C" {
         IGNORED,      /**< Event ignored.*/
         DEFERRED,     /**< Event deferred.*/
         SAMESTATE,    /**< Event handled, no state change.*/
-        CHANGEDSTATE, /**< Event handled, state changed.*/
-        TRANSITION    /**< Event processing started, but paused \
-                                      on some submachine action.*/
+        CHANGEDSTATE  /**< Event handled, state changed.*/
     }sm_event_status_t;
 
     sm_event_status_t sm_event_resolve_status(sm_event_status_t const status1,\

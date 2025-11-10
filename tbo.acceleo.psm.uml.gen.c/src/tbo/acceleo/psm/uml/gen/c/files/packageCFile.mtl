@@ -44,15 +44,15 @@
 //[/protected]
 #include "[get_package_h_filename(aPackage)/]"
 [uml_c_include_dependencies(source_dependencies, source_subpackages, 0)
-/][if needs_get_specific]
+/][if (needs_get_specific)]
 #include <stddef.h>
-[/if][if needs_get_specific]
+[/if][if (needs_get_specific)]
 #include <stdint.h>
-[/if][if needs_get_specific]
+[/if][if (needs_get_specific)]
 #include <stdbool.h>
-[/if][if (not sourceClassifiers->selectByKind(StateMachine)->isEmpty())
+[/if][if ((not sourceClassifiers->selectByKind(StateMachine)->isEmpty())
     and aPackage.uml_c_header_classifiers()
-        ->selectByKind(StateMachine)->isEmpty()]
+        ->selectByKind(StateMachine)->isEmpty() )]
 #include <sm.h>
 [/if]//[protected('includes bottom')]
 //[/protected]
@@ -61,9 +61,9 @@
  * Data type, constant, and macro definitions.
  *
  ******************************************************************************/
-[if not sourceLiteralSpecifications
+[if (not sourceLiteralSpecifications
     ->select(ls : LiteralSpecification | ls.uml_c_literalspec_need_define())
-    ->isEmpty() ]
+    ->isEmpty() )]
 [uml_c_literal_list(sourceLiteralSpecifications, 0)/]
 
 [/if]
@@ -84,7 +84,7 @@
                              offsetof(child_type,base_field), (char**)child_ptr)
 
 [/if]
-[if sourceClassifiers->uml_c_classifiers_need_declare()]
+[if (sourceClassifiers->uml_c_classifiers_need_declare() )]
 [uml_c_declare_structs(sourceClassifiers, 0)/]
 [/if]
 /*******************************************************************************
@@ -143,15 +143,15 @@
        or aClassifier.uml_c_needs_init_defaults()
        or aClassifier.oclIsKindOf(StateMachine))
     {vis : Set(VisibilityKind) = Set{VisibilityKind::private};}]
-[if aClassifier.uml_c_operations_need_declaration(vis)->notEmpty()]
+[if (aClassifier.uml_c_operations_need_declaration(vis)->notEmpty() )]
 [uml_c_declare_operations(aClassifier, vis, false, 0)/]
 [/if]
 [let bc:BehavioredClassifier=aClassifier]
-[if bc.request_standalone_behaviors(vis)->notEmpty()]
+[if (bc.request_standalone_behaviors(vis)->notEmpty() )]
 [uml_c_declare_behaviors(bc, vis, false, 0)/]
 [/if]
 [/let]
-[if aClassifier.uml_c_needs_init_defaults()]
+[if (aClassifier.uml_c_needs_init_defaults() )]
 [uml_c_declare_defaults(aClassifier, 0)/]
 [/if]
 [let sm:StateMachine=aClassifier]
@@ -159,10 +159,10 @@
 [uml_c_declare_sm_dispatch(sm, 0)/]
 [uml_c_declare_region_dispatch(sm,0)/]
 [uml_c_declare_state_dispatch(sm, 0)/]
-[if sm.request_state_machine_choices()->notEmpty() ]
+[if (sm.request_state_machine_choices()->notEmpty() )]
 [uml_c_declare_choices(sm, 0)/]
 [/if]
-[if sm.request_state_machine_junctions()->notEmpty() ]
+[if (sm.request_state_machine_junctions()->notEmpty() )]
 [uml_c_declare_junctions(sm, 0)/][/if]
 [/let]
 [/for]
@@ -209,9 +209,9 @@ static inline bool
 [for (sm : StateMachine | allClassifiers->selectByKind(StateMachine))]
 [uml_c_define_state_entry(sm,0)/]
 [uml_c_implement_initial_transitions(sm, 0)/]
-[if not sm.eAllContents(State)
+[if (not sm.eAllContents(State)
           ->select(aState : State | aState.request_state_needs_exit())
-          ->isEmpty() ]
+          ->isEmpty() )]
 [uml_c_define_state_exit(sm,0)/]
 [/if]
 [/for]
@@ -248,30 +248,30 @@ static inline bool
        or aClassifier.request_has_standalone_behaviors(
                                                    non_public_bodies_visibility)
        or aClassifier.oclIsKindOf(StateMachine)) ]
-[if aClassifier.uml_c_needs_init_defaults()]
+[if (aClassifier.uml_c_needs_init_defaults() )]
 [uml_c_define_defaults(aClassifier,0)/]
 [/if]
-[if aClassifier.uml_c_get_operations(non_public_bodies_visibility)->notEmpty()]
+[if (aClassifier.uml_c_get_operations(non_public_bodies_visibility)->notEmpty())]
 [uml_c_define_operations(aClassifier, non_public_bodies_visibility, 0)/]
 [/if]
 [let bc:BehavioredClassifier=aClassifier]
-[if bc.request_standalone_behaviors(non_public_bodies_visibility)->notEmpty()]
+[if (bc.request_standalone_behaviors(non_public_bodies_visibility)->notEmpty())]
 [uml_c_define_behaviors(bc, non_public_bodies_visibility, 0)/]
 [/if]
 [/let]
 [let sm:StateMachine=aClassifier]
-[if sm.request_all_regions()
+[if (sm.request_all_regions()
                           ->select(r: Region | r.request_region_needs_exit())
-                          ->notEmpty()]
+                          ->notEmpty() )]
 [uml_c_define_region_exit(sm,0)/]
 [/if]
 [uml_c_implement_sm_dispatch(sm, 0)/]
 [uml_c_implement_region_dispatch(sm,0)/]
 [uml_c_implement_state_dispatch(sm, 0)/]
-[if sm.request_state_machine_choices()->notEmpty() ]
+[if ( sm.request_state_machine_choices()->notEmpty() )]
 [uml_c_implement_choices(sm, 0)/]
 [/if]
-[if sm.request_state_machine_junctions()->notEmpty() ]
+[if ( sm.request_state_machine_junctions()->notEmpty() )]
 [uml_c_implement_junctions(sm, 0)/][/if]
 [/let]
 [/for]

@@ -30,19 +30,19 @@ extern "C" {
 //[/protected]
 [uml_c_include_dependencies(visible_dependencies, visible_subpackages, 
                             indentation)
-/][if not headerClassifiers->selectByKind(StateMachine)->isEmpty()]
+/][if (not headerClassifiers->selectByKind(StateMachine)->isEmpty())]
 #[utils_indent(indentation)/]include <sm.h>
 [/if]
 //[protected('includes bottom')]
 //[/protected]
 
-[if not headerLiteralSpecifications
+[if (not headerLiteralSpecifications
     ->select(ls : LiteralSpecification | ls.uml_c_literalspec_need_define())
-    ->isEmpty() ]
+    ->isEmpty() )]
 [uml_c_literal_list(headerLiteralSpecifications, indentation)/]
 
 [/if]
-[if headerClassifiers->uml_c_classifiers_need_declare()]
+[if (headerClassifiers->uml_c_classifiers_need_declare() )]
 [uml_c_declare_structs(headerClassifiers, indentation)/]
 [/if]
 [for (aClassifier:Classifier|headerClassifiers)

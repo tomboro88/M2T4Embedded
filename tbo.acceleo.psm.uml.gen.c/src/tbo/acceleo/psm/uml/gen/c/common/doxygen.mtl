@@ -168,9 +168,9 @@
    request_return_value(anOp.ownedParameter)->first(),
    doxygen_return(''),line_width)/][/if]
 [else]
-[if anElement.oclIsKindOf(Behavior) 
+[if ( anElement.oclIsKindOf(Behavior) 
     and (not anElement.oclAsType(Behavior).owner.oclIsUndefined())
-    and anElement.oclAsType(Behavior).owner.oclIsKindOf(State)]
+    and anElement.oclAsType(Behavior).owner.oclIsKindOf(State) )]
 [doxygen_param(ParameterDirectionKind::_in, 
                utils_get_self_name()).doxygen_line_prefix()
 /]The pointer to the self object.

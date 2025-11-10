@@ -552,12 +552,6 @@ OrderedSet(Region)
                            ->includes(aTransition.source.oclAsType(State))/]
 
 
-[query public request_region_effect_sm_transitions(aRegion:Region):
-  OrderedSet(Transition) = aRegion.containingStateMachine()
-      .request_state_machine_transitions()
-      ->select(t:Transition|t.request_transition_effect_region()=aRegion)
-      ->select(t:Transition|t.effect.request_behavior_needs_async_call())/]
-
 [query public request_transitions_by_event(transitions:OrderedSet(Transition),
               anEvent:Event):
   OrderedSet(Transition) = 
@@ -687,51 +681,6 @@ let exitState : State = request_transition_exit_state(aTransition) in
           ->any(p:Pseudostate | not p.oclIsUndefined())
    else null endif/]
 
-[query public request_behavior_needs_async_call(aBehavior:Behavior):Boolean = 
- (not aBehavior.oclIsUndefined()) and aBehavior.oclIsKindOf(StateMachine)/]
-
-[**
- * Returns an OrderedSet of Vertices whose entry calls can be executed 
- * synchronously at the time they are called, with the exception of the last
- * Vertex, which can be called asynchronously in order to start the asynchronous
- * chain of calls.
-*/]
-[query public request_synchronous_entry_calls(anOSet:OrderedSet(Vertex))
- : OrderedSet(Vertex) = 
-   let lastVertex : Vertex = 
-    anOSet->select(v:Vertex | v.request_vertex_needs_async_entry())->first() in
-   let lastIndex : Integer = if lastVertex.oclIsUndefined() then anOSet->size()
-                             else anOSet->indexOf(lastVertex) endif in
-   if anOSet->notEmpty() then anOSet->subOrderedSet(1, lastIndex)
-   else anOSet endif/]
-
-[query public request_vertex_needs_async_entry(v:Vertex):Boolean = 
-  (v.oclIsKindOf(State) and 
-    v.oclAsType(State).entry.request_behavior_needs_async_call())
-  or (v.oclIsKindOf(Pseudostate) and 
-       let p:Pseudostate = v.oclAsType(Pseudostate) in (
-           (p.kind=PseudostateKind::initial and p.outgoing
-             ->select(t:Transition|t.request_transition_needs_async_call())
-             ->notEmpty())
-       ))/]
-
-[query public request_region_needs_async_entry(r:Region):Boolean =
-   let p : Pseudostate = 
-           r.request_region_initial_pseudostate() in
-  (not p.oclIsUndefined()) and
-  p.outgoing->select(t:Transition|t.request_transition_needs_async_call())
-             ->notEmpty()/]
-
-[query public request_transition_needs_async_call(aTransition:Transition)
- :Boolean = 
- aTransition.effect.request_behavior_needs_async_call()
- or (let target_vertices : OrderedSet(Vertex) = 
-        aTransition.request_transition_target_vertices() in
-    target_vertices
-    ->select(v:Vertex|v.request_vertex_needs_async_entry())->notEmpty()
-    or aTransition.request_regions_init()
-       ->select(r:Region|r.request_region_needs_async_entry())->notEmpty())/]
-
 [**
  * @brief Returns a list of vertices that should be entered to make
  * the run to completion step finished. This list does not include 
@@ -740,49 +689,33 @@ let exitState : State = request_transition_exit_state(aTransition) in
 [query public request_transition_target_vertices(aTransition:Transition)
  : OrderedSet(Vertex) = let entry_states : OrderedSet(State) = 
             request_transition_entry_states(aTransition) in
-   if aTransition.request_is_transition_local_to_parent() then
+   if aTransition.request_is_transition_local_to_parent()  then
       entry_states else entry_states->append(aTransition.target) endif/]
 
-[**
- * @brief Returns the list of the first synchronous entry call vertices
- * that should be called at the time the transition is fired. The rest vertices
- * will be called later after the async calls are completed.
-*/]
-[query public request_transition_target_sync_vertices(aTransition:Transition)
- : OrderedSet(Vertex) = 
- request_transition_target_vertices(aTransition)
-                        ->request_synchronous_entry_calls()/]
 
 [**
- * @brief Returns the list of the first synchronous entry call regions
- * that should be called at the time the transition is fired. The rest
- * of regions will be called later as the chain of asynchronous calls
- * executes.
+ * @brief Returns the list of the regions that should be entered 
+ * at the time the transition is fired. 
 */]
-[query public request_transition_target_sync_regions_init
+[query public request_transition_target_regions_init
                                                         (aTransition:Transition)
  : OrderedSet(Region) = 
  let additional_regions : OrderedSet(Region) = 
                    aTransition.request_regions_init() in 
  if aTransition.request_is_transition_local_to_parent()
  then additional_regions else
-   let sync_entry_states : OrderedSet(State) = 
-     request_transition_target_sync_vertices(aTransition)
-     ->selectByKind(State)
-     ->select(s:State|not s.request_vertex_needs_async_entry()) 
+   let entry_states : OrderedSet(State) = 
+     request_transition_target_vertices(aTransition)
+     ->selectByKind(State) 
      in
-   additional_regions->select(r:Region|sync_entry_states->includes(r.state)) 
+   additional_regions->select(r:Region|entry_states->includes(r.state)) 
  endif /]
 
 [query public request_transition_dispatch_result(aTransition : Transition)
- : String = if aTransition.request_transition_needs_async_call() 
-          then request_transition_transit_state() else 
+ : String = 
           if aTransition.kind = TransitionKind::internal then 
                  request_transition_same_state()
-          else request_transition_changed_state() endif endif/]
-
-[query public request_transition_transit_state(traceabilityContext : OclAny)
- : String = 'TRANSITION'/]
+          else request_transition_changed_state() endif/]
 
 [query public request_transition_ignored_state(traceabilityContext : OclAny)
  : String = 'IGNORED'/]

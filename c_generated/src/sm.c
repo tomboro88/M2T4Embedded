@@ -7,11 +7,7 @@ sm_event_resolve_status(sm_event_status_t const status1,\
 {
     sm_event_status_t result = IGNORED;
 
-    if(TRANSITION==status1 || TRANSITION==status2)
-    {
-        result = TRANSITION;
-    }
-    else if(CHANGEDSTATE==status1 || CHANGEDSTATE==status2)
+    if(CHANGEDSTATE==status1 || CHANGEDSTATE==status2)
     {
         result = CHANGEDSTATE;
     }
