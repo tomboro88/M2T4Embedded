@@ -1220,7 +1220,8 @@ memset(&[return_name/], 0, sizeof([return_name/]));
      b_is_literal : Boolean = (not p.upperValue.name.oclIsUndefined())
                                and (name.size() > 0)
                                and name.first(1).isAlpha();}]
-['['/][if (b_is_literal)][name.toUpper()/][else][p.upper/][/if][']'/]
+['['/][if (b_is_literal)][p.upperValue.oclAsType(LiteralSpecification)
+                          .uml_c_get_literal_name()/][else][p.upper/][/if][']'/]
 [/template]
 
 [**
@@ -1262,6 +1263,9 @@ memset(&[return_name/], 0, sizeof([return_name/]));
                              >(line_width-s.size()-1))][sep/][/if][p_mul/];
 [/template]
 
+[query public uml_c_get_literal_name(ls : LiteralSpecification) : String
+ = ls.uml_c_get_element_full_name().toUpper()/]
+
 [**
  * @brief Provides C declaration of an UML LiteralSpecification.
  */]
@@ -1269,7 +1273,7 @@ memset(&[return_name/], 0, sizeof([return_name/]));
                                           indentation : Integer) 
   ?(not (ls.name.oclIsUndefined() or ls.name.oclIsInvalid()))]
 [utils_indent(indentation)/][documentationElement(ls,indentation)/]
-#[utils_indent(indentation)/]define [ls.uml_c_get_element_full_name().toUpper()
+#[utils_indent(indentation)/]define [ls.uml_c_get_literal_name()
                                /] [ls.uml_c_get_literal_string()/]
 [/template]
 
@@ -1367,8 +1371,8 @@ memset(&[return_name/], 0, sizeof([return_name/]));
 [/template]
 
 [query public uml_c_needs_init_defaults(c : Classifier) : Boolean = 
- ( not c.attribute->select(p : Property | 
-        not p.defaultValue->oclIsUndefined())->isEmpty())
+ ( c.attribute->select(p : Property | 
+        not p.defaultValue.oclIsUndefined())->notEmpty())
        or (c.request_needs_vtable() and (not c.oclIsKindOf(Interface)))/]
 
 [template public uml_c_declare_defaults(aClassifier:Classifier,
@@ -1834,7 +1838,10 @@ static [uml_c_get_event_status_type()/]
                         indentation)/]
 {
 [spaces/][uml_c_get_event_status_type()/] [assign_result
-                                        /][request_transition_ignored_state()/];
+  /][(if request_is_always_handled(aState, anEvent) 
+          and aState.region->request_event_subregions(anEvent)->isEmpty() then
+          request_transition_changed_state() 
+     else request_transition_ignored_state() endif)/];
 [if ( aState.region->request_event_subregions(anEvent)->size() > 1 )]
 [spaces/][uml_c_get_event_status_type()/] [assign_temp_status
                                         /][request_transition_ignored_state()/];
@@ -1859,17 +1866,19 @@ static [uml_c_get_event_status_type()/]
 [/for]
 [if (aState.request_state_handles_event(anEvent) )]
 [if (aState.region->request_event_subregions(anEvent)->size() > 0)]
-[debug_marker('uml_c_implement_state_dispatch 1')/]
-[spaces/]if([request_transition_ignored_state()
+[debug_marker('uml_c_implement_state_dispatch 1')
+/][spaces/]if([request_transition_ignored_state()
                                       /] == [utils_dispatch_result_name()/])
 [spaces/]{
 [spaces/][spaces/][uml_c_implement_event_handler(aState, anEvent, 
                                                  indentation+spaces.size()*2)/]
 [spaces/]}
+
 [else]
 [debug_marker('uml_c_implement_state_dispatch 2')/]
 [spaces/][uml_c_implement_event_handler(aState, anEvent,
-                                        indentation+spaces.size())/]
+                                        indentation+spaces.size()).trim()/]
+
 [/if]
 [/if]
 [spaces/]return [utils_dispatch_result_name()/];
@@ -2236,7 +2245,6 @@ static [uml_c_get_event_status_type()/]
 [spaces/][uml_c_implement_vertex_transitions(aChoice, Sequence{}, null, 
                                              indentation+spaces.size())/]
 [/if]
-
 [spaces/]return [utils_dispatch_result_name()/];
 }
 [/template]

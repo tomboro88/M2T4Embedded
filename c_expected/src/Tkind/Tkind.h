@@ -1,6 +1,8 @@
 /**
  * @file 
  * 
+ * A Package containing test diagrams for different kinds of transitions:
+ * internal, external and local.
  */
 
 #ifndef TKIND_H
@@ -18,21 +20,124 @@ extern "C" {
 //Start of user code includes bottom
 //End of user code
 
-#    define TKIND_CTEST_I_CNT 2
-#    define TKIND_CTEST_O_CNT 2
-#    define TKIND_CTEST_A_CNT 2
-#    define TKIND_CTEST_B_CNT 2
-#    define TKIND_CTEST_C_CNT 2
-#    define TKIND_CTEST_F_CNT 2
-#    define TKIND_CTEST_E_CNT 2
-#    define TKIND_CTEST_D_CNT 2
-#    define TKIND_CTEST_N_CNT 2
-#    define TKIND_CTEST_H_CNT 2
-#    define TKIND_CTEST_G_CNT 2
-#    define TKIND_CTEST_J_CNT 2
-#    define TKIND_CTEST_M_CNT 2
-#    define TKIND_CTEST_K_CNT 2
-#    define TKIND_CTEST_L_CNT 2
+    /**
+     * @brief The maximum number of I events stored in the I event queue.
+     * @details This (and other) constant must be included by the creator inside
+     * of the model. This way it provides an elastic way to specify the queue
+     * size for each event.
+     * A missing (unspecified explicitly in the model) constant will result in
+     * the C-compiler error, since the queue buffers use these names as the
+     * internal array sizes.
+     * The specified size of 2 is not a random number. This is the minimum
+     * recommended size of the created event queue. Although it may seem obvious
+     * for a queue, the number of two
+     * events in the queue means, that when one ovent is being processed by the
+     * state machine, there will still be place for at least one new event in
+     * the queue.
+     * This is important for critical events, that are sent only ocassionally,
+     * and cannot be missed just because the event queue was filled with other
+     * more frequent event types.
+     */
+#    define TKIND_CTEST_I_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_O_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_A_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_B_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_C_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_F_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_E_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_D_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_N_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_H_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_G_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_J_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_M_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_K_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_L_CNT 2u
+
+    /**
+     * @brief The size of the internal name string.
+     * @details This constant is defined internally in the model as an upper
+     * limit of the number of characters in the my_name property of ctest class.
+     * It is automatically detected by the generator and included as a literal
+     * constant in the package header.
+     */
+#    define TKIND_MAX_CHAR_NUM 20u
+
+    /**
+     */
+#    define TKIND_PI_LITERAL_CONSTANT 3.14
+
+    /**
+     * @brief The virtual table type for the Tkind_cbase1_s struct.
+     */
+    typedef struct Tkind_cbase1_vt_s \
+            Tkind_cbase1_vt_t;
+
+    /**
+     * @brief The type representing the Tkind_cbase1_s struct.
+     */
+    typedef struct Tkind_cbase1_s \
+            Tkind_cbase1_t;
+
+    /**
+     * @brief The virtual table type for the Tkind_cbase2_s struct.
+     */
+    typedef struct Tkind_cbase2_vt_s \
+            Tkind_cbase2_vt_t;
+
+    /**
+     * @brief The type representing the Tkind_cbase2_s struct.
+     */
+    typedef struct Tkind_cbase2_s \
+            Tkind_cbase2_t;
+
+    /**
+     * @brief The virtual table type for the Tkind_ctest_s struct.
+     */
+    typedef struct Tkind_ctest_vt_s \
+            Tkind_ctest_vt_t;
 
     /**
      * @brief The type representing the Tkind_ctest_s struct.
@@ -45,6 +150,61 @@ extern "C" {
      */
     typedef struct Tkind_sm1_s \
             Tkind_sm1_t;
+
+    /**
+     * @brief An example base class with one uint32 property.
+     */
+    struct Tkind_cbase1_s
+    {
+        /**
+         */
+        uint32_t                        Property1;
+        /**
+         * @brief The pointer to the virtual table of the cbase1 class.
+         */
+        const Tkind_cbase1_vt_t*        p_vtable;
+    };
+
+    /**
+     * @brief The virtual table struct for the Tkind_cbase1_s struct. Contains
+     * pointers to all virtual methods of the class.
+     */
+    struct Tkind_cbase1_vt_s
+    {
+        /**
+         * @param [in] p_obj The pointer to the self object.
+         * @param [in] param1 
+         */
+        void (*p_SetUintProp)(Tkind_cbase1_t* const p_obj,\
+                              uint32_t const param1);
+    };
+
+    /**
+     * @brief An example base class with one float property.
+     */
+    struct Tkind_cbase2_s
+    {
+        /**
+         */
+        float                           Property1;
+        /**
+         * @brief The pointer to the virtual table of the cbase2 class.
+         */
+        const Tkind_cbase2_vt_t*        p_vtable;
+    };
+
+    /**
+     * @brief The virtual table struct for the Tkind_cbase2_s struct. Contains
+     * pointers to all virtual methods of the class.
+     */
+    struct Tkind_cbase2_vt_s
+    {
+        /**
+         * @param [in] p_obj The pointer to the self object.
+         * @return 
+         */
+        float (*p_GetFloatProp)(Tkind_cbase2_t* const p_obj);
+    };
 
     /**
      * @brief The enumeration of all events handled by ctest Class.
@@ -656,9 +816,19 @@ extern "C" {
     }tkind_ctest_l_queue_t;
     
     /**
+     * This is a comment linked 
+     * to the ctest type
      */
     struct Tkind_ctest_s
     {
+        /**
+         * @brief cbase1 base class data.
+         */
+        Tkind_cbase1_t                  cbase1;
+        /**
+         * @brief cbase2 base class data.
+         */
+        Tkind_cbase2_t                  cbase2;
         /**
          * @brief The type of the first event in the event pool of the ctest
          * class.
@@ -729,6 +899,28 @@ extern "C" {
          * @brief The event queue holding l events.
          */
         tkind_ctest_l_queue_t           l;
+        /**
+         */
+        char                            my_name[TKIND_MAX_CHAR_NUM];
+        /**
+         */
+        double                          pi;
+    };
+
+    /**
+     * @brief The virtual table struct for the Tkind_ctest_s struct. Contains
+     * pointers to all virtual methods of the class.
+     */
+    struct Tkind_ctest_vt_s
+    {
+        /**
+         * cbase1 base class virtual table.
+         */
+        Tkind_cbase1_vt_t               cbase1;
+        /**
+         * cbase2 base class virtual table.
+         */
+        Tkind_cbase2_vt_t               cbase2;
     };
 
     /**
@@ -886,9 +1078,18 @@ extern "C" {
         /**
          */
         tkind_sm1_region6_t             region6;
-
+        /**
+         */
         bool                            b_test_condition;
     };
+
+    void Tkind_cbase1_SetUintProp(Tkind_cbase1_t* const p_obj,\
+                                  uint32_t const param1);
+    uint32_t Tkind_cbase1_GetUintProp(Tkind_cbase1_t* const p_obj);
+
+    void Tkind_cbase2_SetFloatProp(Tkind_cbase2_t* const p_obj,\
+                                   float const param1);
+    float Tkind_cbase2_GetFloatProp(Tkind_cbase2_t* const p_obj);
 
     void Tkind_ctest_a(Tkind_ctest_t* const p_obj);
     void Tkind_ctest_b(Tkind_ctest_t* const p_obj);

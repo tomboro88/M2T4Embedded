@@ -311,6 +311,9 @@ extern "C" {
          */
         TJUNCTION_SM1_STATE36,
         /**
+         */
+        TJUNCTION_SM1_STATE43,
+        /**
          * @brief The number of all substates of Region1 Region of sm1
          * StateMachine.
          */
@@ -341,6 +344,75 @@ extern "C" {
     }tjunction_sm1_region36_t;
     
     /**
+     * @brief The enumeration of all substates of Region431 Region of sm1
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the Region431 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_INITIAL431,
+        /**
+         */
+        TJUNCTION_SM1_STATE431,
+        /**
+         */
+        TJUNCTION_SM1_STATE432,
+        /**
+         * @brief The number of all substates of Region431 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_REGION431_SIZE
+    }tjunction_sm1_region431_t;
+    
+    /**
+     * @brief The enumeration of all substates of Region4321 Region of sm1
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the Region4321 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_INITIAL4321,
+        /**
+         */
+        TJUNCTION_SM1_STATE4321,
+        /**
+         */
+        TJUNCTION_SM1_STATE4322,
+        /**
+         * @brief The number of all substates of Region4321 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_REGION4321_SIZE
+    }tjunction_sm1_region4321_t;
+    
+    /**
+     * @brief The enumeration of all substates of Region432 Region of sm1
+     * StateMachine.
+     */
+    typedef enum{
+        /**
+         * @brief The default substate of the Region432 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_INITIAL432,
+        /**
+         */
+        TJUNCTION_SM1_STATE433,
+        /**
+         */
+        TJUNCTION_SM1_STATE434,
+        /**
+         * @brief The number of all substates of Region432 Region of sm1
+         * StateMachine.
+         */
+        TJUNCTION_SM1_REGION432_SIZE
+    }tjunction_sm1_region432_t;
+    
+    /**
      */
     struct TJunction_sm1_s
     {
@@ -350,13 +422,39 @@ extern "C" {
         /**
          */
         tjunction_sm1_region36_t        region36;
-
+        /**
+         */
+        tjunction_sm1_region431_t       region431;
+        /**
+         */
+        tjunction_sm1_region4321_t      region4321;
+        /**
+         */
+        tjunction_sm1_region432_t       region432;
+        /**
+         */
         bool                            b_guard1;
+        /**
+         */
         bool                            b_guard2;
+        /**
+         */
         bool                            b_guard3;
+        /**
+         */
         bool                            b_guard4;
+        /**
+         */
         bool                            b_guard5;
+        /**
+         */
         bool                            b_guard6;
+        /**
+         */
+        bool                            b_guard7;
+        /**
+         */
+        bool                            b_guard8;
     };
 
     void TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);

@@ -136,6 +136,7 @@
  * 
  ******************************************************************************/
 [for (aClassifier:Classifier|allClassifiers)
+  separator(utils_newline())
   ?(aClassifier.uml_c_operations_need_declaration(Set{VisibilityKind::private})
                 ->notEmpty()
        or aClassifier
@@ -250,6 +251,7 @@ static inline bool
        or aClassifier.oclIsKindOf(StateMachine)) ]
 [if (aClassifier.uml_c_needs_init_defaults() )]
 [uml_c_define_defaults(aClassifier,0)/]
+
 [/if]
 [if (aClassifier.uml_c_get_operations(non_public_bodies_visibility)->notEmpty())]
 [uml_c_define_operations(aClassifier, non_public_bodies_visibility, 0)/]

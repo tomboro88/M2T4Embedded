@@ -1,6 +1,8 @@
 /**
  * @file 
  * 
+ * @brief Top level module of the model.
+ * @details Contains two example subpackages: Tkind and TJunction.
  */
 
 #ifndef UMLTEST_H

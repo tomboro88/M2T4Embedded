@@ -39,6 +39,62 @@ extern "C" {
 #    define TKIND_CTEST_I_CNT 2u
 
     /**
+     */
+#    define TKIND_CTEST_O_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_A_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_B_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_C_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_F_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_E_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_D_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_N_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_H_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_G_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_J_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_M_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_K_CNT 2u
+
+    /**
+     */
+#    define TKIND_CTEST_L_CNT 2u
+
+    /**
      * @brief The size of the internal name string.
      * @details This constant is defined internally in the model as an upper
      * limit of the number of characters in the my_name property of ctest class.
@@ -843,7 +899,7 @@ extern "C" {
         tkind_ctest_l_queue_t           l;
         /**
          */
-        char                            my_name[MAX_CHAR_NUM];
+        char                            my_name[TKIND_MAX_CHAR_NUM];
         /**
          */
         double                          pi;
@@ -1020,6 +1076,9 @@ extern "C" {
         /**
          */
         tkind_sm1_region6_t             region6;
+        /**
+         */
+        bool                            b_test_condition;
     };
 
     void Tkind_cbase1_SetUintProp(Tkind_cbase1_t* const p_obj,\

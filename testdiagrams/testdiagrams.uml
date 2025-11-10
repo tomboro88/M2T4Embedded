@@ -28,6 +28,7 @@ It is automatically detected by the generator and included as a literal constant
         <defaultValue xmi:type="uml:LiteralReal" xmi:id="_PIx20KU6EfCJwtlh12_YdQ" name="PI_LITERAL_CONSTANT" value="3.14"/>
       </ownedAttribute>
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_nbBJMNw4Ee-clukbqF5Mtw" name="sm1">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_qkc70L4zEfCF3MoXlXpSFw" name="b_test_condition" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
         <region xmi:type="uml:Region" xmi:id="_vunXENw4Ee-clukbqF5Mtw" name="Region1">
           <transition xmi:type="uml:Transition" xmi:id="_kVUYANxCEe-clukbqF5Mtw" source="_xRPncNw4Ee-clukbqF5Mtw" target="_MQR5Ydw8Ee-clukbqF5Mtw">
             <trigger xmi:type="uml:Trigger" xmi:id="_31jbIN27Ee-8CKMu-ENa-A" event="_3iswkN27Ee-8CKMu-ENa-A"/>
@@ -160,7 +161,7 @@ It is automatically detected by the generator and included as a literal constant
                 <ownedRule xmi:type="uml:Constraint" xmi:id="_s8gbgPh2Ee-9W4mcsGdJGQ">
                   <specification xmi:type="uml:OpaqueExpression" xmi:id="_2FuCwPh2Ee-9W4mcsGdJGQ" visibility="private">
                     <language>C</language>
-                    <body>b_test_condition</body>
+                    <body>p_obj->b_test_condition</body>
                   </specification>
                 </ownedRule>
               </transition>
@@ -322,6 +323,20 @@ This is important for critical events, that are sent only ocassionally, and cann
         <ownedParameter xmi:type="uml:Parameter" xmi:id="_djpokKTEEfCF5Mxlt2zVCg" name="result" type="_XDi8sKU0EfCJFuHNEOD_Ew" direction="return"/>
       </ownedOperation>
     </packagedElement>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_C27P8L4uEfCF3MoXlXpSFw" name="CTEST_O_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_NdlsoL4uEfCF3MoXlXpSFw" name="CTEST_A_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ToS7YL4uEfCF3MoXlXpSFw" name="CTEST_B_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_WVRfAL4uEfCF3MoXlXpSFw" name="CTEST_C_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ZybiYL4uEfCF3MoXlXpSFw" name="CTEST_F_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_dS4xYL4uEfCF3MoXlXpSFw" name="CTEST_E_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hErA8L4uEfCF3MoXlXpSFw" name="CTEST_D_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kz4doL4uEfCF3MoXlXpSFw" name="CTEST_N_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_npsNIL4uEfCF3MoXlXpSFw" name="CTEST_H_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_rfey8L4uEfCF3MoXlXpSFw" name="CTEST_G_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vBp5ML4uEfCF3MoXlXpSFw" name="CTEST_J_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_x334YL4uEfCF3MoXlXpSFw" name="CTEST_M_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0kz_wL4uEfCF3MoXlXpSFw" name="CTEST_K_CNT" value="2"/>
+    <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2-IAgL4uEfCF3MoXlXpSFw" name="CTEST_L_CNT" value="2"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Package" xmi:id="_tzRuEAHPEfCgXv5ODs4Seg" name="TJunction">
     <ownedComment xmi:type="uml:Comment" xmi:id="_krpNQKU4EfCJwtlh12_YdQ" annotatedElement="_tzRuEAHPEfCgXv5ODs4Seg">
@@ -332,6 +347,14 @@ for static evaluation of a sequence of guard conditions before any transition is
     </ownedComment>
     <packagedElement xmi:type="uml:Class" xmi:id="_0eQ_YAHPEfCgXv5ODs4Seg" name="Jtest">
       <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_5YXh4AHPEfCgXv5ODs4Seg" name="sm1">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_kmX50L3xEfCuufnsP13LzQ" name="b_guard1" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_s_-pEL3xEfCuufnsP13LzQ" name="b_guard2" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_xbt0kL3xEfCuufnsP13LzQ" name="b_guard3" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_z06gkL3xEfCuufnsP13LzQ" name="b_guard4" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_3NbUgL3xEfCuufnsP13LzQ" name="b_guard5" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_6lbLEL3xEfCuufnsP13LzQ" name="b_guard6" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_9j4gQL3xEfCuufnsP13LzQ" name="b_guard7" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="__ZNqML3xEfCuufnsP13LzQ" name="b_guard8" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
         <region xmi:type="uml:Region" xmi:id="_9FNnEAHPEfCgXv5ODs4Seg" name="Region1">
           <transition xmi:type="uml:Transition" xmi:id="_EME8EAHQEfCgXv5ODs4Seg" source="_-JOBwAHPEfCgXv5ODs4Seg" target="__1fWUAHPEfCgXv5ODs4Seg">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_-WOGoLnUEfC0UfKG-fUG3g">
@@ -502,6 +525,28 @@ for static evaluation of a sequence of guard conditions before any transition is
           <transition xmi:type="uml:Transition" xmi:id="_xiA5wLkjEfC-keoHQ33Mgw" source="_pk0ZsLkjEfC-keoHQ33Mgw" target="_8HzQwKI6EfCvx517mEM6Vg">
             <trigger xmi:type="uml:Trigger" xmi:id="_18ruQLkjEfC-keoHQ33Mgw" event="_WdHqgAHQEfCgXv5ODs4Seg"/>
           </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_JcGoQL3uEfCuufnsP13LzQ" source="_povXwLkgEfC-keoHQ33Mgw" target="_SnnkUL3oEfCuufnsP13LzQ">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_Vdn5YL3uEfCuufnsP13LzQ">
+              <language>C</language>
+              <body>printf(&quot;Execute c event from State36&quot;);</body>
+            </effect>
+            <trigger xmi:type="uml:Trigger" xmi:id="_NrmukL3uEfCuufnsP13LzQ" event="_IY2pEAHREfCgXv5ODs4Seg"/>
+          </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_P673cL3vEfCuufnsP13LzQ" source="_fG3IsL3nEfCuufnsP13LzQ" target="_1pH7EL3vEfCuufnsP13LzQ">
+            <trigger xmi:type="uml:Trigger" xmi:id="_RgjKYL3vEfCuufnsP13LzQ" event="_IY2pEAHREfCgXv5ODs4Seg"/>
+            <trigger xmi:type="uml:Trigger" xmi:id="_hFcboL3vEfCuufnsP13LzQ" event="_zJ3CIAHYEfCkTbNMLPdxiA"/>
+          </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_CUR_EL3wEfCuufnsP13LzQ" source="_1pH7EL3vEfCuufnsP13LzQ" target="_E387ELkhEfC-keoHQ33Mgw">
+            <effect xmi:type="uml:OpaqueBehavior" xmi:id="_MM2UwL3yEfCuufnsP13LzQ">
+              <language>C</language>
+              <body>printf(&quot;Chosen State36.\n&quot;);</body>
+            </effect>
+          </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_F56pAL3wEfCuufnsP13LzQ" guard="_K4n-sL3wEfCuufnsP13LzQ" source="_1pH7EL3vEfCuufnsP13LzQ" target="_fG3IsL3nEfCuufnsP13LzQ">
+            <ownedRule xmi:type="uml:Constraint" xmi:id="_K4n-sL3wEfCuufnsP13LzQ">
+              <specification xmi:type="uml:Expression" xmi:id="_K4n-sb3wEfCuufnsP13LzQ" symbol="else"/>
+            </ownedRule>
+          </transition>
           <subvertex xmi:type="uml:State" xmi:id="_-JOBwAHPEfCgXv5ODs4Seg" name="State1">
             <exit xmi:type="uml:OpaqueBehavior" xmi:id="_uHz5MLkiEfC-keoHQ33Mgw">
               <language>C</language>
@@ -524,7 +569,7 @@ for static evaluation of a sequence of guard conditions before any transition is
           <subvertex xmi:type="uml:State" xmi:id="_povXwLkgEfC-keoHQ33Mgw" name="State36">
             <entry xmi:type="uml:OpaqueBehavior" xmi:id="_lpBvALkiEfC-keoHQ33Mgw">
               <language>C</language>
-              <body>printf(&quot;Enter State36);</body>
+              <body>printf(&quot;Enter State36&quot;);</body>
             </entry>
             <region xmi:type="uml:Region" xmi:id="_qcxcwLkgEfC-keoHQ33Mgw" name="Region36">
               <transition xmi:type="uml:Transition" xmi:id="_IW7jYLkhEfC-keoHQ33Mgw" guard="_Js8pMLkjEfC-keoHQ33Mgw" source="_E387ELkhEfC-keoHQ33Mgw" target="_rMS1MLkgEfC-keoHQ33Mgw">
@@ -562,6 +607,97 @@ for static evaluation of a sequence of guard conditions before any transition is
           </subvertex>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_Q05OMLkhEfC-keoHQ33Mgw" name="Junction37" kind="junction"/>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_pk0ZsLkjEfC-keoHQ33Mgw" name="Junction41" kind="junction"/>
+          <subvertex xmi:type="uml:State" xmi:id="_fG3IsL3nEfCuufnsP13LzQ" name="State43">
+            <region xmi:type="uml:Region" xmi:id="_gXIdwL3nEfCuufnsP13LzQ" name="Region431">
+              <transition xmi:type="uml:Transition" xmi:id="_DHqdcL3oEfCuufnsP13LzQ" source="_rRFC0L3nEfCuufnsP13LzQ" target="_qqu0gL3nEfCuufnsP13LzQ"/>
+              <transition xmi:type="uml:Transition" xmi:id="_FOfnEL3oEfCuufnsP13LzQ" source="_qqu0gL3nEfCuufnsP13LzQ" target="_w3XV4L3nEfCuufnsP13LzQ">
+                <trigger xmi:type="uml:Trigger" xmi:id="_JV3FEL3oEfCuufnsP13LzQ" event="_WdHqgAHQEfCgXv5ODs4Seg"/>
+              </transition>
+              <transition xmi:type="uml:Transition" xmi:id="_U51ekL3oEfCuufnsP13LzQ" guard="_12r6IL3oEfCuufnsP13LzQ" source="_SnnkUL3oEfCuufnsP13LzQ" target="_qqu0gL3nEfCuufnsP13LzQ">
+                <ownedRule xmi:type="uml:Constraint" xmi:id="_12r6IL3oEfCuufnsP13LzQ">
+                  <specification xmi:type="uml:OpaqueExpression" xmi:id="_12r6Ib3oEfCuufnsP13LzQ">
+                    <language>C</language>
+                    <body>p_obj->b_guard6</body>
+                  </specification>
+                </ownedRule>
+                <effect xmi:type="uml:OpaqueBehavior" xmi:id="_eGRxQL3uEfCuufnsP13LzQ">
+                  <language>C</language>
+                  <body>printf(&quot;Exit junction431\n&quot;);</body>
+                </effect>
+              </transition>
+              <transition xmi:type="uml:Transition" xmi:id="_V2_qYL3oEfCuufnsP13LzQ" guard="_NRCEsL3pEfCuufnsP13LzQ" source="_SnnkUL3oEfCuufnsP13LzQ" target="_XmZygL3oEfCuufnsP13LzQ">
+                <ownedRule xmi:type="uml:Constraint" xmi:id="_Bu6FUL3pEfCuufnsP13LzQ">
+                  <specification xmi:type="uml:Expression" xmi:id="_Bu6FUb3pEfCuufnsP13LzQ" symbol="else"/>
+                </ownedRule>
+                <ownedRule xmi:type="uml:Constraint" xmi:id="_NRCEsL3pEfCuufnsP13LzQ">
+                  <specification xmi:type="uml:OpaqueExpression" xmi:id="_NRCEsb3pEfCuufnsP13LzQ">
+                    <language>C</language>
+                    <body>p_obj->b_guard5</body>
+                  </specification>
+                </ownedRule>
+                <effect xmi:type="uml:OpaqueBehavior" xmi:id="_lMQVcL3uEfCuufnsP13LzQ">
+                  <language>C</language>
+                  <body>printf(&quot;Go to junction4321\n&quot;);</body>
+                </effect>
+              </transition>
+              <subvertex xmi:type="uml:State" xmi:id="_qqu0gL3nEfCuufnsP13LzQ" name="State431"/>
+              <subvertex xmi:type="uml:Pseudostate" xmi:id="_rRFC0L3nEfCuufnsP13LzQ" name="Initial431"/>
+              <subvertex xmi:type="uml:State" xmi:id="_w3XV4L3nEfCuufnsP13LzQ" name="State432">
+                <region xmi:type="uml:Region" xmi:id="_0ESk4L3nEfCuufnsP13LzQ" name="Region4321">
+                  <transition xmi:type="uml:Transition" xmi:id="_KzIUUL3oEfCuufnsP13LzQ" source="_-wVQ0L3nEfCuufnsP13LzQ" target="_0ETzAL3nEfCuufnsP13LzQ"/>
+                  <transition xmi:type="uml:Transition" xmi:id="_L0m_cL3oEfCuufnsP13LzQ" source="_0ETzAL3nEfCuufnsP13LzQ" target="_6ppvUL3nEfCuufnsP13LzQ">
+                    <trigger xmi:type="uml:Trigger" xmi:id="_Nj_SYL3oEfCuufnsP13LzQ" event="_hL0o4AHQEfCgXv5ODs4Seg"/>
+                  </transition>
+                  <transition xmi:type="uml:Transition" xmi:id="_ZoQVgL3oEfCuufnsP13LzQ" guard="_eyFgoL3pEfCuufnsP13LzQ" source="_XmZygL3oEfCuufnsP13LzQ" target="_0ETzAL3nEfCuufnsP13LzQ">
+                    <ownedRule xmi:type="uml:Constraint" xmi:id="_eyFgoL3pEfCuufnsP13LzQ">
+                      <specification xmi:type="uml:OpaqueExpression" xmi:id="_eyFgob3pEfCuufnsP13LzQ">
+                        <language>C</language>
+                        <body>p_obj->b_guard7</body>
+                      </specification>
+                    </ownedRule>
+                  </transition>
+                  <transition xmi:type="uml:Transition" xmi:id="_a0688L3oEfCuufnsP13LzQ" guard="_l_4kEL3pEfCuufnsP13LzQ" source="_XmZygL3oEfCuufnsP13LzQ" target="_6ppvUL3nEfCuufnsP13LzQ">
+                    <ownedRule xmi:type="uml:Constraint" xmi:id="_l_4kEL3pEfCuufnsP13LzQ">
+                      <specification xmi:type="uml:Expression" xmi:id="_l_4kEb3pEfCuufnsP13LzQ" symbol="else"/>
+                    </ownedRule>
+                  </transition>
+                  <subvertex xmi:type="uml:State" xmi:id="_0ETzAL3nEfCuufnsP13LzQ" name="State4321">
+                    <exit xmi:type="uml:OpaqueBehavior" xmi:id="_Ts_XUL3wEfCuufnsP13LzQ">
+                      <language>C</language>
+                      <body>printf(&quot;Exit State4321.\n&quot;);</body>
+                    </exit>
+                  </subvertex>
+                  <subvertex xmi:type="uml:State" xmi:id="_6ppvUL3nEfCuufnsP13LzQ" name="State4322"/>
+                  <subvertex xmi:type="uml:Pseudostate" xmi:id="_-wVQ0L3nEfCuufnsP13LzQ" name="Initial4321"/>
+                  <subvertex xmi:type="uml:Pseudostate" xmi:id="_XmZygL3oEfCuufnsP13LzQ" name="Junction4321" kind="junction"/>
+                </region>
+              </subvertex>
+              <subvertex xmi:type="uml:Pseudostate" xmi:id="_SnnkUL3oEfCuufnsP13LzQ" name="Junction431" kind="junction"/>
+            </region>
+            <region xmi:type="uml:Region" xmi:id="_ifJ6ML3nEfCuufnsP13LzQ" name="Region432">
+              <transition xmi:type="uml:Transition" xmi:id="_8kb80L3uEfCuufnsP13LzQ" source="_yvl-oL3uEfCuufnsP13LzQ" target="_z8TCUL3uEfCuufnsP13LzQ"/>
+              <transition xmi:type="uml:Transition" xmi:id="_-PUKQL3uEfCuufnsP13LzQ" source="_z8TCUL3uEfCuufnsP13LzQ" target="_2DUZML3uEfCuufnsP13LzQ">
+                <trigger xmi:type="uml:Trigger" xmi:id="_NbCtkL3vEfCuufnsP13LzQ" event="_IY2pEAHREfCgXv5ODs4Seg"/>
+              </transition>
+              <transition xmi:type="uml:Transition" xmi:id="__mtbAL3uEfCuufnsP13LzQ" source="_2DUZML3uEfCuufnsP13LzQ" target="_z8TCUL3uEfCuufnsP13LzQ">
+                <trigger xmi:type="uml:Trigger" xmi:id="_GzTkkL3vEfCuufnsP13LzQ" event="_WdHqgAHQEfCgXv5ODs4Seg"/>
+              </transition>
+              <subvertex xmi:type="uml:Pseudostate" xmi:id="_yvl-oL3uEfCuufnsP13LzQ" name="Initial432"/>
+              <subvertex xmi:type="uml:State" xmi:id="_z8TCUL3uEfCuufnsP13LzQ" name="State433">
+                <exit xmi:type="uml:OpaqueBehavior" xmi:id="_jxc5cL3wEfCuufnsP13LzQ">
+                  <language>C</language>
+                  <body>printf(&quot;Exit State433.\n&quot;);</body>
+                </exit>
+              </subvertex>
+              <subvertex xmi:type="uml:State" xmi:id="_2DUZML3uEfCuufnsP13LzQ" name="State434">
+                <entry xmi:type="uml:OpaqueBehavior" xmi:id="_nFcZwL3wEfCuufnsP13LzQ">
+                  <language>C</language>
+                  <body>printf(&quot;State434 entry behavior.\n&quot;);</body>
+                </entry>
+              </subvertex>
+            </region>
+          </subvertex>
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_1pH7EL3vEfCuufnsP13LzQ" name="Choice46" kind="choice"/>
         </region>
       </ownedBehavior>
       <ownedOperation xmi:type="uml:Operation" xmi:id="_WFQkIAHQEfCgXv5ODs4Seg" name="a"/>

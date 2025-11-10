@@ -70,13 +70,16 @@ void Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj,\
  * 
  ******************************************************************************/
 static void Tkind_cbase1_init_df(Tkind_cbase1_t* const p_obj);
+
 static float Tkind_cbase2_get_flt_dflt(Tkind_cbase2_t* const p_obj);
 
 static void Tkind_cbase2_init_df(Tkind_cbase2_t* const p_obj);
+
 static void Tkind_ctest_sm1(Tkind_ctest_t* const p_obj);
 static float Tkind_ctest_get_flt_from_uint(Tkind_cbase2_t* const p_obj);
 
 static void Tkind_ctest_init_df(Tkind_ctest_t* const p_obj);
+
 static void sm1_exit_region1(Tkind_sm1_t* const p_obj);
 static void sm1_exit_region2(Tkind_sm1_t* const p_obj);
 static void sm1_exit_region3(Tkind_sm1_t* const p_obj);
@@ -780,6 +783,7 @@ Tkind_cbase1_init_df(Tkind_cbase1_t* const p_obj)
 {
     p_obj->p_vtable                  = &Tkind_cbase1_vtable;
 }
+
 /**
  * @param [in] p_obj The pointer to the self object.
  * @param [in] param1 
@@ -802,6 +806,7 @@ Tkind_cbase2_init_df(Tkind_cbase2_t* const p_obj)
 {
     p_obj->p_vtable                  = &Tkind_cbase2_vtable;
 }
+
 /**
  * @param [in] p_obj The pointer to the self object.
  * @return 
@@ -825,6 +830,7 @@ Tkind_ctest_init_df(Tkind_ctest_t* const p_obj)
     p_obj->cbase1.p_vtable           = &Tkind_ctest_vtable.cbase1;
     p_obj->cbase2.p_vtable           = &Tkind_ctest_vtable.cbase2;
 }
+
 /**
  */
 static void
@@ -1962,12 +1968,13 @@ sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state1(p_obj);
     sm1_enter_state1(p_obj);
     sm1_enter_state7(p_obj);
     sm1_enter_region2(p_obj);
+
     return result;
 }
 
@@ -2066,12 +2073,13 @@ sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state1(p_obj);
     sm1_enter_state1(p_obj);
     sm1_enter_choice1(p_obj);
     sm1_enter_region2(p_obj);
+
     return result;
 }
 
@@ -2085,11 +2093,12 @@ sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state2(p_obj);
     sm1_enter_state3(p_obj);
     sm1_enter_region3(p_obj);
+
     return result;
 }
 
@@ -2103,11 +2112,12 @@ sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state2(p_obj);
     sm1_enter_state4(p_obj);
     sm1_enter_region4(p_obj);
+
     return result;
 }
 
@@ -2121,11 +2131,12 @@ sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_region3(p_obj);
     printf("c event transition fired!");
     sm1_enter_state5(p_obj);
+
     return result;
 }
 
@@ -2173,11 +2184,12 @@ sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state4(p_obj);
     sm1_enter_state4(p_obj);
     sm1_enter_state6(p_obj);
+
     return result;
 }
 
@@ -2242,10 +2254,11 @@ sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_region3(p_obj);
     sm1_enter_region3(p_obj);
+
     return result;
 }
 
@@ -2259,10 +2272,11 @@ sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_region2(p_obj);
     sm1_enter_region2(p_obj);
+
     return result;
 }
 
@@ -2276,11 +2290,12 @@ sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state3(p_obj);
     sm1_enter_state4(p_obj);
     sm1_enter_state6(p_obj);
+
     return result;
 }
 
@@ -2294,11 +2309,12 @@ sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state4(p_obj);
     sm1_enter_state4(p_obj);
     sm1_enter_region4(p_obj);
+
     return result;
 }
 
@@ -2312,12 +2328,13 @@ sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state1(p_obj);
     sm1_enter_state1(p_obj);
     sm1_enter_region2(p_obj);
     sm1_enter_region5(p_obj);
+
     return result;
 }
 
@@ -2331,11 +2348,12 @@ sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state7(p_obj);
     sm1_enter_state8(p_obj);
     sm1_enter_region6(p_obj);
+
     return result;
 }
 
@@ -2383,12 +2401,13 @@ sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state1(p_obj);
     sm1_enter_state1(p_obj);
     sm1_enter_region2(p_obj);
     sm1_enter_region5(p_obj);
+
     return result;
 }
 
@@ -2402,11 +2421,12 @@ sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state8(p_obj);
     sm1_enter_state8(p_obj);
     sm1_enter_region6(p_obj);
+
     return result;
 }
 
@@ -2420,12 +2440,13 @@ sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
 static sm_event_status_t
 sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = CHANGEDSTATE;
 
     sm1_exit_state1(p_obj);
     sm1_enter_state1(p_obj);
     sm1_enter_region2(p_obj);
     sm1_enter_region5(p_obj);
+
     return result;
 }
 
@@ -2440,7 +2461,7 @@ sm1_enter_choice1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
-    if(b_test_condition)
+    if(p_obj->b_test_condition)
     {
         sm1_enter_state8(p_obj);
         sm1_enter_region6(p_obj);
@@ -2450,7 +2471,6 @@ sm1_enter_choice1(Tkind_sm1_t* const p_obj)
         sm1_enter_region5(p_obj);
     }
     
-
     return result;
 }
 
