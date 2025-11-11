@@ -26,10 +26,11 @@ This project originated from a willingness to speed up manual typing of state ma
 
 ## Installation
 - **Requirements**: Technically it is only Acceleo project containing *.mtl template files, which can be used with Eclipse Papyrus to generate code from Papyrus UML models. To open and use the project, Eclipse Papyrus version 2024-06 (the Papyrus Classic version, the latest Sirius version is not tested yet) is needed. Acceleo version 3.7 can be installed from Eclipse Marketplace available in Papyrus. Optionally for validation of test code I recommend to use git and Meld - automated Launch Configurations are provided with the project.
-- **Opening**: Create Eclipse Workspace directory in a convenient place - outside the project's repository folder. Start Papyrus and point it to this directory. Then select File>Import>Git>Projects
+- **Opening**: Create Eclipse Workspace directory in a convenient place - outside the project's repository folder. Start Papyrus and point it to this directory. Then select File>Import>Git>Projects. 
+TIP: In order to make the entry, exit, effect and guard behaviors visible directly on the state diagram, go to Window>Preferences>Papyrus>Diagrams>PapyrusUMLStateMachineDiagram>Transition and behavior options, and set the "Shown number of lines for opaque expressions/behaviors" to 3.
 
 ## Repository structure
-- **c_expected** Eclipse C Project with the reference desired output. Each package in the UML model is expected to give a pair of corresponding *.c and *.h files which can contain a number of classes - depending on the contents of the package. At the moment only TJunction.c file is up to date.
+- **c_expected** Eclipse C Project with the reference desired output. Each package in the UML model is expected to give a pair of corresponding *.c and *.h files which can contain a number of classes - depending on the contents of the package.
 - **c_generated** Eclipse C Project with the generated actual output C source code.
 - **c_test_expected** Placeholder project for unit tests for the expected output code. Currently empty.
 - **LaunchConfigurations** A folder with Eclipse Launch configuration files for Eclipse. By default these files are stored in Eclipse Workspace folder, but can be configured to be saved in another directory. In this particular case - they are stored here, so that they can be versioned by git and reused by other users cloning the repository. They will be imported automatically by Eclipse Papyrus when the complete repository will be opened by File>Import>Git>Projects from Git menu command in the main menu. There are the following Run configurations:
@@ -73,7 +74,8 @@ The generator also performs code formatting which relies on the proper configura
 - Add unit tests for the expected code project. Then the tested expected code will be a reliable reference for the generated code.
 - Add custom UML profile that will enhance the possibilities to control the generated code primitives.
 - Implement event queue handling after cleaning up the generated code. A working prototype of event loop bare-metal as well as Freertos based code generation already exists in Python language with Jinja2 templates. Then the currently supported features are enough to implement real life applications.
-- Improved documentation how to use the generator with a simple PLC pattern that could be a basis for many reliable embedded control system designs.
+- Add documentation how to use the generator with a simple PLC pattern that could be a basis for many reliable embedded control system designs.
+- Add documentation with tips how to combine UML modeling and code generation with BDD (Behavior-Driven-Development).
 - Real life example project: a file system for flash memory resilient to power failures, generated from UML state machines - partially implemented manually already - waiting for automated code generator.
 - Real life examples for embedded platforms.
 - Advanced pseudostates: history, fork, join, entry points, exit points, submachine states.
