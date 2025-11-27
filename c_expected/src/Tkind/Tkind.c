@@ -16,6 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 //Start of user code includes bottom
+#include <stdio.h>
 //End of user code
 /*******************************************************************************
  *
@@ -87,157 +88,87 @@ static void sm1_exit_region4(Tkind_sm1_t* const p_obj);
 static void sm1_exit_region5(Tkind_sm1_t* const p_obj);
 static void sm1_exit_region6(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_a(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_a_t* const p_event);
-static sm_event_status_t sm1_dispatch_b(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_b_t* const p_event);
-static sm_event_status_t sm1_dispatch_c(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_c_t* const p_event);
-static sm_event_status_t sm1_dispatch_d(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_f(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_f_t* const p_event);
-static sm_event_status_t sm1_dispatch_g(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_h_t* const p_event);
-static sm_event_status_t sm1_dispatch_i(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_i_t* const p_event);
-static sm_event_status_t sm1_dispatch_j(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_j_t* const p_event);
-static sm_event_status_t sm1_dispatch_k(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_l_t* const p_event);
-static sm_event_status_t sm1_dispatch_m(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_m_t* const p_event);
-static sm_event_status_t sm1_dispatch_n(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_n_t* const p_event);
-static sm_event_status_t sm1_dispatch_o(Tkind_sm1_t* const p_obj,\
-                                        tkind_ctest_o_t* const p_event);
+static sm_event_status_t sm1_dispatch_a(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_b(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_c(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_d(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_f(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_g(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_i(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_j(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_k(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_m(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_o(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_a_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_a_t* const p_event);
-static sm_event_status_t sm1_dispatch_b_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_b_t* const p_event);
-static sm_event_status_t sm1_dispatch_c_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_c_t* const p_event);
-static sm_event_status_t sm1_dispatch_d_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_f_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_f_t* const p_event);
-static sm_event_status_t sm1_dispatch_g_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_h_t* const p_event);
-static sm_event_status_t sm1_dispatch_n_region2(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_n_t* const p_event);
+static sm_event_status_t sm1_dispatch_a_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_b_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_c_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_d_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_f_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_g_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h_region2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n_region2(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_d_region3(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e_region3(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_n_region3(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_n_t* const p_event);
+static sm_event_status_t sm1_dispatch_d_region3(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e_region3(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n_region3(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_g_region4(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h_region4(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_h_t* const p_event);
+static sm_event_status_t sm1_dispatch_g_region4(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h_region4(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_j_region5(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_j_t* const p_event);
-static sm_event_status_t sm1_dispatch_k_region5(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l_region5(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_l_t* const p_event);
-static sm_event_status_t sm1_dispatch_m_region5(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_m_t* const p_event);
+static sm_event_status_t sm1_dispatch_j_region5(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_k_region5(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l_region5(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_m_region5(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_k_region6(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l_region6(Tkind_sm1_t* const p_obj,\
-                                                tkind_ctest_l_t* const p_event);
+static sm_event_status_t sm1_dispatch_k_region6(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l_region6(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_a_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_a_t* const p_event);
-static sm_event_status_t sm1_dispatch_b_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_b_t* const p_event);
-static sm_event_status_t sm1_dispatch_c_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_c_t* const p_event);
-static sm_event_status_t sm1_dispatch_d_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_f_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_f_t* const p_event);
-static sm_event_status_t sm1_dispatch_g_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_h_t* const p_event);
-static sm_event_status_t sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_i_t* const p_event);
-static sm_event_status_t sm1_dispatch_j_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_j_t* const p_event);
-static sm_event_status_t sm1_dispatch_k_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_l_t* const p_event);
-static sm_event_status_t sm1_dispatch_m_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_m_t* const p_event);
-static sm_event_status_t sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_n_t* const p_event);
-static sm_event_status_t sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_o_t* const p_event);
+static sm_event_status_t sm1_dispatch_a_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_b_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_c_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_d_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_f_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_g_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_j_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_k_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_m_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_a_t* const p_event);
-static sm_event_status_t sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_b_t* const p_event);
-static sm_event_status_t sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_c_t* const p_event);
-static sm_event_status_t sm1_dispatch_d_state3(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_f_t* const p_event);
-static sm_event_status_t sm1_dispatch_g_state4(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h_state4(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_h_t* const p_event);
-static sm_event_status_t sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_n_t* const p_event);
+static sm_event_status_t sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_d_state3(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_g_state4(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h_state4(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_d_t* const p_event);
-static sm_event_status_t sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_e_t* const p_event);
-static sm_event_status_t sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_n_t* const p_event);
+static sm_event_status_t sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_g_t* const p_event);
-static sm_event_status_t sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_h_t* const p_event);
+static sm_event_status_t sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_j_t* const p_event);
-static sm_event_status_t sm1_dispatch_k_state8(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_l_t* const p_event);
-static sm_event_status_t sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_m_t* const p_event);
+static sm_event_status_t sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_k_state8(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj);
 
-static sm_event_status_t sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_k_t* const p_event);
-static sm_event_status_t sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj,\
-                                               tkind_ctest_l_t* const p_event);
+static sm_event_status_t sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj);
+static sm_event_status_t sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj);
 
 static sm_event_status_t sm1_enter_choice1(Tkind_sm1_t* const p_obj);
 
@@ -285,6 +216,7 @@ static inline void
 sm1_enter_state1(Tkind_sm1_t* const p_obj)
 {
     p_obj->region1 = TKIND_SM1_STATE1;
+    (void) p_obj;
     printf("Enter State1");
 }
 
@@ -296,6 +228,7 @@ static inline void
 sm1_enter_state3(Tkind_sm1_t* const p_obj)
 {
     p_obj->region2 = TKIND_SM1_STATE3;
+    (void) p_obj;
     printf("Enter State3");
 }
 
@@ -307,6 +240,7 @@ static inline void
 sm1_enter_state5(Tkind_sm1_t* const p_obj)
 {
     p_obj->region3 = TKIND_SM1_STATE5;
+    (void) p_obj;
     printf("Enter State5");
 }
 
@@ -318,6 +252,7 @@ static inline void
 sm1_enter_state2(Tkind_sm1_t* const p_obj)
 {
     p_obj->region2 = TKIND_SM1_STATE2;
+    (void) p_obj;
     printf("Enter State2");
 }
 
@@ -329,6 +264,7 @@ static inline void
 sm1_enter_state4(Tkind_sm1_t* const p_obj)
 {
     p_obj->region2 = TKIND_SM1_STATE4;
+    (void) p_obj;
     printf("Enter State4");
 }
 
@@ -340,6 +276,7 @@ static inline void
 sm1_enter_state6(Tkind_sm1_t* const p_obj)
 {
     p_obj->region4 = TKIND_SM1_STATE6;
+    (void) p_obj;
     printf("Enter State6");
 }
 
@@ -351,6 +288,7 @@ static inline void
 sm1_enter_state7(Tkind_sm1_t* const p_obj)
 {
     p_obj->region5 = TKIND_SM1_STATE7;
+    (void) p_obj;
     printf("Enter State7");
 }
 
@@ -362,6 +300,7 @@ static inline void
 sm1_enter_state8(Tkind_sm1_t* const p_obj)
 {
     p_obj->region5 = TKIND_SM1_STATE8;
+    (void) p_obj;
     printf("Enter State8");
 }
 
@@ -373,6 +312,7 @@ static inline void
 sm1_enter_state9(Tkind_sm1_t* const p_obj)
 {
     p_obj->region6 = TKIND_SM1_STATE9;
+    (void) p_obj;
     printf("Enter State9");
 }
 
@@ -450,6 +390,7 @@ sm1_exit_state1(Tkind_sm1_t* const p_obj)
 {
     sm1_exit_region2(p_obj);
     sm1_exit_region5(p_obj);
+    (void) p_obj;
     printf("Exit State1");
 }
 
@@ -461,6 +402,7 @@ static inline void
 sm1_exit_state3(Tkind_sm1_t* const p_obj)
 {
     sm1_exit_region3(p_obj);
+    (void) p_obj;
     printf("Exit State3");
 }
 
@@ -471,6 +413,7 @@ sm1_exit_state3(Tkind_sm1_t* const p_obj)
 static inline void
 sm1_exit_state5(Tkind_sm1_t* const p_obj)
 {
+    (void) p_obj;
     printf("Exit State5");
 }
 
@@ -481,6 +424,7 @@ sm1_exit_state5(Tkind_sm1_t* const p_obj)
 static inline void
 sm1_exit_state2(Tkind_sm1_t* const p_obj)
 {
+    (void) p_obj;
     printf("Exit State2");
 }
 
@@ -492,6 +436,7 @@ static inline void
 sm1_exit_state4(Tkind_sm1_t* const p_obj)
 {
     sm1_exit_region4(p_obj);
+    (void) p_obj;
     printf("Exit State4");
 }
 
@@ -502,6 +447,7 @@ sm1_exit_state4(Tkind_sm1_t* const p_obj)
 static inline void
 sm1_exit_state6(Tkind_sm1_t* const p_obj)
 {
+    (void) p_obj;
     printf("Exit State6");
 }
 
@@ -512,6 +458,7 @@ sm1_exit_state6(Tkind_sm1_t* const p_obj)
 static inline void
 sm1_exit_state7(Tkind_sm1_t* const p_obj)
 {
+    (void) p_obj;
     printf("Exit State7");
 }
 
@@ -523,6 +470,7 @@ static inline void
 sm1_exit_state8(Tkind_sm1_t* const p_obj)
 {
     sm1_exit_region6(p_obj);
+    (void) p_obj;
     printf("Exit State8");
 }
 
@@ -533,6 +481,7 @@ sm1_exit_state8(Tkind_sm1_t* const p_obj)
 static inline void
 sm1_exit_state9(Tkind_sm1_t* const p_obj)
 {
+    (void) p_obj;
     printf("Exit State9");
 }
 
@@ -619,10 +568,8 @@ Tkind_cbase2_SetFloatProp(Tkind_cbase2_t* const p_obj, float const param1)
 float
 Tkind_cbase2_GetFloatProp(Tkind_cbase2_t* const p_obj)
 {
-    float result                    ;
-    memset(&result, 0, sizeof(result));
+    float result;
     
-
     /*Code for handling a virtual operation.*/
     if((NULL != p_obj) && (NULL != p_obj->p_vtable))
     {
@@ -1001,18 +948,17 @@ sm1_exit_region6(Tkind_sm1_t* const p_obj)
 /**
  * @brief Implements a event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_a(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
+sm1_dispatch_a(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_a_state1(p_obj, p_event);
+            result = sm1_dispatch_a_state1(p_obj);
             break;
         default:
             break;
@@ -1024,18 +970,17 @@ sm1_dispatch_a(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
 /**
  * @brief Implements b event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_b(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
+sm1_dispatch_b(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_b_state1(p_obj, p_event);
+            result = sm1_dispatch_b_state1(p_obj);
             break;
         default:
             break;
@@ -1047,18 +992,17 @@ sm1_dispatch_b(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
 /**
  * @brief Implements c event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_c(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
+sm1_dispatch_c(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_c_state1(p_obj, p_event);
+            result = sm1_dispatch_c_state1(p_obj);
             break;
         default:
             break;
@@ -1070,18 +1014,17 @@ sm1_dispatch_c(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
 /**
  * @brief Implements d event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_d_state1(p_obj, p_event);
+            result = sm1_dispatch_d_state1(p_obj);
             break;
         default:
             break;
@@ -1093,18 +1036,17 @@ sm1_dispatch_d(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
 /**
  * @brief Implements e event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_e_state1(p_obj, p_event);
+            result = sm1_dispatch_e_state1(p_obj);
             break;
         default:
             break;
@@ -1116,18 +1058,17 @@ sm1_dispatch_e(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
 /**
  * @brief Implements f event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_f(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
+sm1_dispatch_f(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_f_state1(p_obj, p_event);
+            result = sm1_dispatch_f_state1(p_obj);
             break;
         default:
             break;
@@ -1139,18 +1080,17 @@ sm1_dispatch_f(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
 /**
  * @brief Implements g event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_g_state1(p_obj, p_event);
+            result = sm1_dispatch_g_state1(p_obj);
             break;
         default:
             break;
@@ -1162,18 +1102,17 @@ sm1_dispatch_g(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
 /**
  * @brief Implements h event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_h_state1(p_obj, p_event);
+            result = sm1_dispatch_h_state1(p_obj);
             break;
         default:
             break;
@@ -1185,18 +1124,17 @@ sm1_dispatch_h(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
 /**
  * @brief Implements i event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_i(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
+sm1_dispatch_i(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_i_state1(p_obj, p_event);
+            result = sm1_dispatch_i_state1(p_obj);
             break;
         default:
             break;
@@ -1208,18 +1146,17 @@ sm1_dispatch_i(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
 /**
  * @brief Implements j event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_j(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
+sm1_dispatch_j(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_j_state1(p_obj, p_event);
+            result = sm1_dispatch_j_state1(p_obj);
             break;
         default:
             break;
@@ -1231,18 +1168,17 @@ sm1_dispatch_j(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
 /**
  * @brief Implements k event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_k_state1(p_obj, p_event);
+            result = sm1_dispatch_k_state1(p_obj);
             break;
         default:
             break;
@@ -1254,18 +1190,17 @@ sm1_dispatch_k(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
 /**
  * @brief Implements l event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_l_state1(p_obj, p_event);
+            result = sm1_dispatch_l_state1(p_obj);
             break;
         default:
             break;
@@ -1277,18 +1212,17 @@ sm1_dispatch_l(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
 /**
  * @brief Implements m event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_m(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
+sm1_dispatch_m(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_m_state1(p_obj, p_event);
+            result = sm1_dispatch_m_state1(p_obj);
             break;
         default:
             break;
@@ -1300,18 +1234,17 @@ sm1_dispatch_m(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
 /**
  * @brief Implements n event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_n_state1(p_obj, p_event);
+            result = sm1_dispatch_n_state1(p_obj);
             break;
         default:
             break;
@@ -1323,18 +1256,17 @@ sm1_dispatch_n(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
 /**
  * @brief Implements o event handling by the sm1 state machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_o(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
+sm1_dispatch_o(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region1)
     {
         case TKIND_SM1_STATE1:
-            result = sm1_dispatch_o_state1(p_obj, p_event);
+            result = sm1_dispatch_o_state1(p_obj);
             break;
         default:
             break;
@@ -1347,18 +1279,17 @@ sm1_dispatch_o(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
  * @brief Implements a event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_a_region2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
+sm1_dispatch_a_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE2:
-            result = sm1_dispatch_a_state2(p_obj, p_event);
+            result = sm1_dispatch_a_state2(p_obj);
             break;
         default:
             break;
@@ -1371,18 +1302,17 @@ sm1_dispatch_a_region2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
  * @brief Implements b event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_b_region2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
+sm1_dispatch_b_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE2:
-            result = sm1_dispatch_b_state2(p_obj, p_event);
+            result = sm1_dispatch_b_state2(p_obj);
             break;
         default:
             break;
@@ -1395,18 +1325,17 @@ sm1_dispatch_b_region2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
  * @brief Implements c event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_c_region2(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
+sm1_dispatch_c_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE3:
-            result = sm1_dispatch_c_state3(p_obj, p_event);
+            result = sm1_dispatch_c_state3(p_obj);
             break;
         default:
             break;
@@ -1419,18 +1348,17 @@ sm1_dispatch_c_region2(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
  * @brief Implements d event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d_region2(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE3:
-            result = sm1_dispatch_d_state3(p_obj, p_event);
+            result = sm1_dispatch_d_state3(p_obj);
             break;
         default:
             break;
@@ -1443,18 +1371,17 @@ sm1_dispatch_d_region2(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
  * @brief Implements e event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e_region2(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE3:
-            result = sm1_dispatch_e_state3(p_obj, p_event);
+            result = sm1_dispatch_e_state3(p_obj);
             break;
         default:
             break;
@@ -1467,18 +1394,17 @@ sm1_dispatch_e_region2(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
  * @brief Implements f event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_f_region2(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
+sm1_dispatch_f_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE4:
-            result = sm1_dispatch_f_state4(p_obj, p_event);
+            result = sm1_dispatch_f_state4(p_obj);
             break;
         default:
             break;
@@ -1491,18 +1417,17 @@ sm1_dispatch_f_region2(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
  * @brief Implements g event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g_region2(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE4:
-            result = sm1_dispatch_g_state4(p_obj, p_event);
+            result = sm1_dispatch_g_state4(p_obj);
             break;
         default:
             break;
@@ -1515,18 +1440,17 @@ sm1_dispatch_g_region2(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
  * @brief Implements h event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h_region2(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE4:
-            result = sm1_dispatch_h_state4(p_obj, p_event);
+            result = sm1_dispatch_h_state4(p_obj);
             break;
         default:
             break;
@@ -1539,18 +1463,17 @@ sm1_dispatch_h_region2(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
  * @brief Implements n event handling by the Region2 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n_region2(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n_region2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region2)
     {
         case TKIND_SM1_STATE3:
-            result = sm1_dispatch_n_state3(p_obj, p_event);
+            result = sm1_dispatch_n_state3(p_obj);
             break;
         default:
             break;
@@ -1563,18 +1486,17 @@ sm1_dispatch_n_region2(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
  * @brief Implements d event handling by the Region3 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d_region3(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d_region3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region3)
     {
         case TKIND_SM1_STATE5:
-            result = sm1_dispatch_d_state5(p_obj, p_event);
+            result = sm1_dispatch_d_state5(p_obj);
             break;
         default:
             break;
@@ -1587,18 +1509,17 @@ sm1_dispatch_d_region3(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
  * @brief Implements e event handling by the Region3 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e_region3(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e_region3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region3)
     {
         case TKIND_SM1_STATE5:
-            result = sm1_dispatch_e_state5(p_obj, p_event);
+            result = sm1_dispatch_e_state5(p_obj);
             break;
         default:
             break;
@@ -1611,18 +1532,17 @@ sm1_dispatch_e_region3(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
  * @brief Implements n event handling by the Region3 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n_region3(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n_region3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region3)
     {
         case TKIND_SM1_STATE5:
-            result = sm1_dispatch_n_state5(p_obj, p_event);
+            result = sm1_dispatch_n_state5(p_obj);
             break;
         default:
             break;
@@ -1635,18 +1555,17 @@ sm1_dispatch_n_region3(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
  * @brief Implements g event handling by the Region4 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g_region4(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g_region4(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region4)
     {
         case TKIND_SM1_STATE6:
-            result = sm1_dispatch_g_state6(p_obj, p_event);
+            result = sm1_dispatch_g_state6(p_obj);
             break;
         default:
             break;
@@ -1659,18 +1578,17 @@ sm1_dispatch_g_region4(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
  * @brief Implements h event handling by the Region4 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h_region4(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h_region4(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region4)
     {
         case TKIND_SM1_STATE6:
-            result = sm1_dispatch_h_state6(p_obj, p_event);
+            result = sm1_dispatch_h_state6(p_obj);
             break;
         default:
             break;
@@ -1683,18 +1601,17 @@ sm1_dispatch_h_region4(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
  * @brief Implements j event handling by the Region5 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_j_region5(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
+sm1_dispatch_j_region5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region5)
     {
         case TKIND_SM1_STATE7:
-            result = sm1_dispatch_j_state7(p_obj, p_event);
+            result = sm1_dispatch_j_state7(p_obj);
             break;
         default:
             break;
@@ -1707,18 +1624,17 @@ sm1_dispatch_j_region5(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
  * @brief Implements k event handling by the Region5 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k_region5(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k_region5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region5)
     {
         case TKIND_SM1_STATE8:
-            result = sm1_dispatch_k_state8(p_obj, p_event);
+            result = sm1_dispatch_k_state8(p_obj);
             break;
         default:
             break;
@@ -1731,18 +1647,17 @@ sm1_dispatch_k_region5(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
  * @brief Implements l event handling by the Region5 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l_region5(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l_region5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region5)
     {
         case TKIND_SM1_STATE8:
-            result = sm1_dispatch_l_state8(p_obj, p_event);
+            result = sm1_dispatch_l_state8(p_obj);
             break;
         default:
             break;
@@ -1755,18 +1670,17 @@ sm1_dispatch_l_region5(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
  * @brief Implements m event handling by the Region5 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_m_region5(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
+sm1_dispatch_m_region5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region5)
     {
         case TKIND_SM1_STATE8:
-            result = sm1_dispatch_m_state8(p_obj, p_event);
+            result = sm1_dispatch_m_state8(p_obj);
             break;
         default:
             break;
@@ -1779,18 +1693,17 @@ sm1_dispatch_m_region5(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
  * @brief Implements k event handling by the Region6 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k_region6(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k_region6(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region6)
     {
         case TKIND_SM1_STATE9:
-            result = sm1_dispatch_k_state9(p_obj, p_event);
+            result = sm1_dispatch_k_state9(p_obj);
             break;
         default:
             break;
@@ -1803,18 +1716,17 @@ sm1_dispatch_k_region6(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
  * @brief Implements l event handling by the Region6 region of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l_region6(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l_region6(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
     switch(p_obj->region6)
     {
         case TKIND_SM1_STATE9:
-            result = sm1_dispatch_l_state9(p_obj, p_event);
+            result = sm1_dispatch_l_state9(p_obj);
             break;
         default:
             break;
@@ -1827,15 +1739,14 @@ sm1_dispatch_l_region6(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
  * @brief Implements a event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_a_state1(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
+sm1_dispatch_a_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_a_region2(p_obj, p_event);
+    result = sm1_dispatch_a_region2(p_obj);
 
     return result;
 }
@@ -1844,15 +1755,14 @@ sm1_dispatch_a_state1(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
  * @brief Implements b event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_b_state1(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
+sm1_dispatch_b_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_b_region2(p_obj, p_event);
+    result = sm1_dispatch_b_region2(p_obj);
 
     return result;
 }
@@ -1861,15 +1771,14 @@ sm1_dispatch_b_state1(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
  * @brief Implements c event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_c_state1(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
+sm1_dispatch_c_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_c_region2(p_obj, p_event);
+    result = sm1_dispatch_c_region2(p_obj);
 
     return result;
 }
@@ -1878,15 +1787,14 @@ sm1_dispatch_c_state1(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
  * @brief Implements d event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d_state1(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_d_region2(p_obj, p_event);
+    result = sm1_dispatch_d_region2(p_obj);
 
     return result;
 }
@@ -1895,15 +1803,14 @@ sm1_dispatch_d_state1(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
  * @brief Implements e event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e_state1(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_e_region2(p_obj, p_event);
+    result = sm1_dispatch_e_region2(p_obj);
 
     return result;
 }
@@ -1912,15 +1819,14 @@ sm1_dispatch_e_state1(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
  * @brief Implements f event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_f_state1(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
+sm1_dispatch_f_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_f_region2(p_obj, p_event);
+    result = sm1_dispatch_f_region2(p_obj);
 
     return result;
 }
@@ -1929,15 +1835,14 @@ sm1_dispatch_f_state1(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
  * @brief Implements g event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g_state1(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_g_region2(p_obj, p_event);
+    result = sm1_dispatch_g_region2(p_obj);
 
     return result;
 }
@@ -1946,15 +1851,14 @@ sm1_dispatch_g_state1(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
  * @brief Implements h event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_h_region2(p_obj, p_event);
+    result = sm1_dispatch_h_region2(p_obj);
 
     return result;
 }
@@ -1963,11 +1867,10 @@ sm1_dispatch_h_state1(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
  * @brief Implements i event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
+sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -1983,15 +1886,14 @@ sm1_dispatch_i_state1(Tkind_sm1_t* const p_obj, tkind_ctest_i_t* const p_event)
  * @brief Implements j event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_j_state1(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
+sm1_dispatch_j_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_j_region5(p_obj, p_event);
+    result = sm1_dispatch_j_region5(p_obj);
 
     return result;
 }
@@ -2000,15 +1902,14 @@ sm1_dispatch_j_state1(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
  * @brief Implements k event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k_state1(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_k_region5(p_obj, p_event);
+    result = sm1_dispatch_k_region5(p_obj);
 
     return result;
 }
@@ -2017,15 +1918,14 @@ sm1_dispatch_k_state1(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
  * @brief Implements l event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l_state1(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_l_region5(p_obj, p_event);
+    result = sm1_dispatch_l_region5(p_obj);
 
     return result;
 }
@@ -2034,15 +1934,14 @@ sm1_dispatch_l_state1(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
  * @brief Implements m event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_m_state1(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
+sm1_dispatch_m_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_m_region5(p_obj, p_event);
+    result = sm1_dispatch_m_region5(p_obj);
 
     return result;
 }
@@ -2051,15 +1950,14 @@ sm1_dispatch_m_state1(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
  * @brief Implements n event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_n_region2(p_obj, p_event);
+    result = sm1_dispatch_n_region2(p_obj);
 
     return result;
 }
@@ -2068,11 +1966,10 @@ sm1_dispatch_n_state1(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
  * @brief Implements o event handling by the State1 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
+sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2088,11 +1985,10 @@ sm1_dispatch_o_state1(Tkind_sm1_t* const p_obj, tkind_ctest_o_t* const p_event)
  * @brief Implements a event handling by the State2 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
+sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2107,11 +2003,10 @@ sm1_dispatch_a_state2(Tkind_sm1_t* const p_obj, tkind_ctest_a_t* const p_event)
  * @brief Implements b event handling by the State2 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
+sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2126,11 +2021,10 @@ sm1_dispatch_b_state2(Tkind_sm1_t* const p_obj, tkind_ctest_b_t* const p_event)
  * @brief Implements c event handling by the State3 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
+sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2145,15 +2039,14 @@ sm1_dispatch_c_state3(Tkind_sm1_t* const p_obj, tkind_ctest_c_t* const p_event)
  * @brief Implements d event handling by the State3 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d_state3(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d_state3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_d_region3(p_obj, p_event);
+    result = sm1_dispatch_d_region3(p_obj);
 
     return result;
 }
@@ -2162,15 +2055,14 @@ sm1_dispatch_d_state3(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
  * @brief Implements e event handling by the State3 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_e_region3(p_obj, p_event);
+    result = sm1_dispatch_e_region3(p_obj);
 
     return result;
 }
@@ -2179,11 +2071,10 @@ sm1_dispatch_e_state3(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
  * @brief Implements f event handling by the State4 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
+sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2198,15 +2089,14 @@ sm1_dispatch_f_state4(Tkind_sm1_t* const p_obj, tkind_ctest_f_t* const p_event)
  * @brief Implements g event handling by the State4 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g_state4(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g_state4(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_g_region4(p_obj, p_event);
+    result = sm1_dispatch_g_region4(p_obj);
 
     return result;
 }
@@ -2215,15 +2105,14 @@ sm1_dispatch_g_state4(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
  * @brief Implements h event handling by the State4 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h_state4(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h_state4(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_h_region4(p_obj, p_event);
+    result = sm1_dispatch_h_region4(p_obj);
 
     return result;
 }
@@ -2232,15 +2121,14 @@ sm1_dispatch_h_state4(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
  * @brief Implements n event handling by the State3 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_n_region3(p_obj, p_event);
+    result = sm1_dispatch_n_region3(p_obj);
 
     return result;
 }
@@ -2249,11 +2137,10 @@ sm1_dispatch_n_state3(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
  * @brief Implements d event handling by the State5 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
+sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2267,11 +2154,10 @@ sm1_dispatch_d_state5(Tkind_sm1_t* const p_obj, tkind_ctest_d_t* const p_event)
  * @brief Implements e event handling by the State5 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
+sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2285,11 +2171,10 @@ sm1_dispatch_e_state5(Tkind_sm1_t* const p_obj, tkind_ctest_e_t* const p_event)
  * @brief Implements n event handling by the State5 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
+sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2304,11 +2189,10 @@ sm1_dispatch_n_state5(Tkind_sm1_t* const p_obj, tkind_ctest_n_t* const p_event)
  * @brief Implements g event handling by the State6 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
+sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2323,11 +2207,10 @@ sm1_dispatch_g_state6(Tkind_sm1_t* const p_obj, tkind_ctest_g_t* const p_event)
  * @brief Implements h event handling by the State6 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
+sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2343,11 +2226,10 @@ sm1_dispatch_h_state6(Tkind_sm1_t* const p_obj, tkind_ctest_h_t* const p_event)
  * @brief Implements j event handling by the State7 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
+sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2362,15 +2244,14 @@ sm1_dispatch_j_state7(Tkind_sm1_t* const p_obj, tkind_ctest_j_t* const p_event)
  * @brief Implements k event handling by the State8 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k_state8(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k_state8(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_k_region6(p_obj, p_event);
+    result = sm1_dispatch_k_region6(p_obj);
 
     return result;
 }
@@ -2379,15 +2260,14 @@ sm1_dispatch_k_state8(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
  * @brief Implements l event handling by the State8 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    result = sm1_dispatch_l_region6(p_obj, p_event);
+    result = sm1_dispatch_l_region6(p_obj);
 
     return result;
 }
@@ -2396,11 +2276,10 @@ sm1_dispatch_l_state8(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
  * @brief Implements m event handling by the State8 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
+sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2416,11 +2295,10 @@ sm1_dispatch_m_state8(Tkind_sm1_t* const p_obj, tkind_ctest_m_t* const p_event)
  * @brief Implements k event handling by the State9 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
+sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 
@@ -2435,11 +2313,10 @@ sm1_dispatch_k_state9(Tkind_sm1_t* const p_obj, tkind_ctest_k_t* const p_event)
  * @brief Implements l event handling by the State9 state of the sm1 state
  * machine.
  * @param [in] p_obj The pointer to the self object.
- * @param [in] p_event The pointer to the event data.
  * @return the event dispatch status.
  */
 static sm_event_status_t
-sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj, tkind_ctest_l_t* const p_event)
+sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj)
 {
     sm_event_status_t result = CHANGEDSTATE;
 

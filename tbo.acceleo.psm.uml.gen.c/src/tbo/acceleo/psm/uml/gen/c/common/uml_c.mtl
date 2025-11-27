@@ -220,14 +220,33 @@ endif/]
     or (p.upper = *)
     or (p.lower = 0)/]
 
+[query public uml_c_get_predefined_integer_base_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = 
+   Set {'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32', 'int64', 'uint64'}/]
+
+[query public uml_c_get_predefined_integer_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = uml_c_get_predefined_integer_base_types()
+                                    ->collect(s:String|s+uml_c_get_type_suffix())->asSet()/]
+
+[query public uml_c_get_predefined_size_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = Set{'size_t'}/]
+
+[query public uml_c_get_predefined_boolean_base_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = Set{'bool', 'Bool', 'boolean', 'Boolean'}/]
+
+[query public uml_c_get_predefined_float_base_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = Set {'float32', 'float64', 'float128'}/]
+
+[query public uml_c_get_predefined_base_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = uml_c_get_predefined_integer_base_types()->addAll(uml_c_get_predefined_float_base_types())/]
+
 [**
  * Recognizes some of the common fixed size integer and floating point types
  * and replaces their names with names of appropriate c language types.
  */]
 [query private uml_c_get_type_name(aType: Type) : String = 
  let n : String = aType.name.toLower() in
- let predefined : Set(String) = Set {'int8', 'uint8', 'int16', 'uint16', 
- 'int32', 'uint32', 'int64', 'uint64', 'float32', 'float64', 'float128'} in
+ let predefined : Set(String) = uml_c_get_predefined_base_types() in
  if predefined->includes(n) then
     n + uml_c_get_type_suffix(aType)
  else
@@ -243,6 +262,31 @@ endif/]
     endif
  endif 
  /]
+
+[query public uml_c_is_stdint_required(cList:OrderedSet(Classifier)) : Boolean
+ = cList->uml_c_is_using_types(uml_c_get_predefined_integer_types())/]
+
+[query public uml_c_is_stdbool_required(cList:OrderedSet(Classifier)) : Boolean
+ = cList->uml_c_is_using_types(uml_c_get_predefined_boolean_base_types())/]
+
+[query public uml_c_is_stddef_required(cList:OrderedSet(Classifier)) : Boolean
+ = cList->uml_c_is_using_types(uml_c_get_predefined_size_types()) 
+   or cList->selectByKind(StateMachine)->notEmpty()/]
+
+[**
+ * @brief Checks if the provided list of classifiers is using 
+ * any type with a name from the given name list.
+ * @param cList The list of classifiers that is checked
+ * @param types The list of searched type names used in the cList.
+*/]
+[query public uml_c_is_using_types(cList:OrderedSet(Classifier), 
+                                              types:Set(String)) : Boolean
+ = cList->select(c:Classifier|c.attribute->select(p:Property|
+         types->includes(p.type.name))->notEmpty())->notEmpty()
+   or cList->select(c:Classifier|c.ownedMember->filter(Operation)
+         ->select(o:Operation|o.ownedParameter
+         ->select(p:Parameter|types->includes(p.type.name))->notEmpty()
+                                              )->notEmpty())->notEmpty()/]
 
 [**
  * Creates the name of a bound template class./]
@@ -1101,7 +1145,6 @@ static const [uml_c_get_vtable_type_name(aClassifier)
 [if (anOperation.uml_c_operation_return_type() <> 'void')]
 [utils_indent(indent_width)/][uml_c_init_default_result(anOperation, 
                                                         indentation)/]
-
 [/if]
 [utils_indent(indent_width)/][uml_c_insert_text(
   '/*Code for handling a virtual operation.*/')/]
@@ -1149,10 +1192,9 @@ static const [uml_c_get_vtable_type_name(aClassifier)
                       request_return_value(anOperation.ownedParameter)->first();
  return_name : String = return_parameter.name;}]
 [uml_c_get_vtable_qualified_entry(Sequence{return_type, ' ', return_name}, 
-                          indentation, 0)/][if 
+                          indentation, 0).trim()/][if 
                       ( not return_parameter.defaultValue.oclIsUndefined() )
 ] = [uml_c_get_value_string(return_parameter.defaultValue)/];[else];
-memset(&[return_name/], 0, sizeof([return_name/]));
 [/if]
 [/template]
 
@@ -1615,27 +1657,18 @@ static void
    anEvent:Event):Sequence(String)
   = let sm :StateMachine = aRegion.containingStateMachine() in
     Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
-                                    utils_get_self_name()),
-                  uml_c_param_decl(
-                  uml_c_get_event_typedef(sm.request_sm_context(), anEvent) 
-                         + '*', 'p_event')}/]
+                                    utils_get_self_name())}/]
 
 [query public uml_c_get_sm_event_dispatch_params(anSM:StateMachine, 
    anEvent:Event):Sequence(String)
   = Sequence{uml_c_param_decl(uml_c_get_type_name(anSM) + '*', 
-                                    utils_get_self_name()),
-                  uml_c_param_decl(
-                  uml_c_get_event_typedef(anSM.request_sm_context(), anEvent) 
-                         + '*', 'p_event')}/]
+                                    utils_get_self_name())}/]
 
 [query public uml_c_get_state_event_dispatch_params(aState:State, 
    anEvent:Event):Sequence(String)
   = let sm :StateMachine = aState.containingStateMachine() in
      Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
-                                    utils_get_self_name()),
-                  uml_c_param_decl(
-                  uml_c_get_event_typedef(sm.request_sm_context(), anEvent) 
-                         + '*', 'p_event')}/]
+                                    utils_get_self_name())}/]
 
 [**
  * Declares a dispatch function of each event for each region for which a state
@@ -1675,8 +1708,6 @@ static void
  +' the ' + aRegion.name + ' region of the ' + sm.name + ' state machine.\n' 
   + documentation_param(ParameterDirectionKind::_in, 
                utils_get_self_name(), 'The pointer to the self object.\n')
-  + documentation_param(ParameterDirectionKind::_in, 
-               'p_event', 'The pointer to the event data.\n')
   + 'return the event dispatch status.',
   indentation)/]
 static [uml_c_get_event_status_type()/]
@@ -1711,7 +1742,7 @@ static [uml_c_get_event_status_type()/]
 [spaces/][spaces/]case [s.uml_c_get_state_full_name()/]:
 [spaces/][spaces/][spaces/][assign_result/][uml_c_format_param_list(
          s.uml_c_get_state_event_dispatch(anEvent),
-         Sequence{ utils_get_self_name(), 'p_event'}, 
+         Sequence{ utils_get_self_name()}, 
          indentation+(spaces.size()*3) + assign_result.size() + 1)/];
 [spaces/][spaces/][spaces/]break;[/for]
 [spaces/][spaces/]default:
@@ -1750,8 +1781,6 @@ static [uml_c_get_event_status_type()/]
  +' the ' + sm.name + ' state machine.\n' 
   + documentation_param(ParameterDirectionKind::_in, 
                utils_get_self_name(), 'The pointer to the self object.\n')
-  + documentation_param(ParameterDirectionKind::_in, 
-               'p_event', 'The pointer to the event data.\n')
   + 'return the event dispatch status.',
   indentation)/]
 static [uml_c_get_event_status_type()/]
@@ -1769,7 +1798,7 @@ static [uml_c_get_event_status_type()/]
       separator(utils_newline())]
 [spaces/][assign_temp_status/][uml_c_format_param_list(
                     subRegion.uml_c_get_region_event_dispatch(anEvent),
-                    Sequence{ utils_get_self_name(), 'p_event'}, 
+                    Sequence{ utils_get_self_name()}, 
                     indentation+spaces.size()+assign_temp_status.size()+1)/];
 [spaces/][assign_result/][uml_c_format_param_list(
                     uml_c_get_event_resolve_status_name(),
@@ -1828,8 +1857,6 @@ static [uml_c_get_event_status_type()/]
  +' the ' + aState.name + ' state of the ' + sm.name + ' state machine.\n' 
   + documentation_param(ParameterDirectionKind::_in, 
                utils_get_self_name(), 'The pointer to the self object.\n')
-  + documentation_param(ParameterDirectionKind::_in, 
-               'p_event', 'The pointer to the event data.\n')
   + '@return the event dispatch status.', 
   indentation)/]
 static [uml_c_get_event_status_type()/]
@@ -1855,7 +1882,7 @@ static [uml_c_get_event_status_type()/]
           then assign_temp_status else assign_result endif;}]
 [spaces/][assign_retval/][uml_c_format_param_list(
                     subRegion.uml_c_get_region_event_dispatch(anEvent),
-                    Sequence{ utils_get_self_name(), 'p_event'}, 
+                    Sequence{ utils_get_self_name()}, 
                     indentation+spaces.size()+assign_retval.size()+1)/];
 [if (aState.region->request_event_subregions(anEvent)->size() > 1 )]
 [spaces/][assign_result/][uml_c_format_param_list(

@@ -15,8 +15,9 @@ extern "C" {
 //Start of user code includes top
 //End of user code
 #    include <sm.h>
-#    include <stdbool.h>
 #    include <stddef.h>
+#    include <stdbool.h>
+#    include <stdint.h>
 //Start of user code includes bottom
 //End of user code
 

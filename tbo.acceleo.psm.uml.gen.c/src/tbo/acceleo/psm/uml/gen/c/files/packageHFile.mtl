@@ -32,6 +32,12 @@ extern "C" {
                             indentation)
 /][if (not headerClassifiers->selectByKind(StateMachine)->isEmpty())]
 #[utils_indent(indentation)/]include <sm.h>
+[/if][if (headerClassifiers->uml_c_is_stddef_required())]
+#[utils_indent(indentation)/]include <stddef.h>
+[/if][if (headerClassifiers->uml_c_is_stdbool_required())]
+#[utils_indent(indentation)/]include <stdbool.h>
+[/if][if (headerClassifiers->uml_c_is_stdint_required())]
+#[utils_indent(indentation)/]include <stdint.h>
 [/if]
 //[protected('includes bottom')]
 //[/protected]

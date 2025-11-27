@@ -40,11 +40,13 @@ It is automatically detected by the generator and included as a literal constant
           <subvertex xmi:type="uml:State" xmi:id="_xRPncNw4Ee-clukbqF5Mtw" name="State1">
             <entry xmi:type="uml:OpaqueBehavior" xmi:id="_L--osN3WEe-K46f0PJjDaQ">
               <language>C</language>
-              <body>printf(&quot;Enter State1&quot;);</body>
+              <body>(void) p_obj;
+printf(&quot;Enter State1&quot;);</body>
             </entry>
             <exit xmi:type="uml:OpaqueBehavior" xmi:id="_RAjsMN3WEe-K46f0PJjDaQ">
               <language>C</language>
-              <body>printf(&quot;Exit State1&quot;);</body>
+              <body>(void) p_obj;
+printf(&quot;Exit State1&quot;);</body>
             </exit>
             <region xmi:type="uml:Region" xmi:id="_y0mQkNw4Ee-clukbqF5Mtw" name="Region2">
               <ownedComment xmi:type="uml:Comment" xmi:id="_175kIN22Ee-8CKMu-ENa-A" annotatedElement="_y0qiANw4Ee-clukbqF5Mtw">
@@ -79,11 +81,13 @@ It is automatically detected by the generator and included as a literal constant
               <subvertex xmi:type="uml:State" xmi:id="_y0qiANw4Ee-clukbqF5Mtw" name="State3">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_khO3gN3LEe-T8tGVws-ENQ">
                   <language>C</language>
-                  <body>printf(&quot;Enter State3&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Enter State3&quot;);</body>
                 </entry>
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_JnoQcN3OEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Exit State3&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State3&quot;);</body>
                 </exit>
                 <region xmi:type="uml:Region" xmi:id="_9VgDgNw4Ee-clukbqF5Mtw" name="Region3">
                   <transition xmi:type="uml:Transition" xmi:id="_3KcSoNw8Ee-clukbqF5Mtw" kind="local" source="_9VifwNw4Ee-clukbqF5Mtw" target="_xRPncNw4Ee-clukbqF5Mtw">
@@ -98,11 +102,13 @@ It is automatically detected by the generator and included as a literal constant
                   <subvertex xmi:type="uml:State" xmi:id="_9VifwNw4Ee-clukbqF5Mtw" name="State5">
                     <entry xmi:type="uml:OpaqueBehavior" xmi:id="_4MdkoN3OEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Enter State5&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Enter State5&quot;);</body>
                     </entry>
                     <exit xmi:type="uml:OpaqueBehavior" xmi:id="_-tvuEN3TEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Exit State5&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Exit State5&quot;);</body>
                     </exit>
                   </subvertex>
                 </region>
@@ -110,22 +116,26 @@ It is automatically detected by the generator and included as a literal constant
               <subvertex xmi:type="uml:State" xmi:id="_9oHWINw7Ee-clukbqF5Mtw" name="State2">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_Dn9WYN21Ee-8CKMu-ENa-A">
                   <language>C</language>
-                  <body>printf(&quot;Enter State2&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Enter State2&quot;);</body>
                 </entry>
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_OjLlcN3DEe-8CKMu-ENa-A">
                   <language>C</language>
-                  <body>printf(&quot;Exit State2&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State2&quot;);</body>
                 </exit>
               </subvertex>
               <subvertex xmi:type="uml:Pseudostate" xmi:id="_HZtMANw8Ee-clukbqF5Mtw" name="Initial3"/>
               <subvertex xmi:type="uml:State" xmi:id="_F56XwNw9Ee-clukbqF5Mtw" name="State4">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_HeMQAN3UEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Enter State4&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Enter State4&quot;);</body>
                 </entry>
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_SBDx0N3UEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Exit State4&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State4&quot;);</body>
                 </exit>
                 <region xmi:type="uml:Region" xmi:id="_HMO7QNw9Ee-clukbqF5Mtw" name="Region4">
                   <transition xmi:type="uml:Transition" xmi:id="_LWi_kNw9Ee-clukbqF5Mtw" source="_HMPiVNw9Ee-clukbqF5Mtw" target="_xRPncNw4Ee-clukbqF5Mtw">
@@ -137,11 +147,13 @@ It is automatically detected by the generator and included as a literal constant
                   <subvertex xmi:type="uml:State" xmi:id="_HMPiVNw9Ee-clukbqF5Mtw" name="State6">
                     <entry xmi:type="uml:OpaqueBehavior" xmi:id="_laqq0N3UEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Enter State6&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Enter State6&quot;);</body>
                     </entry>
                     <exit xmi:type="uml:OpaqueBehavior" xmi:id="_1HM1IN3UEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Exit State6&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Exit State6&quot;);</body>
                     </exit>
                   </subvertex>
                 </region>
@@ -173,21 +185,25 @@ It is automatically detected by the generator and included as a literal constant
               <subvertex xmi:type="uml:State" xmi:id="_MQR5Ydw8Ee-clukbqF5Mtw" name="State7">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_jRjMwN3VEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Enter State7&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Enter State7&quot;);</body>
                 </entry>
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_n_CPkN3VEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Exit State7&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State7&quot;);</body>
                 </exit>
               </subvertex>
               <subvertex xmi:type="uml:State" xmi:id="_N0T38Nw8Ee-clukbqF5Mtw" name="State8">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_xToAYN3VEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Enter State8&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Enter State8&quot;);</body>
                 </entry>
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_0ePiQN3VEe-K46f0PJjDaQ">
                   <language>C</language>
-                  <body>printf(&quot;Exit State8&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State8&quot;);</body>
                 </exit>
                 <region xmi:type="uml:Region" xmi:id="_PLqscNw8Ee-clukbqF5Mtw" name="Region6">
                   <transition xmi:type="uml:Transition" xmi:id="_cqmvENxCEe-clukbqF5Mtw" source="_PLtIsNw8Ee-clukbqF5Mtw" target="_N0T38Nw8Ee-clukbqF5Mtw">
@@ -200,11 +216,13 @@ It is automatically detected by the generator and included as a literal constant
                   <subvertex xmi:type="uml:State" xmi:id="_PLtIsNw8Ee-clukbqF5Mtw" name="State9">
                     <entry xmi:type="uml:OpaqueBehavior" xmi:id="_5USEIN3VEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Enter State9&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Enter State9&quot;);</body>
                     </entry>
                     <exit xmi:type="uml:OpaqueBehavior" xmi:id="_Cqu2IN3WEe-K46f0PJjDaQ">
                       <language>C</language>
-                      <body>printf(&quot;Exit State9&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Exit State9&quot;);</body>
                     </exit>
                   </subvertex>
                   <subvertex xmi:type="uml:Pseudostate" xmi:id="_-JSFUNxCEe-clukbqF5Mtw" name="Initial4"/>
@@ -354,7 +372,8 @@ for static evaluation of a sequence of guard conditions before any transition is
         <ownedAttribute xmi:type="uml:Property" xmi:id="_3NbUgL3xEfCuufnsP13LzQ" name="b_guard5" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_6lbLEL3xEfCuufnsP13LzQ" name="b_guard6" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_9j4gQL3xEfCuufnsP13LzQ" name="b_guard7" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="__ZNqML3xEfCuufnsP13LzQ" name="b_guard8" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_pPlGwMdLEfCwEooWuRT-Gw" name="b_guard8" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="__ZNqML3xEfCuufnsP13LzQ" name="b_guard9" visibility="private" type="_ZIVe8KU0EfCJFuHNEOD_Ew"/>
         <region xmi:type="uml:Region" xmi:id="_9FNnEAHPEfCgXv5ODs4Seg" name="Region1">
           <transition xmi:type="uml:Transition" xmi:id="_EME8EAHQEfCgXv5ODs4Seg" source="_-JOBwAHPEfCgXv5ODs4Seg" target="__1fWUAHPEfCgXv5ODs4Seg">
             <effect xmi:type="uml:OpaqueBehavior" xmi:id="_-WOGoLnUEfC0UfKG-fUG3g">
@@ -550,7 +569,8 @@ for static evaluation of a sequence of guard conditions before any transition is
           <subvertex xmi:type="uml:State" xmi:id="_-JOBwAHPEfCgXv5ODs4Seg" name="State1">
             <exit xmi:type="uml:OpaqueBehavior" xmi:id="_uHz5MLkiEfC-keoHQ33Mgw">
               <language>C</language>
-              <body>printf(&quot;Exit State1&quot;);</body>
+              <body>(void) p_obj;
+printf(&quot;Exit State1&quot;);</body>
             </exit>
           </subvertex>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="__1fWUAHPEfCgXv5ODs4Seg" name="Junction2" kind="junction"/>
@@ -569,7 +589,8 @@ for static evaluation of a sequence of guard conditions before any transition is
           <subvertex xmi:type="uml:State" xmi:id="_povXwLkgEfC-keoHQ33Mgw" name="State36">
             <entry xmi:type="uml:OpaqueBehavior" xmi:id="_lpBvALkiEfC-keoHQ33Mgw">
               <language>C</language>
-              <body>printf(&quot;Enter State36&quot;);</body>
+              <body>(void) p_obj;
+printf(&quot;Enter State36&quot;);</body>
             </entry>
             <region xmi:type="uml:Region" xmi:id="_qcxcwLkgEfC-keoHQ33Mgw" name="Region36">
               <transition xmi:type="uml:Transition" xmi:id="_IW7jYLkhEfC-keoHQ33Mgw" guard="_Js8pMLkjEfC-keoHQ33Mgw" source="_E387ELkhEfC-keoHQ33Mgw" target="_rMS1MLkgEfC-keoHQ33Mgw">
@@ -593,13 +614,15 @@ for static evaluation of a sequence of guard conditions before any transition is
               <subvertex xmi:type="uml:State" xmi:id="_rMS1MLkgEfC-keoHQ33Mgw" name="State36_1">
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_8yvnILkjEfC-keoHQ33Mgw">
                   <language>C</language>
-                  <body>printf(&quot;Exit State36_1&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State36_1&quot;);</body>
                 </exit>
               </subvertex>
               <subvertex xmi:type="uml:State" xmi:id="_DUb54LkhEfC-keoHQ33Mgw" name="State36_2">
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_GMNQ4LkkEfC-keoHQ33Mgw">
                   <language>C</language>
-                  <body>printf(&quot;Exit State36_2&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State36_2&quot;);</body>
                 </exit>
               </subvertex>
               <subvertex xmi:type="uml:Pseudostate" xmi:id="_E387ELkhEfC-keoHQ33Mgw" name="Junction361" kind="junction"/>
@@ -664,7 +687,8 @@ for static evaluation of a sequence of guard conditions before any transition is
                   <subvertex xmi:type="uml:State" xmi:id="_0ETzAL3nEfCuufnsP13LzQ" name="State4321">
                     <exit xmi:type="uml:OpaqueBehavior" xmi:id="_Ts_XUL3wEfCuufnsP13LzQ">
                       <language>C</language>
-                      <body>printf(&quot;Exit State4321.\n&quot;);</body>
+                      <body>(void) p_obj;
+printf(&quot;Exit State4321.\n&quot;);</body>
                     </exit>
                   </subvertex>
                   <subvertex xmi:type="uml:State" xmi:id="_6ppvUL3nEfCuufnsP13LzQ" name="State4322"/>
@@ -686,13 +710,15 @@ for static evaluation of a sequence of guard conditions before any transition is
               <subvertex xmi:type="uml:State" xmi:id="_z8TCUL3uEfCuufnsP13LzQ" name="State433">
                 <exit xmi:type="uml:OpaqueBehavior" xmi:id="_jxc5cL3wEfCuufnsP13LzQ">
                   <language>C</language>
-                  <body>printf(&quot;Exit State433.\n&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;Exit State433.\n&quot;);</body>
                 </exit>
               </subvertex>
               <subvertex xmi:type="uml:State" xmi:id="_2DUZML3uEfCuufnsP13LzQ" name="State434">
                 <entry xmi:type="uml:OpaqueBehavior" xmi:id="_nFcZwL3wEfCuufnsP13LzQ">
                   <language>C</language>
-                  <body>printf(&quot;State434 entry behavior.\n&quot;);</body>
+                  <body>(void) p_obj;
+printf(&quot;State434 entry behavior.\n&quot;);</body>
                 </entry>
               </subvertex>
             </region>

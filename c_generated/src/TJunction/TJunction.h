@@ -20,6 +20,8 @@ extern "C" {
 //Start of user code includes top
 //End of user code
 #    include <sm.h>
+#    include <stddef.h>
+#    include <stdbool.h>
 //Start of user code includes bottom
 //End of user code
 
@@ -453,6 +455,9 @@ extern "C" {
         /**
          */
         bool                            b_guard8;
+        /**
+         */
+        bool                            b_guard9;
     };
 
     void TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);

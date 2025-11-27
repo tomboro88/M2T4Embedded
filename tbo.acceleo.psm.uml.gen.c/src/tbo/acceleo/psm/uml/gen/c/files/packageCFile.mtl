@@ -135,8 +135,13 @@
  * Private function prototypes.
  * 
  ******************************************************************************/
-[for (aClassifier:Classifier|allClassifiers)
-  separator(utils_newline())
+[for (aClassifier:Classifier|allClassifiers->select(c:Classifier|
+      c.uml_c_operations_need_declaration(Set{VisibilityKind::private})
+                ->notEmpty()
+       or c.request_has_standalone_behaviors(Set{VisibilityKind::private})
+       or c.uml_c_needs_init_defaults()
+       or c.oclIsKindOf(StateMachine))
+      )
   ?(aClassifier.uml_c_operations_need_declaration(Set{VisibilityKind::private})
                 ->notEmpty()
        or aClassifier
@@ -147,14 +152,14 @@
 [if (aClassifier.uml_c_operations_need_declaration(vis)->notEmpty() )]
 [uml_c_declare_operations(aClassifier, vis, false, 0)/]
 [/if]
-[let bc:BehavioredClassifier=aClassifier]
-[if (bc.request_standalone_behaviors(vis)->notEmpty() )]
-[uml_c_declare_behaviors(bc, vis, false, 0)/]
+[if (aClassifier.request_has_standalone_behaviors(vis))]
+[uml_c_declare_behaviors(aClassifier.oclAsType(BehavioredClassifier), vis, false, 0)/]
 [/if]
-[/let]
 [if (aClassifier.uml_c_needs_init_defaults() )]
 [uml_c_declare_defaults(aClassifier, 0)/]
+
 [/if]
+[if (aClassifier.oclIsKindOf(StateMachine))]
 [let sm:StateMachine=aClassifier]
 [uml_c_declare_region_exit(sm,0)/]
 [uml_c_declare_sm_dispatch(sm, 0)/]
@@ -166,6 +171,7 @@
 [if (sm.request_state_machine_junctions()->notEmpty() )]
 [uml_c_declare_junctions(sm, 0)/][/if]
 [/let]
+[/if]
 [/for]
 /*******************************************************************************
  * 
@@ -227,15 +233,20 @@ static inline bool
  * Public function bodies.
  * 
  ******************************************************************************/
-[for (aClassifier:Classifier|allClassifiers)
-     ?(aClassifier.uml_c_get_operations(Set{VisibilityKind::public})
-       ->notEmpty()
-       or aClassifier
-                .request_has_standalone_behaviors(Set{VisibilityKind::public}))]
+[for (aClassifier:Classifier|allClassifiers->select(c:Classifier | 
+      c.uml_c_get_operations(Set{VisibilityKind::public})->notEmpty()
+       or c.request_has_standalone_behaviors(Set{VisibilityKind::public})))
+     separator(utils_newline())
+     after( utils_newline() ) ]
 [uml_c_define_operations(aClassifier, Set{VisibilityKind::public}, 0)
-/][let bc:BehavioredClassifier=aClassifier]
-[uml_c_define_behaviors(bc,Set{VisibilityKind::public}, 0)/]
-[/let]
+/][if (aClassifier.request_has_standalone_behaviors(Set{VisibilityKind::public}))]
+[if(aClassifier.uml_c_get_operations(Set{VisibilityKind::public})
+       ->notEmpty())]
+
+[/if]
+[uml_c_define_behaviors(aClassifier.oclAsType(BehavioredClassifier),
+                                                 Set{VisibilityKind::public}, 0)
+/][/if]
 [/for]
 /*******************************************************************************
  * 

@@ -455,6 +455,9 @@ extern "C" {
         /**
          */
         bool                            b_guard8;
+        /**
+         */
+        bool                            b_guard9;
     };
 
     void TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);
