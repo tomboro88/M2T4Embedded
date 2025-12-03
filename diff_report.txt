@@ -1,0 +1,4 @@
+ c_expected/src/fifo/CMakeLists.txt => /dev/null |  11 [31m--[m
+ c_expected/src/fifo/fifo.c => /dev/null         | 212 [31m------------------------[m
+ c_expected/src/fifo/fifo.h => /dev/null         |  78 [31m---------[m
+ 3 files changed, 301 deletions(-)

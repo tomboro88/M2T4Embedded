@@ -45,6 +45,9 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings">
+				<options/>
+			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="cdt.managedbuild.config.gnu.exe.release.1726212320">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.1726212320" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -114,4 +117,9 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule cmakelistsFolder="" moduleId="de.marw.cmake4eclipse.mbs.settings">
+		<targets>
+			<target name=""/>
+		</targets>
+	</storageModule>
 </cproject>

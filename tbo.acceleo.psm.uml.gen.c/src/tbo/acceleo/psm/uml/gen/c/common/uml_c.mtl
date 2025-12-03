@@ -614,6 +614,10 @@ endif/]
  utils_get_self_name()
                  + '->' + aRegion.uml_c_get_region_state_property_name()/]
 
+[query public uml_c_needs_vtable_inst(aClassifier:Classifier) : Boolean = 
+  aClassifier.request_needs_vtable() and 
+                          not aClassifier.oclIsKindOf(Interface)/]
+
 [template public uml_c_get_literal_string(ls:LiteralSpecification)] 
 [let lun : LiteralUnlimitedNatural = ls]
 [lun.value/]u[elselet lr:LiteralReal = ls]
@@ -1059,9 +1063,10 @@ spaces/][aTree->drop(1)->collect(c : Classifier | '.' + c.name)->append(
                                     indentation : Integer)
  {spaces : String = utils_get_indent_string();
    total_indentation : Integer = indentation + spaces.size();}]
-[for (aClassifier : Classifier | aClOSet) separator(utils_newline())
- ?(aClassifier.request_needs_vtable() and 
-   not aClassifier.oclIsKindOf(Interface))]
+[for (aClassifier : Classifier | aClOSet
+     ->select(c:Classifier|c.uml_c_needs_vtable_inst())) 
+     separator(utils_newline()) 
+     after(utils_newline())]
 [documentation_string('@brief The initialized virtual table for the ' 
   + uml_c_get_struct_name(aClassifier) + ' struct.', indentation)/]
 static const [uml_c_get_vtable_type_name(aClassifier)

@@ -2070,7 +2070,7 @@
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_Jc9j5b3uEfCuufnsP13LzQ" type="Transition_GuardLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_aFK20L3vEfCuufnsP13LzQ" name="IS_UPDATED_POSITION" booleanValue="true"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_Jc9j5r3uEfCuufnsP13LzQ" x="-96" y="-95"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Jc9j5r3uEfCuufnsP13LzQ" x="-111" y="-85"/>
       </children>
       <children xmi:type="notation:DecorationNode" xmi:id="_Jc9j573uEfCuufnsP13LzQ" type="Transition_StereotypeLabel">
         <styles xmi:type="notation:BooleanValueStyle" xmi:id="_aFwFoL3vEfCuufnsP13LzQ" name="IS_UPDATED_POSITION" booleanValue="true"/>
@@ -2079,7 +2079,7 @@
       <styles xmi:type="notation:FontStyle" xmi:id="_Jc9j4b3uEfCuufnsP13LzQ"/>
       <element xmi:type="uml:Transition" href="testdiagrams.uml#_JcGoQL3uEfCuufnsP13LzQ"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Jc9j4r3uEfCuufnsP13LzQ" points="[520, -280, -643984, -643984]$[400, -160, -643984, -643984]$[331, -20, -643984, -643984]"/>
-      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_JeIokL3uEfCuufnsP13LzQ" id="(0.0,0.5907172995780591)"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_JeIokL3uEfCuufnsP13LzQ" id="(0.0,0.6349206349206349)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_JeIokb3uEfCuufnsP13LzQ" id="(0.55,0.0)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_8lGEIL3uEfCuufnsP13LzQ" type="Transition_Edge" source="_ywIKIL3uEfCuufnsP13LzQ" target="_z8yKgL3uEfCuufnsP13LzQ">

@@ -36,9 +36,9 @@
 [documentationCFile('The ' + aPackage.name + ' package source file.')/]
 
 /*******************************************************************************
- * 
+ *
  * Include statements.
- * 
+ *
  ******************************************************************************/
 //[protected('includes top')]
 //[/protected]
@@ -88,9 +88,9 @@
 [uml_c_declare_structs(sourceClassifiers, 0)/]
 [/if]
 /*******************************************************************************
- * 
+ *
  * Non-private function prototypes.
- * 
+ *
  ******************************************************************************/
 [for (aClassifier:Classifier|general_extern_classifiers)
      ?(aClassifier.uml_c_operations_need_declaration(
@@ -131,9 +131,9 @@
 [/let]
 [/for]
 /*******************************************************************************
- * 
+ *
  * Private function prototypes.
- * 
+ *
  ******************************************************************************/
 [for (aClassifier:Classifier|allClassifiers->select(c:Classifier|
       c.uml_c_operations_need_declaration(Set{VisibilityKind::private})
@@ -174,9 +174,17 @@
 [/if]
 [/for]
 /*******************************************************************************
- * 
+ *
+ * Static data declarations.
+ *
+ ******************************************************************************/
+[if (allClassifiers
+       ->select(c:Classifier|c.uml_c_needs_vtable_inst())->notEmpty())]
+[uml_c_init_vtables(allClassifiers, 0)/][/if]
+/*******************************************************************************
+ *
  * Inline functions.
- * 
+ *
  ******************************************************************************/
 [if (not allClassifiers->select(
  aClassifier : Classifier | aClassifier.request_needs_storage() 
@@ -223,15 +231,9 @@ static inline bool
 [/if]
 [/for]
 /*******************************************************************************
- * 
- * Static data declarations.
- * 
- ******************************************************************************/
-[uml_c_init_vtables(allClassifiers, 0)/]
-/*******************************************************************************
- * 
+ *
  * Public function bodies.
- * 
+ *
  ******************************************************************************/
 [for (aClassifier:Classifier|allClassifiers->select(c:Classifier | 
       c.uml_c_get_operations(Set{VisibilityKind::public})->notEmpty()
@@ -249,9 +251,9 @@ static inline bool
 /][/if]
 [/for]
 /*******************************************************************************
- * 
+ *
  * Non-public function bodies.
- * 
+ *
  ******************************************************************************/
 [for (aClassifier:Classifier|allClassifiers)
      ?(aClassifier.uml_c_needs_init_defaults()

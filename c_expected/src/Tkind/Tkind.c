@@ -5,9 +5,9 @@
  */
 
 /*******************************************************************************
- * 
+ *
  * Include statements.
- * 
+ *
  ******************************************************************************/
 //Start of user code includes top
 //End of user code
@@ -35,9 +35,9 @@
                              offsetof(child_type,base_field), (char**)child_ptr)
 
 /*******************************************************************************
- * 
+ *
  * Non-private function prototypes.
- * 
+ *
  ******************************************************************************/
 void Tkind_cbase1_SetUintProp(Tkind_cbase1_t* const p_obj,\
                               uint32_t const param1);
@@ -66,9 +66,9 @@ void Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj,\
                                uint32_t const param1);
 
 /*******************************************************************************
- * 
+ *
  * Private function prototypes.
- * 
+ *
  ******************************************************************************/
 static void Tkind_cbase1_init_df(Tkind_cbase1_t* const p_obj);
 
@@ -173,9 +173,39 @@ static sm_event_status_t sm1_dispatch_l_state9(Tkind_sm1_t* const p_obj);
 static sm_event_status_t sm1_enter_choice1(Tkind_sm1_t* const p_obj);
 
 /*******************************************************************************
- * 
+ *
+ * Static data declarations.
+ *
+ ******************************************************************************/
+/**
+ * @brief The initialized virtual table for the Tkind_cbase1_s struct.
+ */
+static const Tkind_cbase1_vt_t Tkind_cbase1_vtable = 
+{
+    .p_SetUintProp                   = Tkind_cbase1_set_uint_default
+};
+
+/**
+ * @brief The initialized virtual table for the Tkind_cbase2_s struct.
+ */
+static const Tkind_cbase2_vt_t Tkind_cbase2_vtable = 
+{
+    .p_GetFloatProp                  = Tkind_cbase2_get_flt_dflt
+};
+
+/**
+ * @brief The initialized virtual table for the Tkind_ctest_s struct.
+ */
+static const Tkind_ctest_vt_t Tkind_ctest_vtable = 
+{
+    .cbase1.p_SetUintProp            = Tkind_ctest_set_uint_incr,
+    .cbase2.p_GetFloatProp           = Tkind_ctest_get_flt_from_uint
+};
+
+/*******************************************************************************
+ *
  * Inline functions.
- * 
+ *
  ******************************************************************************/
 /**
  * @brief Obtains the pointer to the specialized class from the pointer to
@@ -486,39 +516,9 @@ sm1_exit_state9(Tkind_sm1_t* const p_obj)
 }
 
 /*******************************************************************************
- * 
- * Static data declarations.
- * 
- ******************************************************************************/
-/**
- * @brief The initialized virtual table for the Tkind_cbase1_s struct.
- */
-static const Tkind_cbase1_vt_t Tkind_cbase1_vtable = 
-{
-    .p_SetUintProp                   = Tkind_cbase1_set_uint_default
-};
-
-/**
- * @brief The initialized virtual table for the Tkind_cbase2_s struct.
- */
-static const Tkind_cbase2_vt_t Tkind_cbase2_vtable = 
-{
-    .p_GetFloatProp                  = Tkind_cbase2_get_flt_dflt
-};
-
-/**
- * @brief The initialized virtual table for the Tkind_ctest_s struct.
- */
-static const Tkind_ctest_vt_t Tkind_ctest_vtable = 
-{
-    .cbase1.p_SetUintProp            = Tkind_ctest_set_uint_incr,
-    .cbase2.p_GetFloatProp           = Tkind_ctest_get_flt_from_uint
-};
-
-/*******************************************************************************
- * 
+ *
  * Public function bodies.
- * 
+ *
  ******************************************************************************/
 /**
  * @param [in] p_obj The pointer to the self object.
@@ -716,9 +716,9 @@ Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj, uint32_t const param1)
 }
 
 /*******************************************************************************
- * 
+ *
  * Non-public function bodies.
- * 
+ *
  ******************************************************************************/
 /**
  * @brief The initializer function of the default values and virtual tables of
