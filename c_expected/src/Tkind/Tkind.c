@@ -568,8 +568,7 @@ Tkind_cbase2_SetFloatProp(Tkind_cbase2_t* const p_obj, float const param1)
 float
 Tkind_cbase2_GetFloatProp(Tkind_cbase2_t* const p_obj)
 {
-    float result;
-    
+    float result = 0.0;
     /*Code for handling a virtual operation.*/
     if((NULL != p_obj) && (NULL != p_obj->p_vtable))
     {

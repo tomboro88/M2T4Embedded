@@ -9,9 +9,12 @@
 void run_all_tests(void)
 {
 	RUN_TEST_GROUP(fifo);
+	RUN_TEST_GROUP(event_pool);
 }
 
 int main(int argc, const char* argv[])
 {
 	return UnityMain(argc, argv, run_all_tests);
 }
+
+/*** end of file ***/

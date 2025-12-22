@@ -9,3 +9,12 @@ target_sources(fifo
     FILES
         fifo.h
 )
+
+target_compile_options(fifo PRIVATE
+    $<$<CONFIG:Coverage>:
+        -O0
+        -g
+        -fprofile-arcs
+        -ftest-coverage
+    >
+)

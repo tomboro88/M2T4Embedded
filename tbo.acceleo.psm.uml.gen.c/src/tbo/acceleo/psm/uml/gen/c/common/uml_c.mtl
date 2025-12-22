@@ -220,25 +220,29 @@ endif/]
     or (p.upper = *)
     or (p.lower = 0)/]
 
-[query public uml_c_get_predefined_integer_base_types(OclTraceabilityContxt:OclAny)
-  :Set(String) = 
-   Set {'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32', 'int64', 'uint64'}/]
+[query public 
+   uml_c_get_predefined_integer_base_types(OclTraceabilityContxt:OclAny)
+  :Set(String) = Set 
+    {'int8', 'uint8', 'int16', 'uint16', 'int32', 'uint32', 'int64', 'uint64'}/]
 
 [query public uml_c_get_predefined_integer_types(OclTraceabilityContxt:OclAny)
   :Set(String) = uml_c_get_predefined_integer_base_types()
-                                    ->collect(s:String|s+uml_c_get_type_suffix())->asSet()/]
+                        ->collect(s:String|s+uml_c_get_type_suffix())->asSet()/]
 
 [query public uml_c_get_predefined_size_types(OclTraceabilityContxt:OclAny)
   :Set(String) = Set{'size_t'}/]
 
-[query public uml_c_get_predefined_boolean_base_types(OclTraceabilityContxt:OclAny)
+[query public 
+           uml_c_get_predefined_boolean_base_types(OclTraceabilityContxt:OclAny)
   :Set(String) = Set{'bool', 'Bool', 'boolean', 'Boolean'}/]
 
-[query public uml_c_get_predefined_float_base_types(OclTraceabilityContxt:OclAny)
+[query public 
+             uml_c_get_predefined_float_base_types(OclTraceabilityContxt:OclAny)
   :Set(String) = Set {'float32', 'float64', 'float128'}/]
 
 [query public uml_c_get_predefined_base_types(OclTraceabilityContxt:OclAny)
-  :Set(String) = uml_c_get_predefined_integer_base_types()->addAll(uml_c_get_predefined_float_base_types())/]
+  :Set(String) = uml_c_get_predefined_integer_base_types()
+                             ->addAll(uml_c_get_predefined_float_base_types())/]
 
 [**
  * Recognizes some of the common fixed size integer and floating point types
@@ -369,8 +373,8 @@ endif/]
     if uml_c_property_by_ref(p) then '*' else '' endif/]
 
 [**
- * Returns the pointer name of the local variable holding the status of the event 
- * dispatch process.
+ * Returns the pointer name of the local variable holding the status of the 
+ * event dispatch process.
 */]
 [query private uml_c_dispatch_result_ptr(aVertex:Vertex): String = 
                    if request_is_static_junction(aVertex) then
@@ -992,13 +996,13 @@ post(toUpper())][aVertex.eContainer(Package).name + '_'
 [let tC : Classifier = tB.signature.template]
 [if (tC.request_needs_vtable())]
 [utils_indent(indentation)/][uml_c_struct_typedef_string(
-       '@brief The virtual table type for the ' 
-       + uml_c_get_bound_class_full_name(tC,aClassifier)
-         .uml_c_get_string_struct_name()
-       + ' intermediate bound struct.', 
-       tC.uml_c_get_bound_vtable_name(aClassifier).uml_c_get_string_struct_name(), 
-       tC.uml_c_get_bound_vtable_name(aClassifier).uml_c_get_string_typedef_name(), 
-       indentation)/]
+    '@brief The virtual table type for the ' 
+    + uml_c_get_bound_class_full_name(tC,aClassifier)
+      .uml_c_get_string_struct_name()
+    + ' intermediate bound struct.', 
+    tC.uml_c_get_bound_vtable_name(aClassifier).uml_c_get_string_struct_name(), 
+    tC.uml_c_get_bound_vtable_name(aClassifier).uml_c_get_string_typedef_name(), 
+    indentation)/]
 
 [/if][utils_indent(indentation)/][uml_c_struct_typedef_string(
        '@brief The type representing the ' 
@@ -1645,7 +1649,8 @@ static void
     Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
                                     utils_get_self_name())}/]
 
-[query public uml_c_get_choice_entry_params(aChoice:Pseudostate):Sequence(String)
+[query public uml_c_get_choice_entry_params(aChoice:Pseudostate)
+ :Sequence(String)
   = let sm :StateMachine = aChoice.containingStateMachine() in
     Sequence{uml_c_param_decl(uml_c_get_type_name(sm) + '*', 
                                     utils_get_self_name())}/]
@@ -2399,8 +2404,8 @@ static [uml_c_get_event_status_type()/]
  * @param aSeq The sequence of the transitions in the incoming compound 
  * transition path for which the function(s) should be implemented. Used for
  * the template recursion.
- * @param b_include_body If true then full function implementation should be inserted,
- * otherwise only declaration will be generated.
+ * @param b_include_body If true then full function implementation should be 
+ * inserted, otherwise only declaration will be generated.
  * @param indentation The indentation means the sum of all previous code 
  * indentations.
 */]
@@ -2446,8 +2451,8 @@ else aSeq->first().source endif.request_incoming_transitions())
  * @param aSeq The sequence of the transitions in the incoming compound 
  * transition path for which the function(s) should be implemented. Used for
  * the template recursion.
- * @param b_include_body If true then full function implementation should be inserted.
- * otherwise only declaration will be generated.
+ * @param b_include_body If true then full function implementation should be 
+ * inserted. Otherwise only declaration will be generated.
  * @param indentation The indentation means the sum of all previous code 
  * indentations.
 */]
@@ -2479,7 +2484,8 @@ else aSeq->first().source endif.request_incoming_transitions())
                                                anEvent : Event,
                                                indentation : Integer)
 ?(aSeq->notEmpty() and aSeq->last().target=aJunction)]
-[uml_c_format_param_list('static bool ' + uml_c_get_junction_entry_name(aSeq, anEvent),
+[uml_c_format_param_list('static bool ' 
+                        + uml_c_get_junction_entry_name(aSeq, anEvent),
                         aJunction.uml_c_get_junction_entry_params(),
                         indentation+1)/];
 [/template]
@@ -2570,7 +2576,7 @@ static bool
   sortedTransitions : OrderedSet(Transition) = 
                    guardTransitions->removeAll(elseTransitions);
   b_should_assign_result : Boolean = 
-        if request_is_always_handled(aVertex, anEvent) then false else true endif;
+      if request_is_always_handled(aVertex, anEvent) then false else true endif;
   spaces : String = utils_get_indent_string();}]
 [if ((elseTransitions->size() > 1) or 
      (elseTransitions->size() > sortedTransitions->size()))]
@@ -2679,7 +2685,7 @@ else
 [/template]
 
 [**
- * @brief Implementation if the transition's guard condition inside the 'if'
+ * @brief Implementation of the transition's guard condition inside the 'if'
  * guard statement.
  * @param aTransition The transition object for which the guard is to be 
  * implemented.

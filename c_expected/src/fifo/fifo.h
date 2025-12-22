@@ -27,16 +27,6 @@ extern "C" {
 #endif
 #include <stddef.h>
 #include <stdbool.h>
-#include <stdint.h>
-
-/**
- * @brief This macro initializes the fifo_t struct to an empty state.
- * @param [in] s The size of the fifo storage array.
- * @return The fifo_t structure initialized to an empty state and given
- * size.
- */
-#    define FIFO_INITIALIZER(s) (fifo_t) {.count = 0u,\
-                                     .tail = 0u, .head = 0u, .size = s}
 
     /**
      * @brief The type for element index storage.
@@ -63,12 +53,17 @@ extern "C" {
         fifo_size_t size;
     } fifo_t;
 
-    void fifo_initialize (fifo_t *const p_obj, const fifo_size_t size);
-    bool fifo_check_with_size (const fifo_t *const p_obj, const fifo_size_t size);
+    bool fifo_initialize (fifo_t *const p_obj, const fifo_size_t size,
+                          fifo_size_t const head, fifo_size_t const count);
+    bool fifo_check_with_size (const fifo_t *const p_obj,
+                               const fifo_size_t size);
     bool fifo_enqueue (fifo_t *const p_obj);
     bool fifo_dequeue (fifo_t *const p_obj);
     bool fifo_is_not_empty (const fifo_t *const p_obj);
     bool fifo_is_not_full (const fifo_t *const p_obj);
+    fifo_size_t fifo_calc_tail(fifo_size_t const size, fifo_size_t const head,
+                               fifo_size_t const count);
+    bool fifo_check (const fifo_t *const p_obj);
 
 #ifdef	__cplusplus
 }
@@ -76,3 +71,4 @@ extern "C" {
 
 #endif	/* FIFO_H */
 
+/*** end of file ***/

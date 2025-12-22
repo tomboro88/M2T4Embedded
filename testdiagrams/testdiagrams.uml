@@ -338,7 +338,9 @@ This is important for critical events, that are sent only ocassionally, and cann
         <ownedParameter xmi:type="uml:Parameter" xmi:id="_7aACsKTDEfCF5Mxlt2zVCg" name="param1" type="_XDi8sKU0EfCJFuHNEOD_Ew"/>
       </ownedOperation>
       <ownedOperation xmi:type="uml:Operation" xmi:id="_Xd0SwKTEEfCF5Mxlt2zVCg" name="GetFloatProp" method="_frDgUKTMEfCF5Mxlt2zVCg _OJTvkKTGEfCF5Mxlt2zVCg">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_djpokKTEEfCF5Mxlt2zVCg" name="result" type="_XDi8sKU0EfCJFuHNEOD_Ew" direction="return"/>
+        <ownedParameter xmi:type="uml:Parameter" xmi:id="_djpokKTEEfCF5Mxlt2zVCg" name="result" type="_XDi8sKU0EfCJFuHNEOD_Ew" direction="return">
+          <defaultValue xmi:type="uml:LiteralReal" xmi:id="_0yGd4N7oEfCBNeffRoavJA"/>
+        </ownedParameter>
       </ownedOperation>
     </packagedElement>
     <packagedElement xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_C27P8L4uEfCF3MoXlXpSFw" name="CTEST_O_CNT" value="2"/>

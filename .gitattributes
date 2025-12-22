@@ -2,18 +2,41 @@
 * text=auto eol=lf
 
 # Set the files, that should always use LF line ending
+
+# C code
 *.c text eol=lf
 *.h text eol=lf
+
+# Acceleo templates
 *.mtl text eol=lf
 *.java text eol=lf
 *.properties text eol=lf
+
+# Papyrus models
 *.uml text eol=lf
 *.di text eol=lf
 *.notation text eol=lf
-*.md text eol=lf
-*.sh text eol=lf
+
+# Eclipse files
 *.project text eol=lf
 *.cproject text eol=lf
+*.launch text eol=lf
+
+# Makefile
+Makefile text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Scripts
+*.sh text eol=lf
+
+# Ruby (CMock)
+*.rb text eol=lf
+*.yml text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
 
 # binary files whould not be modified
 *.png binary

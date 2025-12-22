@@ -21,15 +21,22 @@
  * Data type, constant, and macro definitions.
  *
  ******************************************************************************/
+/**
+ * @brief The minimum allowed size of the fifo queue.
+ */
+#define FIFO_MIN_SIZE 2u
+
 /*******************************************************************************
  *
  * Private function prototypes.
  *
  ******************************************************************************/
-static fifo_size_t fifo_increment_index (const fifo_size_t index,
-                                         const fifo_size_t size);
-static bool fifo_check (const fifo_t *const p_obj);
 
+/*******************************************************************************
+ *
+ * Inline functions.
+ *
+ ******************************************************************************/
 /**
  * @brief Increments the index and resets to zero if it's greater than size.
  * @param [in] index The index that should be incremented.
@@ -54,6 +61,7 @@ fifo_increment_index (const fifo_size_t index, const fifo_size_t size)
  * Static data declarations.
  *
  ******************************************************************************/
+
 /*******************************************************************************
  *
  * Public function bodies.
@@ -64,17 +72,32 @@ fifo_increment_index (const fifo_size_t index, const fifo_size_t size)
  * @brief Initializes the indexes of the given fifo_t struct to empty state.
  * @param [out] p_obj The pointer to the object that should be initialised.
  * @param [in] size The size of the array holding the fifo elements.
- *
+ * @param returns true if correct object was created (size >= 2).
  * The .tail and .head fields are set to zero, and the .size field is set to
  * size.
  */
-void
-fifo_initialize (fifo_t *const p_obj, const fifo_size_t size)
+bool
+fifo_initialize (fifo_t *const p_obj, fifo_size_t const size,
+                 fifo_size_t const head, fifo_size_t const count)
 {
-    if (NULL != p_obj)
+    bool b_is_initialized = false;
+
+    if ((NULL != p_obj))
     {
-        *p_obj = FIFO_INITIALIZER(size);
+        fifo_size_t tail = fifo_calc_tail(size, head, count);
+
+        p_obj->size = size;
+        p_obj->head = head;
+        p_obj->count = count;
+        p_obj->tail = tail;
+
+        if(tail < size)
+        {
+            b_is_initialized = true;
+        }
     }
+
+    return b_is_initialized;
 }
 
 /**
@@ -91,30 +114,7 @@ fifo_initialize (fifo_t *const p_obj, const fifo_size_t size)
 bool
 fifo_check_with_size (const fifo_t *const p_obj, const fifo_size_t size)
 {
-    bool b_is_valid = fifo_check(p_obj) && (p_obj->count <= p_obj->size)
-            && (p_obj->size == size);
-
-    if (b_is_valid)
-    {
-        /*The following calculations allow to get calc_tail
-         * without overflowing fifo_size_t.*/
-        fifo_size_t s_minus_c = size - p_obj->count; /* size >= count */
-
-        fifo_size_t calc_tail = 0;
-
-        if (s_minus_c > p_obj->head)
-        {
-            calc_tail = p_obj->head + p_obj->count; /* always < size here */
-        }
-        else
-        {
-            calc_tail = p_obj->head - s_minus_c; /* head >= (size-count) */
-        }
-
-        b_is_valid = (calc_tail == p_obj->tail);
-    }
-
-    return b_is_valid;
+    return fifo_check(p_obj) && (p_obj->size == size);
 }
 
 /**
@@ -171,8 +171,7 @@ fifo_dequeue (fifo_t *const p_obj)
 bool
 fifo_is_not_empty (const fifo_t *const p_obj)
 {
-    return fifo_check(p_obj) && (p_obj->count > 0u)
-            && (p_obj->count <= p_obj->size);
+    return fifo_check(p_obj) && (p_obj->count > 0u);
 }
 
 /**
@@ -188,11 +187,39 @@ fifo_is_not_full (const fifo_t *const p_obj)
     return fifo_check(p_obj) && (p_obj->count < p_obj->size);
 }
 
-/*******************************************************************************
- *
- * Private function bodies.
- *
- ******************************************************************************/
+/**
+ * @brief Calculates the proper tail index corresponding to given parameters.
+ * @param size The size of the fifo.
+ * @param head The head index corresponding to the first element in the fifo.
+ * @param count The number of elements residing in the fifo.
+ * @return The calculated tail index that meets the (tail < size) condition if
+ * the proivided parameters are correct, otherwise returns the size.
+ */
+fifo_size_t
+fifo_calc_tail(fifo_size_t const size, fifo_size_t const head,
+               fifo_size_t const count)
+{
+    fifo_size_t calc_tail = size;
+
+    if((FIFO_MIN_SIZE <= size) && (head < size) && (count <= size))
+    {
+        /*The following calculations allow to get calc_tail
+         * without overflowing fifo_size_t.*/
+        fifo_size_t s_minus_c = size - count; /* size >= count */
+
+        if (s_minus_c > head)
+        {
+            calc_tail = head + count; /* always < size here */
+        }
+        else
+        {
+            calc_tail = head - s_minus_c; /* head >= (size-count) */
+        }
+    }
+
+    return calc_tail;
+}
+
 /**
  * @brief Checks if the indexes and size of the fifo object are valid with
  * respect to each other.
@@ -202,11 +229,18 @@ fifo_is_not_full (const fifo_t *const p_obj)
  * @returns false if the fields in the object are not valid or if the pointer is
  * NULL.
  */
-static bool
+bool
 fifo_check (const fifo_t *const p_obj)
 {
-    return (NULL != p_obj) && (p_obj->head < p_obj->size)
-            && (p_obj->tail < p_obj->size);
+    return (NULL != p_obj)
+            && (p_obj->tail < p_obj->size)
+            && (fifo_calc_tail(p_obj->size, p_obj->head, p_obj->count)
+                    == p_obj->tail);
 }
+/*******************************************************************************
+ *
+ * Private function bodies.
+ *
+ ******************************************************************************/
 
 /*** end of file ***/

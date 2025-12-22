@@ -1,5 +1,5 @@
 tbo.acceleo.psm.uml.gen.c/bin
 *.emtl
 *.class
-/c_expected/obj/*
 /c_generated/Debug/*
+
