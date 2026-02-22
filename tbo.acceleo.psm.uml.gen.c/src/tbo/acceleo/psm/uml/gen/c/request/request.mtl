@@ -76,6 +76,10 @@
      = aPackage.eContents(PackageableElement)->select(p : PackageableElement | 
        not p.oclIsKindOf(Package))/]
 
+[**
+ * Takes the list of all PackageableElements that are owned directly by the 
+ * given package.
+*/]
 [query public request_non_packaged_children(aPackage : Package) : 
    Sequence(PackageableElement) = 
    let directChildren : Sequence(PackageableElement) 

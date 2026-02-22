@@ -4,6 +4,7 @@
 [import tbo::acceleo::psm::uml::gen::c::common::utils /]
 [import tbo::acceleo::psm::uml::gen::c::common::documentation /]
 [import tbo::acceleo::psm::uml::gen::c::common::uml_c/]
+[import tbo::acceleo::psm::uml::gen::c::common::debug/]
 [import tbo::acceleo::psm::uml::gen::c::request::request/]
 
 [template public generatePackageC(aPackage : Package)
@@ -92,27 +93,36 @@
  * Non-private function prototypes.
  *
  ******************************************************************************/
-[for (aClassifier:Classifier|general_extern_classifiers)
+[debug_marker('general_extern_classifiers.')
+/][for (aClassifier:Classifier|general_extern_classifiers)
      ?(aClassifier.uml_c_operations_need_declaration(
                           Set{VisibilityKind::protected})->notEmpty()
        or (aClassifier.request_has_standalone_behaviors(
                          Set{VisibilityKind::protected, 
                              VisibilityKind::public})))]
-[uml_c_declare_operations(aClassifier, Set{VisibilityKind::protected}, 
+[debug_marker(aClassifier.name + ' protected operations.')
+/][uml_c_declare_operations(aClassifier, Set{VisibilityKind::protected}, 
                           true, 0)/]
-[let bc:BehavioredClassifier=aClassifier]
+[debug_marker(aClassifier.name + ' protected and public behaviors')
+/][let bc:BehavioredClassifier=aClassifier]
 [uml_c_declare_behaviors(
         bc, 
         Set{VisibilityKind::protected, VisibilityKind::public}, true, 0)/]
 [/let]
 [/for]
-[for (aClassifier:Classifier|sourceClassifiers)
+[debug_marker('sourceClassifiers')
+/][for (aClassifier:Classifier|sourceClassifiers)
      ?(aClassifier.uml_c_operations_need_declaration(
                           Set{VisibilityKind::public})->notEmpty())]
 [uml_c_declare_operations(aClassifier, Set{VisibilityKind::public}, 
                           false, 0)/]
 [/for]
-[for (aClassifier:Classifier|allClassifiers)
+[debug_marker('allClassifiers')
+/][if (getProperty('include_debug_markers').toBoolean())]
+[for (aClassifier:Classifier|allClassifiers)]
+/*[aClassifier.name/]*/
+[/for]
+[/if][for (aClassifier:Classifier|allClassifiers)
      ?(aClassifier.uml_c_operations_need_declaration(
                           Set{VisibilityKind::protected, 
                               VisibilityKind::_package})->notEmpty()
@@ -120,11 +130,12 @@
                                      Set{VisibilityKind::protected,
                                          VisibilityKind::_package,
                                          VisibilityKind::public})))]
-[uml_c_declare_operations(aClassifier, Set{VisibilityKind::protected,
-                                         VisibilityKind::_package,
-                                         VisibilityKind::public}, 
+[debug_marker(aClassifier.name + ' operations')
+/][uml_c_declare_operations(aClassifier, Set{VisibilityKind::protected,
+                                         VisibilityKind::_package}, 
                           false, 0)/]
-[let bc:BehavioredClassifier=aClassifier]
+[debug_marker(aClassifier.name + ' behaviors')
+/][let bc:BehavioredClassifier=aClassifier]
 [uml_c_declare_behaviors(bc, Set{VisibilityKind::protected,
                                          VisibilityKind::_package,
                                          VisibilityKind::public}, false, 0)/]

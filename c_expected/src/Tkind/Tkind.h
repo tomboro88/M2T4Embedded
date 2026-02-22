@@ -18,6 +18,7 @@ extern "C" {
 #    include <stddef.h>
 #    include <stdbool.h>
 #    include <stdint.h>
+#    include <event_pool.h>
 //Start of user code includes bottom
 //End of user code
 
@@ -35,7 +36,7 @@ extern "C" {
      * events in the queue means, that when one ovent is being processed by the
      * state machine, there will still be place for at least one new event in
      * the queue.
-     * This is important for critical events, that are sent only ocassionally,
+     * This is important for critical events, that are sent only occasionally,
      * and cannot be missed just because the event queue was filled with other
      * more frequent event types.
      */
@@ -210,7 +211,7 @@ extern "C" {
     /**
      * @brief The enumeration of all events handled by ctest Class.
      */
-    typedef enum
+    enum tkind_ctest_evtype
     {
         /**
          */
@@ -261,652 +262,126 @@ extern "C" {
          * @brief The number of all events handled by ctest Class.
          */
         TKIND_CTEST_EVENT_COUNT
-    }tkind_ctest_evtype_t;
-    
-    /**
-     * @brief The base type of the event in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The type of the next event in the event pool of the ctest
-         * class.
-         */
-        tkind_ctest_evtype_t            event_next;
-    }tkind_ctest_evbase_t;
-    
-    /**
-     * @brief The struct with data of the i event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_i_t;
-    
-    /**
-     * @brief The struct with i event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_i_t                 events[TKIND_CTEST_I_CNT];
-    }tkind_ctest_i_queue_t;
-    
-    /**
-     * @brief The struct with data of the o event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_o_t;
-    
-    /**
-     * @brief The struct with o event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_o_t                 events[TKIND_CTEST_O_CNT];
-    }tkind_ctest_o_queue_t;
-    
-    /**
-     * @brief The struct with data of the a event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_a_t;
-    
-    /**
-     * @brief The struct with a event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_a_t                 events[TKIND_CTEST_A_CNT];
-    }tkind_ctest_a_queue_t;
-    
-    /**
-     * @brief The struct with data of the b event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_b_t;
-    
-    /**
-     * @brief The struct with b event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_b_t                 events[TKIND_CTEST_B_CNT];
-    }tkind_ctest_b_queue_t;
-    
-    /**
-     * @brief The struct with data of the c event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_c_t;
-    
-    /**
-     * @brief The struct with c event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_c_t                 events[TKIND_CTEST_C_CNT];
-    }tkind_ctest_c_queue_t;
-    
-    /**
-     * @brief The struct with data of the f event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_f_t;
-    
-    /**
-     * @brief The struct with f event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_f_t                 events[TKIND_CTEST_F_CNT];
-    }tkind_ctest_f_queue_t;
-    
-    /**
-     * @brief The struct with data of the e event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_e_t;
-    
-    /**
-     * @brief The struct with e event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_e_t                 events[TKIND_CTEST_E_CNT];
-    }tkind_ctest_e_queue_t;
-    
-    /**
-     * @brief The struct with data of the d event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_d_t;
-    
-    /**
-     * @brief The struct with d event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_d_t                 events[TKIND_CTEST_D_CNT];
-    }tkind_ctest_d_queue_t;
-    
-    /**
-     * @brief The struct with data of the n event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_n_t;
-    
-    /**
-     * @brief The struct with n event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_n_t                 events[TKIND_CTEST_N_CNT];
-    }tkind_ctest_n_queue_t;
-    
-    /**
-     * @brief The struct with data of the h event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_h_t;
-    
-    /**
-     * @brief The struct with h event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_h_t                 events[TKIND_CTEST_H_CNT];
-    }tkind_ctest_h_queue_t;
-    
-    /**
-     * @brief The struct with data of the g event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_g_t;
-    
-    /**
-     * @brief The struct with g event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_g_t                 events[TKIND_CTEST_G_CNT];
-    }tkind_ctest_g_queue_t;
-    
-    /**
-     * @brief The struct with data of the j event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_j_t;
-    
-    /**
-     * @brief The struct with j event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_j_t                 events[TKIND_CTEST_J_CNT];
-    }tkind_ctest_j_queue_t;
-    
-    /**
-     * @brief The struct with data of the m event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_m_t;
-    
-    /**
-     * @brief The struct with m event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_m_t                 events[TKIND_CTEST_M_CNT];
-    }tkind_ctest_m_queue_t;
-    
-    /**
-     * @brief The struct with data of the k event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_k_t;
-    
-    /**
-     * @brief The struct with k event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_k_t                 events[TKIND_CTEST_K_CNT];
-    }tkind_ctest_k_queue_t;
-    
-    /**
-     * @brief The struct with data of the l event in the event pool of the
-     * ctest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tkind_ctest_evbase_t            evbase;
-    }tkind_ctest_l_t;
-    
-    /**
-     * @brief The struct with l event queue in the event pool of the ctest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tkind_ctest_l_t                 events[TKIND_CTEST_L_CNT];
-    }tkind_ctest_l_queue_t;
-    
-    /**
-     * This is a comment linked 
-     * to the ctest type
-     */
-    struct Tkind_ctest_s
-    {
-        /**
-         * @brief cbase1 base class data.
-         */
-        Tkind_cbase1_t                  cbase1;
-        /**
-         * @brief cbase2 base class data.
-         */
-        Tkind_cbase2_t                  cbase2;
-        /**
-         * @brief The type of the first event in the event pool of the ctest
-         * class.
-         */
-        tkind_ctest_evtype_t            event_head;
-        /**
-         * @brief The type of the last event in the event pool of the ctest
-         * class.
-         */
-        tkind_ctest_evtype_t            event_tail;
-        /**
-         * @brief The event queue holding i events.
-         */
-        tkind_ctest_i_queue_t           i;
-        /**
-         * @brief The event queue holding o events.
-         */
-        tkind_ctest_o_queue_t           o;
-        /**
-         * @brief The event queue holding a events.
-         */
-        tkind_ctest_a_queue_t           a;
-        /**
-         * @brief The event queue holding b events.
-         */
-        tkind_ctest_b_queue_t           b;
-        /**
-         * @brief The event queue holding c events.
-         */
-        tkind_ctest_c_queue_t           c;
-        /**
-         * @brief The event queue holding f events.
-         */
-        tkind_ctest_f_queue_t           f;
-        /**
-         * @brief The event queue holding e events.
-         */
-        tkind_ctest_e_queue_t           e;
-        /**
-         * @brief The event queue holding d events.
-         */
-        tkind_ctest_d_queue_t           d;
-        /**
-         * @brief The event queue holding n events.
-         */
-        tkind_ctest_n_queue_t           n;
-        /**
-         * @brief The event queue holding h events.
-         */
-        tkind_ctest_h_queue_t           h;
-        /**
-         * @brief The event queue holding g events.
-         */
-        tkind_ctest_g_queue_t           g;
-        /**
-         * @brief The event queue holding j events.
-         */
-        tkind_ctest_j_queue_t           j;
-        /**
-         * @brief The event queue holding m events.
-         */
-        tkind_ctest_m_queue_t           m;
-        /**
-         * @brief The event queue holding k events.
-         */
-        tkind_ctest_k_queue_t           k;
-        /**
-         * @brief The event queue holding l events.
-         */
-        tkind_ctest_l_queue_t           l;
-        /**
-         */
-        char                            my_name[TKIND_MAX_CHAR_NUM];
-        /**
-         */
-        double                          pi;
     };
+    
+    /**
+     * @brief The type used to store the event pool of all events accepted by
+     * the ctest class.
+     */
+    typedef struct {
+        /**
+         * @brief The main event pool manager object in the ctest class.
+         */
+        event_pool_t         manager;
+        /**
+         * @brief The array of fifo objects, one for each accepted event type.
+         * @details The objects are referenced and managed by the event_pool
+         * object.
+         */
+        event_pool_fifo_t    fifo_pool[TKIND_CTEST_EVENT_COUNT];
+        /**
+         * @brief The array of the events that follow any i event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_I] object.
+         */
+        event_pool_size_t    i_next_events[TKIND_CTEST_I_CNT];
+        /**
+         * @brief The array of the events that follow any o event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_O] object.
+         */
+        event_pool_size_t    o_next_events[TKIND_CTEST_O_CNT];
+        /**
+         * @brief The array of the events that follow any a event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_A] object.
+         */
+        event_pool_size_t    a_next_events[TKIND_CTEST_A_CNT];
+        /**
+         * @brief The array of the events that follow any b event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_B] object.
+         */
+        event_pool_size_t    b_next_events[TKIND_CTEST_B_CNT];
+        /**
+         * @brief The array of the events that follow any c event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_C] object.
+         */
+        event_pool_size_t    c_next_events[TKIND_CTEST_C_CNT];
+        /**
+         * @brief The array of the events that follow any f event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_F] object.
+         */
+        event_pool_size_t    f_next_events[TKIND_CTEST_F_CNT];
+        /**
+         * @brief The array of the events that follow any e event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_E] object.
+         */
+        event_pool_size_t    e_next_events[TKIND_CTEST_E_CNT];
+        /**
+         * @brief The array of the events that follow any d event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_D] object.
+         */
+        event_pool_size_t    d_next_events[TKIND_CTEST_D_CNT];
+        /**
+         * @brief The array of the events that follow any n event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_N] object.
+         */
+        event_pool_size_t    n_next_events[TKIND_CTEST_N_CNT];
+        /**
+         * @brief The array of the events that follow any h event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_H] object.
+         */
+        event_pool_size_t    h_next_events[TKIND_CTEST_H_CNT];
+        /**
+         * @brief The array of the events that follow any g event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_G] object.
+         */
+        event_pool_size_t    g_next_events[TKIND_CTEST_G_CNT];
+        /**
+         * @brief The array of the events that follow any j event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_J] object.
+         */
+        event_pool_size_t    j_next_events[TKIND_CTEST_J_CNT];
+        /**
+         * @brief The array of the events that follow any m event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_M] object.
+         */
+        event_pool_size_t    m_next_events[TKIND_CTEST_M_CNT];
+        /**
+         * @brief The array of the events that follow any k event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_K] object.
+         */
+        event_pool_size_t    k_next_events[TKIND_CTEST_K_CNT];
+        /**
+         * @brief The array of the events that follow any l event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TKIND_CTEST_L] object.
+         */
+        event_pool_size_t    l_next_events[TKIND_CTEST_L_CNT];
+        /**
+         * @brief The marker that stores the status of processing of the event
+         * at the 'first' position. It is used to prevent processing of the same
+         * event multiple times, and from removing unprocessed events.
+         * Moreover it can be used to handle event deferring.
+         */
+        sm_event_status_t    event_proc_status;
+        /**
+         * @brief Stores the location of the event that is currently being
+         * processed.
+         */
+        event_pool_locator_t fetched_event;
+    }Tkind_ctest_event_pool_t;
 
     /**
      * @brief The virtual table struct for the Tkind_ctest_s struct. Contains
@@ -1060,6 +535,10 @@ extern "C" {
     struct Tkind_sm1_s
     {
         /**
+         * @brief The pointer to the StateMachine's context object.
+         */
+        Tkind_ctest_t*                  p_context;
+        /**
          */
         tkind_sm1_region1_t             region1;
         /**
@@ -1084,29 +563,67 @@ extern "C" {
         bool                            b_test_condition;
     };
 
+    /**
+     * This is a comment linked
+     * to the ctest type
+     */
+    struct Tkind_ctest_s
+    {
+        /**
+         * @brief cbase1 base class data.
+         */
+        Tkind_cbase1_t                  cbase1;
+        /**
+         * @brief cbase2 base class data.
+         */
+        Tkind_cbase2_t                  cbase2;
+        /**
+         * @brief The event pool object managing all events corresponding to the
+         * ctest class.
+         */
+        Tkind_ctest_event_pool_t        event_pool;
+        /**
+         * @brief The instance of the sm1 state machine. According to UML, ctest
+         * class is the context of the sm1 state machine.
+         */
+        Tkind_sm1_t                     sm1;
+        /**
+         */
+        char                            my_name[TKIND_MAX_CHAR_NUM];
+        /**
+         */
+        double                          pi;
+    };
+
+    bool Tkind_cbase1_init(Tkind_cbase1_t* const p_obj);
     void Tkind_cbase1_SetUintProp(Tkind_cbase1_t* const p_obj,\
                                   uint32_t const param1);
     uint32_t Tkind_cbase1_GetUintProp(Tkind_cbase1_t* const p_obj);
 
+    bool Tkind_cbase2_init(Tkind_cbase2_t* const p_obj);
     void Tkind_cbase2_SetFloatProp(Tkind_cbase2_t* const p_obj,\
                                    float const param1);
     float Tkind_cbase2_GetFloatProp(Tkind_cbase2_t* const p_obj);
 
-    void Tkind_ctest_a(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_b(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_c(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_d(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_e(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_f(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_g(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_h(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_i(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_j(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_k(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_l(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_m(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_n(Tkind_ctest_t* const p_obj);
-    void Tkind_ctest_o(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_init(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_a(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_b(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_c(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_d(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_e(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_f(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_g(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_h(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_i(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_j(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_k(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_l(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_m(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_n(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_o(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_fetch_event(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_dispatch_event(Tkind_ctest_t* const p_obj);
+    bool Tkind_ctest_release_event(Tkind_ctest_t* const p_obj);
 
 #ifdef  __cplusplus
 }

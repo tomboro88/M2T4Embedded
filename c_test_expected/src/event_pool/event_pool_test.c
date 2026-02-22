@@ -47,7 +47,7 @@ typedef enum
 
 TEST_GROUP(event_pool);
 
-static event_pool_t      event_pool = {};
+static event_pool_t      event_pool = {0};
 
 static event_pool_fifo_t fifo_pool[CONCEPT_EVENT_COUNT];
 
@@ -57,7 +57,7 @@ static event_pool_size_t double_next_events[CONCEPT_EVENT_DOUBLE_COUNT];
 static event_pool_size_t string_next_events[CONCEPT_EVENT_STRING_COUNT];
 
 
-static event_pool_t      event_pool_copied = {};
+static event_pool_t      event_pool_copied = {0};
 
 static event_pool_fifo_t fifo_pool_copied[CONCEPT_EVENT_COUNT];
 
@@ -88,7 +88,7 @@ static const fifo_size_t    concept_fifo_sizes[CONCEPT_EVENT_COUNT] =
 static void
 event_pool_test_init(void)
 {
-    event_pool = (event_pool_t) {};
+    event_pool = (event_pool_t) {0};
 
     for(event_pool_size_t i = 0u; i < CONCEPT_EVENT_COUNT; ++i)
     {
@@ -96,7 +96,7 @@ event_pool_test_init(void)
         fifo_pool[i].p_next_events = next_event_pools[i];
     }
 
-    event_pool_initialize(&event_pool, fifo_pool, concept_fifo_sizes,
+    (void) event_pool_initialize(&event_pool, fifo_pool, concept_fifo_sizes,
                                                            CONCEPT_EVENT_COUNT);
 }
 
@@ -209,13 +209,22 @@ event_pool_test_dequeue_fail(void)
     event_pool_assert_equal_copy();
 }
 
+/**
+ * @brief Checks if the event_pool_get_first_head() function fails.
+ * @param p_obj The event_pool_t object that should be tested.
+ */
 static void
 event_pool_test_assert_first_fail(const event_pool_t* const p_obj)
 {
+    /* Initialize the object where the first event location should be stored
+     * if found any.*/
     event_pool_locator_t locator = {.event_type = CONCEPT_EVENT_COUNT,
                                     .event_index = (~((fifo_size_t) 0u))};
     event_pool_locator_t locator_copied = locator;
 
+    /*
+     * Execute the test.
+     */
     TEST_ASSERT_FALSE(event_pool_get_first_head(p_obj, &locator));
 
     TEST_ASSERT_EQUAL_MEMORY(&locator_copied, &locator, sizeof(locator));
@@ -292,7 +301,7 @@ TEST(event_pool, init_fail_when_fifos_uninitialized)
     for(event_pool_size_t i = 0; i < CONCEPT_EVENT_COUNT; ++i)
     {
         event_pool_test_init();
-        fifo_pool[i].fifo = (fifo_t){};
+        fifo_pool[i].fifo = (fifo_t){0};
         TEST_ASSERT_FALSE(event_pool_initialize(&event_pool,
                                                        fifo_pool,
                                                        concept_fifo_sizes,
@@ -374,7 +383,7 @@ TEST(event_pool, enqueue_fail_after_init_fail5)
     for(event_pool_size_t i = 0; i < CONCEPT_EVENT_COUNT; ++i)
     {
         event_pool_test_init();
-        fifo_pool[i].fifo = (fifo_t){};
+        fifo_pool[i].fifo = (fifo_t){0};
         event_pool_test_enqueue_fail_after_init_fail();
     }
 }
@@ -656,6 +665,17 @@ TEST(event_pool, enqueue_dequeue_full)
             event_pool_test_enqueue_event_fail(i);
             event_pool_test_assert_first(CONCEPT_EVENT_INT, 0u);
         }
+
+        for(event_pool_size_t i = 0; i<CONCEPT_EVENT_COUNT; ++i)
+        {
+            for(fifo_size_t j = 0; j<concept_fifo_sizes[i]; ++j)
+            {
+                event_pool_test_assert_first(i, j);
+                TEST_ASSERT_TRUE(event_pool_dequeue(&event_pool));
+                TEST_ASSERT_TRUE(event_pool_enqueue(&event_pool, i));
+            }
+        }
+
 
         for(event_pool_size_t i = 0; i<CONCEPT_EVENT_COUNT; ++i)
         {

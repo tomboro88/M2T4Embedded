@@ -153,12 +153,12 @@ static bool sm1_enter_junction37_14_22(TJunction_sm1_t* const p_obj,\
 static bool sm1_enter_junction37_1_24(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
 
-static bool sm1_enter_junction41_a_32(TJunction_sm1_t* const p_obj,\
-                                      sm_event_status_t* const p_result);
 static bool sm1_enter_junction41_a_33(TJunction_sm1_t* const p_obj,\
                                       sm_event_status_t* const p_result);
+static bool sm1_enter_junction41_a_34(TJunction_sm1_t* const p_obj,\
+                                      sm_event_status_t* const p_result);
 
-static bool sm1_enter_junction4321_26_37(TJunction_sm1_t* const p_obj,\
+static bool sm1_enter_junction4321_26_38(TJunction_sm1_t* const p_obj,\
                                          sm_event_status_t* const p_result);
 
 static bool sm1_enter_junction431_26(TJunction_sm1_t* const p_obj,\
@@ -408,7 +408,8 @@ sm1_enter_region432(TJunction_sm1_t* const p_obj)
 static inline void
 sm1_enter_region1(TJunction_sm1_t* const p_obj)
 {
-    p_obj->region1 = TJUNCTION_SM1_REGION1_INL;
+    p_obj->region1 = TJUNCTION_SM1_INITIAL49;
+    sm1_enter_state1(p_obj);
 }
 
 /**
@@ -570,7 +571,7 @@ sm1_exit_region1(TJunction_sm1_t* const p_obj)
     }
 
     // Mark the region is already exited.
-    p_obj->region1 = TJUNCTION_SM1_REGION1_INL;
+    p_obj->region1 = TJUNCTION_SM1_INITIAL49;
 }
 
 /**
@@ -1310,7 +1311,7 @@ sm1_dispatch_a_state36_1(TJunction_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    if(sm1_enter_junction41_a_32(p_obj, &result))
+    if(sm1_enter_junction41_a_33(p_obj, &result))
     {
     }
     else
@@ -1332,7 +1333,7 @@ sm1_dispatch_a_state36_2(TJunction_sm1_t* const p_obj)
 {
     sm_event_status_t result = IGNORED;
 
-    if(sm1_enter_junction41_a_33(p_obj, &result))
+    if(sm1_enter_junction41_a_34(p_obj, &result))
     {
     }
     else
@@ -2368,7 +2369,7 @@ sm1_enter_junction37_1_24(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction41_a_32(TJunction_sm1_t* const p_obj,\
+sm1_enter_junction41_a_33(TJunction_sm1_t* const p_obj,\
                           sm_event_status_t* const p_result)
 {
     bool b_is_handled = true;
@@ -2389,7 +2390,7 @@ sm1_enter_junction41_a_32(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction41_a_33(TJunction_sm1_t* const p_obj,\
+sm1_enter_junction41_a_34(TJunction_sm1_t* const p_obj,\
                           sm_event_status_t* const p_result)
 {
     bool b_is_handled = true;
@@ -2410,7 +2411,7 @@ sm1_enter_junction41_a_33(TJunction_sm1_t* const p_obj,\
  * @return true if the junction transition was executed.
  */
 static bool
-sm1_enter_junction4321_26_37(TJunction_sm1_t* const p_obj,\
+sm1_enter_junction4321_26_38(TJunction_sm1_t* const p_obj,\
                              sm_event_status_t* const p_result)
 {
     bool b_is_handled = true;
@@ -2467,7 +2468,7 @@ sm1_enter_junction431_26(TJunction_sm1_t* const p_obj,\
         b_is_handled = true;
     }
     else if(p_obj->b_guard5
-       && sm1_enter_junction4321_26_37(p_obj, p_result))
+       && sm1_enter_junction4321_26_38(p_obj, p_result))
     {
         b_is_handled = true;
     }

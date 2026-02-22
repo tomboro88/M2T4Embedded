@@ -56,7 +56,7 @@ fifo_test_enqueue_fail(void)
 {
     fifo_test_copy();
 
-    /*Failed dequeue mustn't change the contents of the fifo.*/
+    /*Failed enqueue mustn't change the contents of the fifo.*/
     TEST_ASSERT_FALSE(fifo_enqueue(&fifo_obj));
     fifo_assert_equal_copy();
 }
@@ -220,7 +220,11 @@ fifo_test_init_fail(fifo_size_t const size, fifo_size_t const head,
     TEST_ASSERT_TRUE(fifo_check_with_size(&fifo_obj, FIFO_TEST_BUFFER_SIZE));
     /*Run the initialization function, the fifo_obj should be overwritten.*/
     TEST_ASSERT_FALSE(fifo_initialize(&fifo_obj, size, head, count));
-    /*Verify results.*/
+    /* Verify results. If the initialization fails, we don't want the fifo_obj
+     * contain old data when it's valid, because it may lead to potential use of
+     * some old data, while the program thinks it has a correct fifo object.
+     * fifo_obj initialized with the invalid arguments should lead to blocking
+     * the operation of the corresponding state machine.*/
     TEST_ASSERT_EQUAL_size_t(size,  fifo_obj.size);
     TEST_ASSERT_EQUAL_size_t(head,  fifo_obj.head);
     TEST_ASSERT_EQUAL_size_t(count, fifo_obj.count);

@@ -70,11 +70,11 @@ fifo_increment_index (const fifo_size_t index, const fifo_size_t size)
 
 /**
  * @brief Initializes the indexes of the given fifo_t struct to empty state.
- * @param [out] p_obj The pointer to the object that should be initialised.
+ * @param [in] p_obj The pointer to the object that should be initialised.
  * @param [in] size The size of the array holding the fifo elements.
+ * @param [in] head The initial value of the head index.
+ * @param [in] count The initial number of elements in the fifo.
  * @param returns true if correct object was created (size >= 2).
- * The .tail and .head fields are set to zero, and the .size field is set to
- * size.
  */
 bool
 fifo_initialize (fifo_t *const p_obj, fifo_size_t const size,
@@ -86,6 +86,9 @@ fifo_initialize (fifo_t *const p_obj, fifo_size_t const size,
     {
         fifo_size_t tail = fifo_calc_tail(size, head, count);
 
+        /* Even if the provided arguments are invalid, we want to populate
+         * the object with them, because this will lead to a situation that any
+         * operation on an invalid fifo_t object will fail and return false.*/
         p_obj->size = size;
         p_obj->head = head;
         p_obj->count = count;

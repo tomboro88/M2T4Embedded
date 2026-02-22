@@ -108,7 +108,7 @@ event_pool_initialize(event_pool_t* const p_obj,
 
 /**
  * @brief Adds an event of the given type at the end of the event pool.
- * @param p_obj The pointer to the event queue.
+ * @param p_obj The pointer to the event queue manager.
  * @param event_type the event type that should be added at the queue end.
  * @return true if the event was correctly added to the queue.
  */

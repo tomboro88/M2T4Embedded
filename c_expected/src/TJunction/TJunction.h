@@ -22,6 +22,7 @@ extern "C" {
 #    include <sm.h>
 #    include <stddef.h>
 #    include <stdbool.h>
+#    include <event_pool.h>
 //Start of user code includes bottom
 //End of user code
 
@@ -64,7 +65,7 @@ extern "C" {
     /**
      * @brief The enumeration of all events handled by Jtest Class.
      */
-    typedef enum
+    enum tjunction_jtest_evtype
     {
         /**
          */
@@ -82,196 +83,60 @@ extern "C" {
          * @brief The number of all events handled by Jtest Class.
          */
         TJUNCTION_JTEST_EVENT_COUNT
-    }tjunction_jtest_evtype_t;
-    
-    /**
-     * @brief The base type of the event in the event pool of the Jtest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The type of the next event in the event pool of the Jtest
-         * class.
-         */
-        tjunction_jtest_evtype_t        event_next;
-    }tjunction_jtest_evbase_t;
-    
-    /**
-     * @brief The struct with data of the a event in the event pool of the
-     * Jtest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tjunction_jtest_evbase_t        evbase;
-    }tjunction_jtest_a_t;
-    
-    /**
-     * @brief The struct with a event queue in the event pool of the Jtest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tjunction_jtest_a_t             events[TJUNCTION_JTEST_A_CNT];
-    }tjunction_jtest_a_queue_t;
-    
-    /**
-     * @brief The struct with data of the b event in the event pool of the
-     * Jtest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tjunction_jtest_evbase_t        evbase;
-    }tjunction_jtest_b_t;
-    
-    /**
-     * @brief The struct with b event queue in the event pool of the Jtest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tjunction_jtest_b_t             events[TJUNCTION_JTEST_B_CNT];
-    }tjunction_jtest_b_queue_t;
-    
-    /**
-     * @brief The struct with data of the c event in the event pool of the
-     * Jtest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tjunction_jtest_evbase_t        evbase;
-    }tjunction_jtest_c_t;
-    
-    /**
-     * @brief The struct with c event queue in the event pool of the Jtest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tjunction_jtest_c_t             events[TJUNCTION_JTEST_C_CNT];
-    }tjunction_jtest_c_queue_t;
-    
-    /**
-     * @brief The struct with data of the d event in the event pool of the
-     * Jtest class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The base data of the event.
-         */
-        tjunction_jtest_evbase_t        evbase;
-    }tjunction_jtest_d_t;
-    
-    /**
-     * @brief The struct with d event queue in the event pool of the Jtest
-     * class.
-     */
-    typedef struct
-    {
-        /**
-         * @brief The index of the first element in the queue.
-         */
-        size_t                          head;
-        /**
-         * @brief The index of the last element in the queue.
-         */
-        size_t                          tail;
-        /**
-         * @brief The number of elements in the queue.
-         */
-        size_t                          count;
-        /**
-         * @brief The array of events in the queue.
-         */
-        tjunction_jtest_d_t             events[TJUNCTION_JTEST_D_CNT];
-    }tjunction_jtest_d_queue_t;
-    
-    /**
-     */
-    struct TJunction_Jtest_s
-    {
-        /**
-         * @brief The type of the first event in the event pool of the Jtest
-         * class.
-         */
-        tjunction_jtest_evtype_t        event_head;
-        /**
-         * @brief The type of the last event in the event pool of the Jtest
-         * class.
-         */
-        tjunction_jtest_evtype_t        event_tail;
-        /**
-         * @brief The event queue holding a events.
-         */
-        tjunction_jtest_a_queue_t       a;
-        /**
-         * @brief The event queue holding b events.
-         */
-        tjunction_jtest_b_queue_t       b;
-        /**
-         * @brief The event queue holding c events.
-         */
-        tjunction_jtest_c_queue_t       c;
-        /**
-         * @brief The event queue holding d events.
-         */
-        tjunction_jtest_d_queue_t       d;
     };
+    
+    /**
+     * @brief The type used to store the event pool of all events accepted by
+     * the Jtest class.
+     */
+    typedef struct {
+        /**
+         * @brief The main event pool manager object in the Jtest class.
+         */
+        event_pool_t         manager;
+        /**
+         * @brief The array of fifo objects, one for each accepted event type.
+         * @details The objects are referenced and managed by the event_pool
+         * object.
+         */
+        event_pool_fifo_t    fifo_pool[TJUNCTION_JTEST_EVENT_COUNT];
+        /**
+         * @brief The array of the events that follow any a event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TJUNCTION_JTEST_A] object.
+         */
+        event_pool_size_t    a_next_events[TJUNCTION_JTEST_A_CNT];
+        /**
+         * @brief The array of the events that follow any b event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TJUNCTION_JTEST_B] object.
+         */
+        event_pool_size_t    b_next_events[TJUNCTION_JTEST_B_CNT];
+        /**
+         * @brief The array of the events that follow any c event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TJUNCTION_JTEST_C] object.
+         */
+        event_pool_size_t    c_next_events[TJUNCTION_JTEST_C_CNT];
+        /**
+         * @brief The array of the events that follow any d event in the event
+         * pool sequence.
+         * @details It is referenced by the fifo_pool[TJUNCTION_JTEST_D] object.
+         */
+        event_pool_size_t    d_next_events[TJUNCTION_JTEST_D_CNT];
+        /**
+         * @brief The marker that stores the status of processing of the event
+         * at the 'first' position. It is used to prevent processing of the same
+         * event multiple times, and from removing unprocessed events.
+         * Moreover it can be used to handle event deferring.
+         */
+        sm_event_status_t    event_proc_status;
+        /**
+         * @brief Stores the location of the event that is currently being
+         * processed.
+         */
+        event_pool_locator_t fetched_event;
+    }TJunction_Jtest_event_pool_t;
 
     /**
      * @brief The enumeration of all substates of Region1 Region of sm1
@@ -282,7 +147,7 @@ extern "C" {
          * @brief The default substate of the Region1 Region of sm1
          * StateMachine.
          */
-        TJUNCTION_SM1_REGION1_INL,
+        TJUNCTION_SM1_INITIAL49,
         /**
          */
         TJUNCTION_SM1_STATE1,
@@ -417,6 +282,10 @@ extern "C" {
     struct TJunction_sm1_s
     {
         /**
+         * @brief The pointer to the StateMachine's context object.
+         */
+        TJunction_Jtest_t*              p_context;
+        /**
          */
         tjunction_sm1_region1_t         region1;
         /**
@@ -460,11 +329,30 @@ extern "C" {
         bool                            b_guard9;
     };
 
-    void TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);
-    void TJunction_Jtest_b(TJunction_Jtest_t* const p_obj);
-    void TJunction_Jtest_c(TJunction_Jtest_t* const p_obj);
-    void TJunction_Jtest_d(TJunction_Jtest_t* const p_obj);
+    /**
+     */
+    struct TJunction_Jtest_s
+    {
+        /**
+         * @brief The event pool object managing all events corresponding to the
+         * Jtest class.
+         */
+        TJunction_Jtest_event_pool_t    event_pool;
+        /**
+         * @brief The instance of the sm1 state machine. According to UML Jtest
+         * class is the context of the sm1 state machine.
+         */
+        TJunction_sm1_t                 sm1;
+    };
 
+    bool TJunction_Jtest_init(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_a(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_b(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_c(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_d(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_fetch_event(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_dispatch_event(TJunction_Jtest_t* const p_obj);
+    bool TJunction_Jtest_release_event(TJunction_Jtest_t* const p_obj);
 #ifdef  __cplusplus
 }
 #endif

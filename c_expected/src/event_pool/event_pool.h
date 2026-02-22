@@ -46,7 +46,7 @@
      */
     typedef struct {
         /**
-         * @brief The pointer to an array of objects with fifo indexes.
+         * @brief The pointer to an array of objects with event fifo queues.
          */
         event_pool_fifo_t*   p_queues;
         /**

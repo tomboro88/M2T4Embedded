@@ -282,7 +282,7 @@ extern "C" {
          * @brief The default substate of the Region1 Region of sm1
          * StateMachine.
          */
-        TJUNCTION_SM1_REGION1_INL,
+        TJUNCTION_SM1_INITIAL49,
         /**
          */
         TJUNCTION_SM1_STATE1,

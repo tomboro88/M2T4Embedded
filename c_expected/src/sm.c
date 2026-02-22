@@ -5,23 +5,26 @@ sm_event_status_t
 sm_event_resolve_status(sm_event_status_t const status1,\
                         sm_event_status_t const status2)
 {
-    sm_event_status_t result = IGNORED;
+    sm_event_status_t result = SM_EVENT_STATUS_IGNORED;
 
-    if(CHANGEDSTATE==status1 || CHANGEDSTATE==status2)
+    if(SM_EVENT_STATUS_CHANGEDSTATE==status1
+            || SM_EVENT_STATUS_CHANGEDSTATE==status2)
     {
-        result = CHANGEDSTATE;
+        result = SM_EVENT_STATUS_CHANGEDSTATE;
     }
-    else if(SAMESTATE==status1 || SAMESTATE==status2)
+    else if(SM_EVENT_STATUS_SAMESTATE==status1
+            || SM_EVENT_STATUS_SAMESTATE==status2)
     {
-        result = SAMESTATE;
+        result = SM_EVENT_STATUS_SAMESTATE;
     }
-    else if (DEFERRED==status1 || DEFERRED==status2)
+    else if (SM_EVENT_STATUS_DEFERRED==status1
+            || SM_EVENT_STATUS_DEFERRED==status2)
     {
-        result = DEFERRED;
+        result = SM_EVENT_STATUS_DEFERRED;
     }
     else
     {
-        result = IGNORED;
+        result = SM_EVENT_STATUS_IGNORED;
     }
 
     return result;

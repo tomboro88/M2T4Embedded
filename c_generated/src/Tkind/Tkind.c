@@ -39,28 +39,10 @@
  * Non-private function prototypes.
  *
  ******************************************************************************/
-void Tkind_cbase1_SetUintProp(Tkind_cbase1_t* const p_obj,\
-                              uint32_t const param1);
-uint32_t Tkind_cbase1_GetUintProp(Tkind_cbase1_t* const p_obj);
 
 void Tkind_cbase1_set_uint_default(Tkind_cbase1_t* const p_obj,\
                                    uint32_t const param1);
 
-void Tkind_ctest_a(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_b(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_c(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_d(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_e(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_f(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_g(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_h(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_i(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_j(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_k(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_l(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_m(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_n(Tkind_ctest_t* const p_obj);
-void Tkind_ctest_o(Tkind_ctest_t* const p_obj);
 
 void Tkind_ctest_set_uint_incr(Tkind_cbase1_t* const p_obj,\
                                uint32_t const param1);

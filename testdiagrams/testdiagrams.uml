@@ -568,6 +568,7 @@ for static evaluation of a sequence of guard conditions before any transition is
               <specification xmi:type="uml:Expression" xmi:id="_K4n-sb3wEfCuufnsP13LzQ" symbol="else"/>
             </ownedRule>
           </transition>
+          <transition xmi:type="uml:Transition" xmi:id="_5Bc2cAU4EfGX1pGT08VRbQ" source="_3lDw8AU4EfGX1pGT08VRbQ" target="_-JOBwAHPEfCgXv5ODs4Seg"/>
           <subvertex xmi:type="uml:State" xmi:id="_-JOBwAHPEfCgXv5ODs4Seg" name="State1">
             <exit xmi:type="uml:OpaqueBehavior" xmi:id="_uHz5MLkiEfC-keoHQ33Mgw">
               <language>C</language>
@@ -726,6 +727,7 @@ printf(&quot;State434 entry behavior.\n&quot;);</body>
             </region>
           </subvertex>
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_1pH7EL3vEfCuufnsP13LzQ" name="Choice46" kind="choice"/>
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_3lDw8AU4EfGX1pGT08VRbQ" name="Initial49"/>
         </region>
       </ownedBehavior>
       <ownedOperation xmi:type="uml:Operation" xmi:id="_WFQkIAHQEfCgXv5ODs4Seg" name="a"/>

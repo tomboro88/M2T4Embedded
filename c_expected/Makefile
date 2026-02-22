@@ -2,8 +2,8 @@
 CC = gcc
 
 # Flags for different configurations
-CFLAGS_RELEASE = -Wall -Wextra -O2 -I./src
-CFLAGS_DEBUG   = -Wall -Wextra -g -O0 -I./src
+CFLAGS_RELEASE = -Wall -Wextra -O2 -I./src/ -I./src/fifo -I./src/event_pool
+CFLAGS_DEBUG   = -Wall -Wextra -g -O0 -I./src/ -I./src/fifo -I./src/event_pool
 
 # Default configuration
 BUILD ?= Release

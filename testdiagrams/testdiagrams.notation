@@ -1328,6 +1328,16 @@
               <element xmi:type="uml:Pseudostate" href="testdiagrams.uml#_1pH7EL3vEfCuufnsP13LzQ"/>
               <layoutConstraint xmi:type="notation:Bounds" xmi:id="_1pypcb3vEfCuufnsP13LzQ" x="279" y="780" width="41" height="41"/>
             </children>
+            <children xmi:type="notation:Shape" xmi:id="_3tZNkAU4EfGX1pGT08VRbQ" type="Pseudostate_InitialShape">
+              <children xmi:type="notation:DecorationNode" xmi:id="_3tabsAU4EfGX1pGT08VRbQ" type="Pseudostate_InitialFloatingNameLabel">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_3tabsQU4EfGX1pGT08VRbQ" x="25" y="3"/>
+              </children>
+              <children xmi:type="notation:DecorationNode" xmi:id="_3tbCwAU4EfGX1pGT08VRbQ" type="Pseudostate_InitialStereotypeLabel">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_3tbCwQU4EfGX1pGT08VRbQ" x="25" y="-10"/>
+              </children>
+              <element xmi:type="uml:Pseudostate" href="testdiagrams.uml#_3lDw8AU4EfGX1pGT08VRbQ"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3tZNkQU4EfGX1pGT08VRbQ" x="299" y="20"/>
+            </children>
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9FQDWQHPEfCgXv5ODs4Seg"/>
           </children>
           <element xmi:type="uml:Region" href="testdiagrams.uml#_9FNnEAHPEfCgXv5ODs4Seg"/>
@@ -2192,6 +2202,22 @@
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_F6kJQr3wEfCuufnsP13LzQ" points="[319, -260, -643984, -643984]$[320, -140, -643984, -643984]"/>
       <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_F7xDIL3wEfCuufnsP13LzQ" id="(0.46457607433217163,0.975609756097561)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_F7xDIb3wEfCuufnsP13LzQ" id="(0.05398110661268556,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_5O0kEAU4EfGX1pGT08VRbQ" type="Transition_Edge" source="_3tZNkAU4EfGX1pGT08VRbQ" target="_-JSTMAHPEfCgXv5ODs4Seg">
+      <children xmi:type="notation:DecorationNode" xmi:id="_5O3AUAU4EfGX1pGT08VRbQ" type="Transition_NameLabel">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_5O3AUQU4EfGX1pGT08VRbQ" y="20"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_5O3AUgU4EfGX1pGT08VRbQ" type="Transition_GuardLabel">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_5O3AUwU4EfGX1pGT08VRbQ" y="-20"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_5O3nYAU4EfGX1pGT08VRbQ" type="Transition_StereotypeLabel">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_5O3nYQU4EfGX1pGT08VRbQ" y="60"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_5O0kEQU4EfGX1pGT08VRbQ"/>
+      <element xmi:type="uml:Transition" href="testdiagrams.uml#_5Bc2cAU4EfGX1pGT08VRbQ"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5O0kEgU4EfGX1pGT08VRbQ" points="[320, -1052, -643984, -643984]$[186, -1020, -643984, -643984]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5RxKYAU4EfGX1pGT08VRbQ" id="(0.0,0.4)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5RxKYQU4EfGX1pGT08VRbQ" id="(1.0,0.2702702702702703)"/>
     </edges>
   </notation:Diagram>
   <notation:Diagram xmi:id="_k56kIJ_lEfC8UZpzv1rbug" type="PapyrusUMLClassDiagram" name="NewPackageDiagram" measurementUnit="Pixel">

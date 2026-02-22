@@ -86,11 +86,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.1365721452" name="Release" parent="cmake4eclipse.mbs.config.release">
+				<configuration buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="cmake4eclipse.mbs.config.release.1365721452" name="Release" optionalBuildProperties="" parent="cmake4eclipse.mbs.config.release">
 					<folderInfo id="cmake4eclipse.mbs.config.release.1365721452." name="/" resourcePath="">
 						<toolChain id="cmake4eclipse.mbs.config.release.toolChain.121443997" name="CMake driven" superClass="cmake4eclipse.mbs.config.release.toolChain">
 							<targetPlatform id="cmake4eclipse.mbs.targetPlatform.cmake.630177458" name="Any Platform" superClass="cmake4eclipse.mbs.targetPlatform.cmake"/>
-							<builder buildPath="/c_test_expected/_build/Release" id="cmake4eclipse.mbs.builder.1329870782" managedBuildOn="true" name="CMake Builder.Release" superClass="cmake4eclipse.mbs.builder"/>
+							<builder buildPath="/c_test_expected/_build/Release" id="cmake4eclipse.mbs.builder.1329870782" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CMake Builder" superClass="cmake4eclipse.mbs.builder"/>
 							<tool id="cmake4eclipse.mbs.toolchain.tool.dummy.818643547" name="CMake" superClass="cmake4eclipse.mbs.toolchain.tool.dummy">
 								<inputType id="cmake4eclipse.mbs.inputType.c.716753030" superClass="cmake4eclipse.mbs.inputType.c"/>
 								<inputType id="cmake4eclipse.mbs.inputType.cpp.622137185" superClass="cmake4eclipse.mbs.inputType.cpp"/>
@@ -100,7 +100,12 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-			<storageModule moduleId="de.marw.cmake4eclipse.mbs.settings"/>
+			<storageModule buildDir="_build/${ConfigName}" moduleId="de.marw.cmake4eclipse.mbs.settings">
+				<options/>
+				<defs>
+					<def name="CMAKE_BUILD_TYPE" type="STRING" val="${ConfigName}"/>
+				</defs>
+			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="cmake4eclipse.mbs.config.cmake.301168869.18696596">
 			<storageModule buildSystemId="de.marw.cmake4eclipse.mbs.cmake4eclipse" id="cmake4eclipse.mbs.config.cmake.301168869.18696596" moduleId="org.eclipse.cdt.core.settings" name="Coverage">
@@ -156,8 +161,12 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.1365721452;cmake4eclipse.mbs.config.release.1365721452.;cmake4eclipse.mbs.toolchain.tool.dummy.818643547;cmake4eclipse.mbs.inputType.cpp.622137185">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.cmake.301168869.18696596;cmake4eclipse.mbs.config.cmake.301168869.18696596.;cmake4eclipse.mbs.toolchain.tool.dummy.1465817270;cmake4eclipse.mbs.inputType.cpp.1704380649">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
@@ -165,6 +174,9 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.cmake.301168869.18696596;cmake4eclipse.mbs.config.cmake.301168869.18696596.;cmake4eclipse.mbs.toolchain.tool.dummy.1465817270;cmake4eclipse.mbs.inputType.c.2028673838">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.release.1365721452;cmake4eclipse.mbs.config.release.1365721452.;cmake4eclipse.mbs.toolchain.tool.dummy.818643547;cmake4eclipse.mbs.inputType.c.716753030">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cmake4eclipse.mbs.config.cmake.301168869;cmake4eclipse.mbs.config.cmake.301168869.;cmake4eclipse.mbs.toolchain.tool.dummy.1628589924;cmake4eclipse.mbs.inputType.c.1506248120">
