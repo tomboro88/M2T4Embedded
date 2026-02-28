@@ -16,7 +16,7 @@
  * @date   2 Dec 2025
  * @copyright (c) 2025 tomboro88. All rights reserved.
  * @license MIT – see LICENSE file in project root
- * @project github.com/tomboro88/EmbeddedMachinesCoder
+ * @project github.com/tomboro88/M2T4Embedded
  */
 
 #ifndef FIFO_H

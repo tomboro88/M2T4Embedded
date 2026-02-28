@@ -1,12 +1,14 @@
- .../src/TJunction/TJunction.c                      | 509 [32m+++++++[m[31m--------------[m
- .../src/TJunction/TJunction.h                      | 240 [32m+++++++[m[31m---[m
- {c_expected => c_generated}/src/Tkind/Tkind.c      | 144 [32m+++[m[31m---[m
- .../src/event_pool/CMakeLists.txt => /dev/null     |  32 [31m--[m
- .../src/event_pool/event_pool.c => /dev/null       | 308 [31m-------------[m
- .../src/event_pool/event_pool.h => /dev/null       |  95 [31m----[m
- c_expected/src/fifo/CMakeLists.txt => /dev/null    |  20 [31m-[m
- c_expected/src/fifo/fifo.c => /dev/null            | 246 [31m----------[m
- c_expected/src/fifo/fifo.h => /dev/null            |  74 [31m---[m
- {c_expected => c_generated}/src/sm.c               |  19 [32m+[m[31m-[m
- {c_expected => c_generated}/src/sm.h               |  11 [32m+[m[31m-[m
- 11 files changed, 415 insertions(+), 1283 deletions(-)
+ .../src/TJunction/TJunction.c                      | 1248 [32m++++++++[m[31m----------[m
+ .../src/TJunction/TJunction.h                      |  240 [32m+++[m[31m-[m
+ {c_expected => c_generated}/src/Tkind/Tkind.c      | 1364 [32m+++++++[m[31m-------------[m
+ {c_expected => c_generated}/src/Tkind/Tkind.h      |  761 [32m+++++++++[m[31m--[m
+ .../src/event_pool/CMakeLists.txt => /dev/null     |   32 [31m-[m
+ .../src/event_pool/event_pool.c => /dev/null       |  308 [31m-----[m
+ .../src/event_pool/event_pool.h => /dev/null       |   95 [31m--[m
+ c_expected/src/fifo/CMakeLists.txt => /dev/null    |   20 [31m-[m
+ c_expected/src/fifo/fifo.c => /dev/null            |  249 [31m----[m
+ c_expected/src/fifo/fifo.h => /dev/null            |   74 [31m--[m
+ {c_expected => c_generated}/src/sm.c               |   19 [32m+[m[31m-[m
+ {c_expected => c_generated}/src/sm.h               |   11 [32m+[m[31m-[m
+ {c_expected => c_generated}/src/umltest.c          |   32 [31m-[m
+ 13 files changed, 1775 insertions(+), 2678 deletions(-)

@@ -21,6 +21,6 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="tbo.acceleo.psm.uml.gen.c.main.Generate"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="tbo.acceleo.psm.uml.gen.c"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;/home/tomasz/Dokumenty/UMLGen/EmbeddedMachinesCoder/testdiagrams/testdiagrams.uml&quot; &quot;/home/tomasz/Dokumenty/UMLGen/EmbeddedMachinesCoder/c_generated/src&quot;"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;/home/tomasz/Dokumenty/UMLGen/M2T4Embedded/testdiagrams/testdiagrams.uml&quot; &quot;/home/tomasz/Dokumenty/UMLGen/M2T4Embedded/c_generated/src&quot;"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="tbo.acceleo.psm.uml.gen.c"/>
 </launchConfiguration>

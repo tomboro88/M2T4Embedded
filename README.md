@@ -1,10 +1,12 @@
-# EmbeddedMachinesCoder
+# M2T4Embedded
+UML Model to text transformation templates for embedded systems programming in C. 
+
 *Work in progress...*
 
-EmbeddedMachinesCoder is a tool for automated generation of C code for embedded systems from UML state machine diagrams created in Papyrus. It leverages custom Acceleo (MTL) templates to streamline development of reliable embedded software.
+M2T4Embedded is a tool for automated generation of C code for embedded systems from UML state machine diagrams created in Papyrus. It leverages custom Acceleo (MTL) templates to streamline development of reliable embedded software.
 
 ## Motivation
-This project originated from a willingness to speed up manual typing of state machines repeatable code in embedded systems. I observed that many embedded designs follow a common pattern—read sensors, calculate results, update outputs—resembling a PLC (Programmable Logic Controller) architecture. By consolidating proven code snippets into a tool, EmbeddedMachinesCoder enables developers to design software at a higher level of abstraction using graphical UML diagrams. This approach shifts focus from low-level C programming to application-level design, improving efficiency and reliability in embedded development.
+This project originated from a willingness to speed up manual typing of state machines repeatable code in embedded systems. I observed that many embedded designs follow a common pattern—read sensors, calculate results, update outputs—resembling a PLC (Programmable Logic Controller) architecture. By consolidating proven code snippets into a tool, M2T4Embedded enables developers to design software at a higher level of abstraction using graphical UML diagrams. This approach shifts focus from low-level C programming to application-level design, improving efficiency and reliability in embedded development.
 
 ## Features
 - Converts UML state machines and state diagrams to C code (enums, switch statements).
