@@ -48,6 +48,7 @@ TIP: In order to make the entry, exit, effect and guard behaviors visible direct
   - **Compare with Git** Runs the git command for generated code comparison to the expected output.
   - **Compare with Git and Meld Folder** Runs the git and Meld commands for generated code comparison to the expected output. Eclipse Papyrus expects that you select some of the projects in the workspace, otherwise it will give a message that no resource was selected.
   - **Test Expected** Runs the c_test_expected project containing unit tests for the expected code modules.
+  - **c_expected** Runs the compiled c_expected project.
 - **tbo.acceleo.psm.uml.gen.c** The acceleo project used for code generation. It contains a **default.properties** file which can control some options related to the code generation:
   - **include_debug_markers** - By default set to false. Change to true to include additional comments in the generated code. They will provide information which pieces of the generator are responsible for each particular piece of output code. It greatly simplifies the further development of the generator.
   - **line_width** Sets the maximum number of characters in a single line of output code. The generator automatically formats the code to make it easy to read.

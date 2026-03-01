@@ -10,12 +10,12 @@ BUILD ?= Release
 
 ifeq ($(BUILD),Debug)
     CFLAGS = $(CFLAGS_DEBUG)
-    OBJDIR = obj/debug
-    BINDIR = bin/debug
+    OBJDIR = obj/$(BUILD)
+    BINDIR = bin/$(BUILD)
 else
     CFLAGS = $(CFLAGS_RELEASE)
-    OBJDIR = obj/release
-    BINDIR = bin/release
+    OBJDIR = obj/$(BUILD)
+    BINDIR = bin/$(BUILD)
 endif
 
 # Find all .c files in src/ and subfolders
@@ -24,7 +24,6 @@ SRCS := $(shell find src -name '*.c')
 # Replace the src paths with corresponding obj files in obj/
 OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(SRCS))
 
-BINDIR := bin
 TARGET = c_expected
 
 # --- The main rule ---
